@@ -4,96 +4,130 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Archives Impériales - Demon Slayer RP</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Noto+Sans+JP:wght@200;400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Noto+Sans+JP:wght@200;400;700&family=Charm:wght@400;700&display=swap" rel="stylesheet">
     
     <style>
         :root {
             --primary: #8b0000; --accent: #ffd700; --bg: #050505;
-            --card-bg: rgba(20, 20, 20, 0.95); --text: #f0f0f0;
+            --card-bg: rgba(15, 15, 15, 0.98); --text: #f0f0f0;
             --gold: linear-gradient(to right, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
         }
 
-        * { box-sizing: border-box; }
+        * { box-sizing: border-box; scroll-behavior: smooth; }
+        
         body {
             font-family: 'Noto Sans JP', sans-serif; background: var(--bg);
-            background-image: radial-gradient(circle at center, #1a0808 0%, #050505 100%);
-            color: var(--text); margin: 0; padding: 40px 20px; display: flex; flex-direction: column; align-items: center;
-            min-height: 100vh;
+            background-image: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url('https://www.transparenttextures.com/patterns/dark-matter.png');
+            color: var(--text); margin: 0; padding: 40px 10px; display: flex; flex-direction: column; align-items: center;
+            min-height: 100vh; overflow-x: hidden;
         }
 
+        /* --- AUTH BAR --- */
         #authBar {
-            position: fixed; top: 20px; right: 20px; background: rgba(0,0,0,0.8);
-            padding: 10px 20px; border: 1px solid #333; border-radius: 2px; z-index: 100;
-            font-family: 'Cinzel', serif; font-size: 0.7rem; border-left: 3px solid var(--primary);
+            position: fixed; top: 20px; right: 20px; background: rgba(0,0,0,0.9);
+            padding: 12px 25px; border: 1px solid #333; border-radius: 2px; z-index: 100;
+            font-family: 'Cinzel', serif; font-size: 0.75rem; border-left: 4px solid var(--primary);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); backdrop-filter: blur(10px);
         }
         #authBar input { background: transparent; border: none; border-bottom: 1px solid #555; color: var(--accent); width: 80px; outline: none; margin-left: 10px; transition: 0.3s; }
-        #authBar input:focus { width: 120px; border-color: var(--accent); }
+        #authBar input:focus { width: 130px; border-color: var(--accent); }
 
-        .header-container { text-align: center; margin-bottom: 60px; }
+        /* --- HEADER --- */
+        .header-container { text-align: center; margin-bottom: 80px; position: relative; }
         .header-title {
-            font-family: 'Cinzel', serif; font-size: 3.5rem; letter-spacing: 12px; margin: 0;
+            font-family: 'Cinzel', serif; font-size: clamp(2.2rem, 10vw, 4.5rem); letter-spacing: 15px; margin: 0;
             background: var(--gold); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            text-transform: uppercase;
+            text-transform: uppercase; filter: drop-shadow(0 0 15px rgba(139,0,0,0.4));
+            animation: glow 3s infinite alternate;
         }
-        .header-subtitle { font-family: 'Cinzel', serif; color: var(--primary); letter-spacing: 5px; font-size: 0.9rem; margin-top: 10px; opacity: 0.8; }
+        @keyframes glow { from { filter: drop-shadow(0 0 5px var(--primary)); } to { filter: drop-shadow(0 0 20px var(--primary)); } }
+        .header-subtitle { font-family: 'Cinzel', serif; color: var(--primary); letter-spacing: 8px; font-size: 0.9rem; margin-top: 15px; opacity: 0.7; }
 
+        /* --- FORMULAIRE --- */
         #mainForm {
-            background: var(--card-bg); width: 100%; max-width: 1000px; padding: 40px;
-            border: 1px solid #2a2a2a; display: none; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px;
-            margin-bottom: 60px; border-top: 4px solid var(--primary);
+            background: var(--card-bg); width: 100%; max-width: 1000px; padding: 50px;
+            border: 1px solid rgba(255,255,255,0.05); display: none; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 25px;
+            margin-bottom: 80px; border-top: 5px solid var(--primary); box-shadow: 0 40px 100px rgba(0,0,0,0.8);
+            animation: slideDown 0.6s ease-out;
         }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
 
-        input, select, textarea { 
-            background: #0a0a0a; border: 1px solid #333; color: #fff; padding: 15px; 
-            border-radius: 0; font-family: inherit; outline: none;
-        }
-        input:focus, select:focus { border-color: var(--accent); }
-        textarea { grid-column: 1 / -1; height: 100px; }
+        input, select, textarea { background: #080808; border: 1px solid #222; color: #fff; padding: 18px; outline: none; transition: 0.3s; font-size: 0.9rem; }
+        input:focus, select:focus { border-color: var(--accent); background: #0c0c0c; box-shadow: 0 0 15px rgba(255,215,0,0.1); }
+        textarea { grid-column: 1 / -1; height: 120px; }
 
         #btnSubmit {
             grid-column: 1 / -1; background: #000; color: #fff; border: 1px solid var(--primary);
-            padding: 18px; cursor: pointer; font-family: 'Cinzel', serif; letter-spacing: 4px;
-            text-transform: uppercase; transition: 0.4s;
+            padding: 22px; cursor: pointer; font-family: 'Cinzel', serif; letter-spacing: 6px;
+            text-transform: uppercase; transition: 0.5s; font-weight: bold;
         }
-        #btnSubmit:hover { background: var(--primary); box-shadow: 0 0 20px rgba(139,0,0,0.5); }
+        #btnSubmit:hover { background: var(--primary); letter-spacing: 8px; box-shadow: 0 0 40px rgba(139,0,0,0.4); }
 
-        .table-container { width: 100%; max-width: 1100px; background: rgba(10,10,10,0.8); border: 1px solid #222; }
-        table { width: 100%; border-collapse: collapse; }
-        th { font-family: 'Cinzel', serif; color: var(--accent); padding: 20px; font-size: 0.8rem; background: #000; border-bottom: 1px solid #333; }
-        td { padding: 15px; text-align: center; border-bottom: 1px solid #111; color: #aaa; }
-        
-        .badge { padding: 8px 16px; font-weight: bold; font-size: 0.7rem; text-transform: uppercase; border-radius: 1px; display: inline-block; color: #fff; }
-        .Pilier { background: #4b0000; border: 1px solid #8b0000; box-shadow: 0 0 10px #4b0000; }
+        #photoBox { grid-column: 1 / -1; border: 2px dashed #222; padding: 25px; text-align: center; transition: 0.4s; }
+        #photoBox.active { border-color: var(--accent); background: rgba(255,215,0,0.03); }
+
+        /* --- SYSTÈME DE SECTIONS PAR SOUFFLE --- */
+        .registry-wrapper { width: 100%; max-width: 1100px; }
+        .breath-group { margin-bottom: 40px; background: rgba(10,10,10,0.4); border: 1px solid #1a1a1a; overflow: hidden; }
+        .breath-header { 
+            background: #000; padding: 20px 30px; display: flex; justify-content: space-between; align-items: center;
+            border-left: 5px solid var(--primary); cursor: default;
+        }
+        .breath-header h3 { font-family: 'Cinzel', serif; margin: 0; color: var(--accent); letter-spacing: 3px; font-size: 1.2rem; }
+        .breath-count { font-size: 0.7rem; color: #555; }
+
+        .member-list { width: 100%; border-collapse: collapse; }
+        .member-list tr { border-bottom: 1px solid #111; transition: 0.3s; }
+        .member-list tr:hover { background: rgba(255,255,255,0.02); }
+        .member-list td { padding: 20px; text-align: center; color: #bbb; }
+
+        .hidden-members { display: none; }
+        .show-more-btn {
+            width: 100%; background: transparent; border: none; padding: 15px; color: var(--primary);
+            font-family: 'Cinzel', serif; cursor: pointer; font-size: 0.8rem; letter-spacing: 2px;
+            transition: 0.3s; border-top: 1px solid #111;
+        }
+        .show-more-btn:hover { color: var(--accent); background: rgba(255,255,255,0.01); }
+
+        /* --- BADGES (COULEURS RÉTABLIES) --- */
+        .badge { padding: 8px 16px; font-weight: 700; font-size: 0.65rem; text-transform: uppercase; letter-spacing: 1px; color: #fff; border-radius: 1px; display: inline-block; }
+        .Pilier { background: #4b0000; border: 1px solid #8b0000; box-shadow: 0 0 15px rgba(139,0,0,0.3); }
         .Kinoe { background: #FF0000; }
         .Kinoto, .Hinoe, .Hinoto { background: #FF8C00; }
         .Tsuchinoe, .Tsuchinoto { background: #FFA500; }
         .Kanoe, .Kanoto { background: #FFFF00; color: #000; }
         .Mizunoe, .Mizunoto { background: #008000; }
+        
+        .pseudo { font-family: 'Cinzel', serif; cursor: pointer; color: #fff; font-weight: bold; font-size: 1.1rem; transition: 0.3s; }
+        .pseudo:hover { color: var(--accent); text-shadow: 0 0 10px var(--accent); }
 
-        .pseudo { font-family: 'Cinzel', serif; cursor: pointer; font-weight: bold; color: #fff; transition: 0.3s; }
-        .pseudo:hover { color: var(--accent); text-shadow: 0 0 8px var(--accent); }
-
-        #modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); z-index: 1000; justify-content: center; align-items: center; }
-        #modalContent { width: 95%; max-width: 600px; background: #080808; border: 1px solid #333; padding: 40px; position: relative; }
-        #details img { width: 100%; max-height: 350px; object-fit: cover; border: 1px solid #222; margin: 20px 0; }
-        .close-btn { position: absolute; top: 15px; right: 20px; color: var(--primary); font-size: 2rem; cursor: pointer; }
-        .meta-footer { margin-top: 30px; font-size: 0.65rem; color: #444; border-top: 1px solid #1a1a1a; padding-top: 15px; display: flex; justify-content: space-between; }
+        /* --- MODALE --- */
+        #modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); z-index: 1000; justify-content: center; align-items: center; backdrop-filter: blur(10px); }
+        #modalContent { 
+            width: 95%; max-width: 650px; background: #0a0a0a; border: 1px solid #222; padding: 50px; position: relative; 
+            box-shadow: 0 0 100px rgba(0,0,0,1); border-top: 5px solid var(--primary);
+        }
+        #details img { width: 100%; max-height: 400px; object-fit: cover; border: 1px solid #333; margin: 25px 0; }
+        .close-btn { position: absolute; top: 15px; right: 25px; color: var(--primary); font-size: 2.5rem; cursor: pointer; transition: 0.3s; }
+        .close-btn:hover { color: var(--accent); transform: rotate(90deg); }
+        .meta-footer { margin-top: 40px; font-size: 0.7rem; color: #444; border-top: 1px solid #1a1a1a; padding-top: 20px; display: flex; justify-content: space-between; }
+        .signature { font-family: 'Charm', cursive; color: var(--accent); font-size: 1.2rem; margin-left: 10px; }
     </style>
 </head>
 <body>
 
     <div id="authBar">
-        STATUS: <span id="statusBadge" style="color:var(--accent)">VISITEUR</span>
+        STATUS : <span id="statusBadge" style="color:var(--accent)">VISITEUR</span>
         <input type="password" id="passInput" placeholder="Clé..." onkeypress="checkAuth(event)">
     </div>
 
     <div class="header-container">
         <h1 class="header-title">Archives Impériales</h1>
-        <div class="header-subtitle">Registre Officiel des Souffles et des Grades</div>
+        <div class="header-subtitle">Registre des Souffles & Chroniques des Pourfendeurs</div>
     </div>
 
     <form id="mainForm">
-        <input type="text" id="nom" placeholder="IDENTITÉ DU POURFENDEUR" required>
+        <input type="text" id="nom" placeholder="NOM DU POURFENDEUR" required>
         <select id="rang">
             <option value="Pilier">RANG : PILIER</option>
             <option value="Kinoe">RANG : KINOE</option>
@@ -108,7 +142,7 @@
             <option value="Mizunoto">RANG : MIZUNOTO</option>
         </select>
         <select id="souffle">
-            <option value="">SÉLECTIONNER UN SOUFFLE</option>
+            <option value="Inconnu">SÉLECTIONNER UN SOUFFLE</option>
             <option value="Souffle de la Roche">Souffle de la Roche</option>
             <option value="Souffle du Son">Souffle du Son</option>
             <option value="Souffle de l'Eau">Souffle de l'Eau</option>
@@ -116,30 +150,23 @@
             <option value="Souffle de la Foudre">Souffle de la Foudre</option>
             <option value="Souffle de la Brume">Souffle de la Brume</option>
             <option value="Souffle de la Fleur">Souffle de la Fleur</option>
+            <option value="Autre">Autre Souffle</option>
         </select>
         <input type="text" id="brigade" placeholder="BRIGADE">
         <input type="text" id="pilier_ref" placeholder="PILIER RÉFÉRENT">
         <input type="text" id="veilleur_nom" placeholder="SIGNATURE DU VEILLEUR" required>
-        <textarea id="info" placeholder="RAPPORTS ET OBSERVATIONS..."></textarea>
-        <div style="grid-column: 1 / -1; border: 1px dashed #333; padding: 15px; text-align: center;">
-            <label style="cursor:pointer; color:#777; font-size:0.7rem;">🖼️ PORTRAIT : <input type="file" id="photo" accept="image/*" style="display:none"></label>
+        <textarea id="info" placeholder="RAPPORTS ET OBSERVATIONS SUR LE SUJET..."></textarea>
+        <div id="photoBox">
+            <label style="cursor:pointer; color:#555; font-size:0.8rem;" id="photoLabel">
+                <span id="labelText">🖼️ DÉPOSER LE PORTRAIT (JPEG/PNG)</span>
+                <input type="file" id="photo" accept="image/*" style="display:none">
+            </label>
         </div>
         <button type="submit" id="btnSubmit">Sceller l'Archive</button>
     </form>
 
-    <div class="table-container">
-        <table>
-            <thead>
-                <tr>
-                    <th style="width: 20%;">GRADE</th>
-                    <th>IDENTITÉ</th>
-                    <th>SOUFFLE</th>
-                    <th id="thAction" style="display:none; width: 15%;">ACTIONS</th>
-                </tr>
-            </thead>
-            <tbody id="tableBody"></tbody>
-        </table>
-    </div>
+    <div class="registry-wrapper" id="registryBody">
+        </div>
 
     <div id="modal"><div id="modalContent"><span class="close-btn" onclick="fermer()">&times;</span><div id="details"></div></div></div>
 
@@ -163,68 +190,112 @@
 
         const hierarchy = { "Pilier":0, "Kinoe":1, "Kinoto":2, "Hinoe":3, "Hinoto":4, "Tsuchinoe":5, "Tsuchinoto":6, "Kanoe":7, "Kanoto":8, "Mizunoe":9, "Mizunoto":10 };
 
+        document.getElementById('photo').addEventListener('change', function() {
+            if(this.files && this.files[0]) {
+                document.getElementById('labelText').innerText = "✅ PORTRAIT PRÊT À ÊTRE SCELLÉ";
+                document.getElementById('photoBox').classList.add('active');
+            }
+        });
+
         window.checkAuth = (e) => {
             if(e.key === "Enter"){
                 const p = e.target.value;
-                if(p === "PassMaitre") currentRole = "gerant";
-                else if(p === "PassVeilleur") currentRole = "veilleur";
-                else currentRole = "visiteur";
+                currentRole = p === "PassMaitre" ? "gerant" : (p === "PassVeilleur" ? "veilleur" : "visiteur");
                 updateUI(); e.target.value = "";
             }
         };
 
         function updateUI(){
             document.getElementById("statusBadge").innerText = currentRole.toUpperCase();
-            const canEdit = (currentRole !== 'visiteur');
-            document.getElementById("mainForm").style.display = canEdit ? 'grid' : 'none';
-            document.getElementById("thAction").style.display = canEdit ? 'table-cell' : 'none';
+            document.getElementById("mainForm").style.display = currentRole !== 'visiteur' ? 'grid' : 'none';
             if(localStorage.getItem('veilleur')) document.getElementById('veilleur_nom').value = localStorage.getItem('veilleur');
             renderTable();
         }
 
         function renderTable() {
             onSnapshot(collection(db, "pourfendeurs"), (snap) => {
-                const tableBody = document.getElementById("tableBody");
-                tableBody.innerHTML = "";
-                let list = [];
-                snap.forEach(s => list.push({ id: s.id, ...s.data() }));
-                list.sort((a,b) => (hierarchy[a.rang] ?? 99) - (hierarchy[b.rang] ?? 99));
+                const container = document.getElementById("registryBody");
+                container.innerHTML = "";
+                let data = [];
+                snap.forEach(s => data.push({ id: s.id, ...s.data() }));
 
-                list.forEach(d => {
-                    const tr = document.createElement("tr");
-                    let actions = "";
-                    if(currentRole !== 'visiteur'){
-                        actions = `<td>
-                            <button onclick="preparerModif('${d.id}', ${JSON.stringify(d).replace(/"/g, '&quot;')})" style="background:none; border:none; cursor:pointer;">🖋️</button>
-                            ${currentRole === 'gerant' ? `<button onclick="suppr('${d.id}')" style="background:none; border:none; color:#444; cursor:pointer; margin-left:10px;">✖</button>` : ""}
-                        </td>`;
+                const groups = data.reduce((acc, obj) => {
+                    const s = obj.souffle || "Inconnu";
+                    if (!acc[s]) acc[s] = [];
+                    acc[s].push(obj);
+                    return acc;
+                }, {});
+
+                Object.keys(groups).sort().forEach(souffleName => {
+                    const members = groups[souffleName].sort((a,b) => (hierarchy[a.rang] ?? 99) - (hierarchy[b.rang] ?? 99));
+                    const groupDiv = document.createElement("div");
+                    groupDiv.className = "breath-group";
+                    
+                    let html = `
+                        <div class="breath-header">
+                            <h3>${souffleName.toUpperCase()}</h3>
+                            <span class="breath-count">${members.length} MEMBRES</span>
+                        </div>
+                        <table class="member-list">
+                    `;
+
+                    members.forEach((d, idx) => {
+                        const isHidden = idx >= 2;
+                        let actions = "";
+                        if(currentRole !== 'visiteur'){
+                            actions = `<td>
+                                <button onclick="preparerModif('${d.id}', ${JSON.stringify(d).replace(/"/g, '&quot;')})" style="background:none; border:none; cursor:pointer;">🖋️</button>
+                                ${currentRole === 'gerant' ? `<button onclick="suppr('${d.id}')" style="background:none; border:none; color:#444; cursor:pointer; margin-left:10px;">✖</button>` : ""}
+                            </td>`;
+                        }
+
+                        html += `
+                            <tr class="${isHidden ? 'hidden-members' : ''}">
+                                <td style="width:20%"><span class="badge ${d.rang}">${d.rang}</span></td>
+                                <td><span class="pseudo" onclick='voir(${JSON.stringify(d).replace(/"/g, '&quot;')})'>${d.nom}</span></td>
+                                <td style="color:#555; font-size:0.8rem;">${d.brigade || '-'}</td>
+                                ${actions}
+                            </tr>
+                        `;
+                    });
+
+                    html += `</table>`;
+                    if (members.length > 2) {
+                        html += `<button class="show-more-btn" onclick="toggleBreath(this)">VOIR LA SUITE DU SOUFFLE (+${members.length - 2})</button>`;
                     }
-                    tr.innerHTML = `<td><span class="badge ${d.rang}">${d.rang}</span></td><td><span class="pseudo">${d.nom}</span></td><td>${d.souffle || 'N/A'}</td>${actions}`;
-                    tr.querySelector(".pseudo").onclick = () => voir(d);
-                    tableBody.appendChild(tr);
+                    
+                    groupDiv.innerHTML = html;
+                    container.appendChild(groupDiv);
                 });
             });
         }
+
+        window.toggleBreath = (btn) => {
+            const table = btn.previousElementSibling;
+            const hiddenRows = table.querySelectorAll('.hidden-members');
+            const isExpanding = btn.innerText.includes("VOIR");
+            hiddenRows.forEach(r => r.style.display = isExpanding ? 'table-row' : 'none');
+            btn.innerText = isExpanding ? "REPLIER" : `VOIR LA SUITE DU SOUFFLE (+${hiddenRows.length})`;
+        };
 
         window.voir = (d) => {
             const date = d.dateModif ? new Date(d.dateModif).toLocaleDateString('fr-FR', {day:'numeric', month:'long', year:'numeric', hour:'2-digit', minute:'2-digit'}) : "Inconnue";
             document.getElementById("details").innerHTML = `
                 <div style="text-align:center">
-                    <h2 style="font-family:Cinzel; font-size:2.5rem; margin:0; color:#fff">${d.nom}</h2>
-                    <div class="badge ${d.rang}" style="margin-top:10px">${d.rang}</div>
+                    <h2 style="font-family:Cinzel; font-size:2.5rem; margin:0; color:#fff;">${d.nom}</h2>
+                    <div class="badge ${d.rang}" style="margin-top:15px">${d.rang}</div>
                 </div>
-                ${d.photo ? `<img src="${d.photo}">` : "<div style='height:30px'></div>"}
-                <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; font-family:Cinzel; font-size:0.8rem; border-top:1px solid #222; padding-top:20px;">
-                    <div><span style="color:#555">🌬️ SOUFFLE :</span><br>${d.souffle || 'N/A'}</div>
-                    <div><span style="color:#555">🛡️ BRIGADE :</span><br>${d.brigade || 'N/A'}</div>
-                    <div><span style="color:#555">⛩️ RÉFÉRENT :</span><br>${d.pilier_ref || 'N/A'}</div>
+                ${d.photo ? `<img src="${d.photo}">` : "<div style='height:40px'></div>"}
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:30px; font-family:Cinzel; font-size:0.85rem; border-top:1px solid #222; padding-top:25px;">
+                    <div><span style="color:#555">🌬️ SOUFFLE</span><br>${d.souffle || 'N/A'}</div>
+                    <div><span style="color:#555">🛡️ BRIGADE</span><br>${d.brigade || 'N/A'}</div>
                 </div>
-                <div style="background:#050505; padding:20px; border:1px solid #1a1a1a; margin-top:25px; color:#ccc; font-size:0.9rem">
-                    ${d.info || 'Aucune observation.'}
+                <div style="background:rgba(255,255,255,0.02); padding:25px; border-left:3px solid var(--primary); margin-top:30px; color:#ddd; font-style:italic;">
+                    "${d.info || 'Aucun rapport.'}"
                 </div>
                 <div class="meta-footer">
-                    <span>✍️ VEILLEUR : ${d.veilleur || 'INCONNU'}</span>
-                    <span>MODIFIÉ LE : ${date}</span>
+                    <span>✍️ VEILLEUR : <span class="signature">${d.veilleur || 'INCONNU'}</span></span>
+                    <span>SCELLÉ LE : ${date}</span>
                 </div>
             `;
             document.getElementById("modal").style.display = "flex";
@@ -241,7 +312,7 @@
             document.getElementById("pilier_ref").value = data.pilier_ref || "";
             document.getElementById("veilleur_nom").value = data.veilleur || "";
             document.getElementById("info").value = data.info || "";
-            document.getElementById("btnSubmit").innerText = "Mettre à jour l'archive";
+            document.getElementById("btnSubmit").innerText = "Actualiser l'Archive";
             window.scrollTo({top:0, behavior:'smooth'});
         };
 
@@ -252,7 +323,7 @@
             r.onload = (e) => {
                 const i = new Image(); i.src = e.target.result;
                 i.onload = () => {
-                    const c = document.createElement('canvas'); const w = 600; const s = w/i.width;
+                    const c = document.createElement('canvas'); const w = 500; const s = w/i.width;
                     c.width = w; c.height = i.height*s;
                     const ctx = c.getContext('2d'); ctx.drawImage(i,0,0,c.width,c.height);
                     res(c.toDataURL('image/jpeg', 0.6));
@@ -264,11 +335,9 @@
             e.preventDefault();
             const btn = document.getElementById("btnSubmit"); btn.disabled = true;
             const vn = document.getElementById("veilleur_nom").value; localStorage.setItem('veilleur', vn);
-
             try {
                 const file = document.getElementById("photo").files[0];
                 let img = null; if(file) img = await compress(file);
-
                 const data = {
                     nom: document.getElementById("nom").value,
                     rang: document.getElementById("rang").value,
@@ -280,15 +349,15 @@
                     dateModif: Date.now()
                 };
                 if(img) data.photo = img;
-
                 if(editId) { await updateDoc(doc(db, "pourfendeurs", editId), data); editId = null; btn.innerText = "Sceller l'Archive"; }
                 else { await addDoc(collection(db, "pourfendeurs"), data); }
                 document.getElementById("mainForm").reset();
+                document.getElementById('labelText').innerText = "🖼️ DÉPOSER LE PORTRAIT (JPEG/PNG)";
+                document.getElementById('photoBox').classList.remove('active');
                 document.getElementById('veilleur_nom').value = vn;
             } catch (err) { alert(err.message); }
             finally { btn.disabled = false; }
         });
-
         updateUI();
     </script>
 </body>
