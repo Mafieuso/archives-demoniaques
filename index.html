@@ -1,139 +1,231 @@
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import {
-  getFirestore, collection, addDoc, getDocs,
-  deleteDoc, doc, updateDoc
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Archives Impériales - Demon Slayer RP</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Noto+Sans+JP:wght@300;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #b22222; --accent: #ffd700; --bg: #0a0a0a;
+            --card-bg: #161616; --text: #e0e0e0;
+        }
 
-// 🔥 TES CLÉS FIREBASE
-const firebaseConfig = {
-  apiKey: "AIzaSyDHc5tFYxaWeGUkrxrGJAFjeEe1RJEJTHU",
-  authDomain: "archives-demoniaques.firebaseapp.com",
-  projectId: "archives-demoniaques",
-  storageBucket: "archives-demoniaques.firebasestorage.app",
-  messagingSenderId: "660726727180",
-  appId: "1:660726727180:web:de33021940c7c8b0d8a429"
-};
+        body {
+            font-family: 'Noto Sans JP', sans-serif; background: var(--bg);
+            background-image: radial-gradient(circle at center, #1a1a1a 0%, #0a0a0a 100%);
+            color: var(--text); margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center;
+        }
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+        .header-title {
+            font-family: 'Cinzel', serif; color: var(--primary); text-align: center;
+            text-transform: uppercase; font-size: 2.2rem; text-shadow: 0 0 15px rgba(178, 34, 34, 0.7);
+            margin-bottom: 30px; border-bottom: 2px solid var(--primary); padding-bottom: 10px;
+        }
 
-let editId = null;
+        #mainForm {
+            background: var(--card-bg); padding: 25px; border-radius: 15px; border: 1px solid #333;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 12px; width: 100%; max-width: 950px; margin-bottom: 40px;
+        }
 
-// 🩸 Calcul automatique de la menace selon le rang
-function getMenace(rang){
-  switch(rang){
-    case "Mizunoto":
-    case "Mizunoe": return "Faible";
-    case "Kanoto":
-    case "Kanoe": return "Fort";
-    case "Tsuchinoto":
-    case "Tsuchinoe": return "Puissant";
-    case "Hinoto":
-    case "Hinoe":
-    case "Kinoto": return "TresPuissant";
-    case "Kinoe": return "Dangereux";
-  }
-}
+        input, select, textarea {
+            background: #222; border: 1px solid #444; color: white; padding: 12px; 
+            border-radius: 6px; outline: none; transition: 0.3s;
+        }
 
-// 🧠 Charger tous les pourfendeurs
-async function render(){
-  const table = document.getElementById("tableBody");
-  table.innerHTML = "";
+        textarea { grid-column: 1 / -1; height: 60px; }
 
-  const snapshot = await getDocs(collection(db, "pourfendeurs"));
+        #btnSubmit {
+            grid-column: 1 / -1; background: linear-gradient(45deg, #8b0000, #b22222);
+            color: white; font-weight: bold; border: none; padding: 15px; border-radius: 6px;
+            cursor: pointer; text-transform: uppercase; letter-spacing: 2px;
+        }
 
-  snapshot.forEach(docSnap => {
-    const d = docSnap.data();
+        #btnSubmit:disabled { opacity: 0.5; cursor: wait; }
 
-    table.innerHTML += `
-      <tr>
-        <td class="pseudo" onclick='voir(${JSON.stringify(d).replace(/'/g,"&#39;")})'>${d.nom}</td>
-        <td>${d.rang}</td>
-        <td>${d.souffle}</td>
-        <td class="${d.menace}">${d.menace}</td>
-        <td>
-          <button onclick='modifier("${docSnap.id}", ${JSON.stringify(d).replace(/'/g,"&#39;")})'>Modifier</button>
-          <button onclick='supprimer("${docSnap.id}")'>Supprimer</button>
-        </td>
-      </tr>
-    `;
-  });
-}
+        .table-container { width: 100%; max-width: 1000px; overflow-x: auto; border-radius: 12px; }
+        table { width: 100%; border-collapse: collapse; background: var(--card-bg); }
+        th { background: #1f1f1f; color: var(--accent); padding: 15px; font-family: 'Cinzel', serif; }
+        td { padding: 12px; border-bottom: 1px solid #222; text-align: center; }
+        
+        .pseudo { font-weight: bold; color: #fff; cursor: pointer; text-decoration: underline; }
+        .badge { padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: bold; }
+        .Faible { background: #2e7d32; } .Fort { background: #f9a825; color: #000; }
+        .Puissant { background: #ef6c00; } .TresPuissant { background: #c62828; }
+        .Dangereux { background: #6a1b9a; box-shadow: 0 0 10px #ab47bc; }
 
-// 👁️ Voir fiche
-window.voir = function(d){
-  modalContent.innerHTML = `
-    <h2>${d.nom}</h2>
-    ${d.photo ? `<img src="${d.photo}">` : ""}
-    <p><b>Rang:</b> ${d.rang}</p>
-    <p><b>Brigade:</b> ${d.brigade}</p>
-    <p><b>Souffle:</b> ${d.souffle}</p>
-    <p><b>Pilier:</b> ${d.pilier}</p>
-    <p><b>Kinoe:</b> ${d.kinoe}</p>
-    <p><b>Menace:</b> ${d.menace}</p>
-    <p><b>Infos:</b> ${d.info}</p>
-    <button onclick="fermer()">Fermer</button>
-  `;
-  modal.style.display = "flex";
-};
+        #modal {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.95); backdrop-filter: blur(5px);
+            justify-content: center; align-items: center; z-index: 1000;
+        }
 
-window.fermer = () => modal.style.display = "none";
+        #modalContent {
+            background: #1a1a1a; padding: 30px; border-radius: 15px; border: 1px solid var(--primary);
+            max-width: 500px; width: 90%; position: relative;
+        }
 
-// ❌ Supprimer
-window.supprimer = async function(id){
-  if(confirm("Supprimer cette cible ?")){
-    await deleteDoc(doc(db, "pourfendeurs", id));
-    render();
-  }
-};
+        #modalContent img { width: 100%; border-radius: 8px; margin: 15px 0; max-height: 300px; object-fit: cover; border: 1px solid var(--accent); }
+        .close-btn { position: absolute; top: 15px; right: 20px; font-size: 25px; cursor: pointer; color: var(--primary); }
+    </style>
+</head>
+<body>
 
-// ✏️ Modifier
-window.modifier = function(id, d){
-  nom.value = d.nom;
-  rang.value = d.rang;
-  brigade.value = d.brigade;
-  souffle.value = d.souffle;
-  pilier.value = d.pilier;
-  kinoe.value = d.kinoe;
-  info.value = d.info;
-  editId = id;
-};
+    <h1 class="header-title">📜 Archives des Pourfendeurs</h1>
 
-// ➕ Ajouter / Mettre à jour
-document.getElementById("form").addEventListener("submit", async (e)=>{
-  e.preventDefault();
+    <form id="mainForm">
+        <input type="text" id="nom" placeholder="Nom du Pourfendeur" required>
+        <select id="rang">
+            <option value="Mizunoto">Mizunoto</option>
+            <option value="Mizunoe">Mizunoe</option>
+            <option value="Kanoto">Kanoto</option>
+            <option value="Kanoe">Kanoe</option>
+            <option value="Tsuchinoto">Tsuchinoto</option>
+            <option value="Tsuchinoe">Tsuchinoe</option>
+            <option value="Hinoto">Hinoto</option>
+            <option value="Hinoe">Hinoe</option>
+            <option value="Kinoto">Kinoto</option>
+            <option value="Kinoe">Kinoe</option>
+        </select>
+        <input type="text" id="souffle" placeholder="Souffle / Art">
+        <input type="text" id="brigade" placeholder="Brigade">
+        <input type="text" id="pilier" placeholder="Élève de / Maître">
+        <input type="text" id="kinoe_ref" placeholder="Kinoe Référent">
+        <textarea id="info" placeholder="Observations, points faibles..."></textarea>
+        <div style="grid-column: 1 / -1; font-size: 0.9rem; color: #888;">
+            Portrait (sera compressé automatiquement) : <input type="file" id="photo" accept="image/*">
+        </div>
+        <button type="submit" id="btnSubmit">Inscrire dans les Registres</button>
+    </form>
 
-  const file = document.getElementById("photo").files[0];
-  const reader = new FileReader();
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Identité</th>
+                    <th>Rang</th>
+                    <th>Souffle</th>
+                    <th>Menace</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody"></tbody>
+        </table>
+    </div>
 
-  reader.onload = async function(){
-    const obj = {
-      nom: nom.value,
-      rang: rang.value,
-      brigade: brigade.value,
-      souffle: souffle.value,
-      pilier: pilier.value,
-      kinoe: kinoe.value,
-      info: info.value,
-      menace: getMenace(rang.value),
-      photo: reader.result || null
-    };
+    <div id="modal">
+        <div id="modalContent">
+            <span class="close-btn" onclick="fermer()">&times;</span>
+            <div id="details"></div>
+        </div>
+    </div>
 
-    if(editId){
-      await updateDoc(doc(db, "pourfendeurs", editId), obj);
-      editId = null;
-    } else {
-      await addDoc(collection(db, "pourfendeurs"), obj);
-    }
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getFirestore, collection, addDoc, onSnapshot, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-    form.reset();
-    render();
-  };
+        const firebaseConfig = {
+            apiKey: "AIzaSyDHc5tFYxaWeGUkrxrGJAFjeEe1RJEJTHU",
+            authDomain: "archives-demoniaques.firebaseapp.com",
+            projectId: "archives-demoniaques",
+            storageBucket: "archives-demoniaques.firebasestorage.app",
+            messagingSenderId: "660726727180",
+            appId: "1:660726727180:web:de33021940c7c8b0d8a429"
+        };
 
-  if(file) reader.readAsDataURL(file);
-  else reader.onload();
-});
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
 
-render();
-</script>
+        const getMenace = (rang) => {
+            const m = { "Mizunoto":"Faible", "Mizunoe":"Faible", "Kanoto":"Fort", "Kanoe":"Fort", "Tsuchinoto":"Puissant", "Tsuchinoe":"Puissant", "Hinoto":"TresPuissant", "Hinoe":"TresPuissant", "Kinoto":"TresPuissant", "Kinoe":"Dangereux" };
+            return m[rang] || "Inconnue";
+        };
+
+        onSnapshot(collection(db, "pourfendeurs"), (snap) => {
+            const tableBody = document.getElementById("tableBody");
+            tableBody.innerHTML = "";
+            snap.forEach(docSnap => {
+                const d = docSnap.data();
+                const tr = document.createElement("tr");
+                tr.innerHTML = `<td><span class="pseudo">${d.nom}</span></td><td>${d.rang}</td><td>${d.souffle}</td><td><span class="badge ${d.menace}">${d.menace}</span></td><td><button style="background:none;border:none;color:#555;cursor:pointer" onclick="suppr('${docSnap.id}')">Supprimer</button></td>`;
+                tr.querySelector(".pseudo").onclick = () => voir(d);
+                tableBody.appendChild(tr);
+            });
+        });
+
+        window.voir = (d) => {
+            document.getElementById("details").innerHTML = `
+                <h2 style="color:var(--accent); font-family:Cinzel;">${d.nom}</h2>
+                <span class="badge ${d.menace}">${d.menace}</span>
+                ${d.photo ? `<img src="${d.photo}">` : ""}
+                <p><b>Rang :</b> ${d.rang} | <b>Souffle :</b> ${d.souffle}</p>
+                <p><b>Brigade :</b> ${d.brigade || 'Inconnue'}</p>
+                <p><b>Maître :</b> ${d.pilier || 'N/A'}</p>
+                <p style="font-style:italic; border-left: 3px solid var(--primary); padding-left: 10px; margin-top:15px;">${d.info || ''}</p>
+            `;
+            document.getElementById("modal").style.display = "flex";
+        };
+
+        window.fermer = () => document.getElementById("modal").style.display = "none";
+        window.suppr = async (id) => { if(confirm("Supprimer cette archive ?")) await deleteDoc(doc(db, "pourfendeurs", id)); };
+
+        // --- FONCTION DE COMPRESSION ---
+        const compressImage = (file) => {
+            return new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = (event) => {
+                    const img = new Image();
+                    img.src = event.target.result;
+                    img.onload = () => {
+                        const canvas = document.createElement('canvas');
+                        const MAX_WIDTH = 600; // On réduit la largeur à 600px
+                        const scaleSize = MAX_WIDTH / img.width;
+                        canvas.width = MAX_WIDTH;
+                        canvas.height = img.height * scaleSize;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                        // On exporte en JPG avec une qualité de 0.6 (60%)
+                        resolve(canvas.toDataURL('image/jpeg', 0.6));
+                    };
+                };
+            });
+        };
+
+        document.getElementById("mainForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById("btnSubmit");
+            btn.disabled = true; btn.innerText = "Traitement de l'image...";
+
+            const file = document.getElementById("photo").files[0];
+            let photoFinal = "";
+
+            try {
+                if(file) {
+                    photoFinal = await compressImage(file);
+                }
+
+                await addDoc(collection(db, "pourfendeurs"), {
+                    nom: document.getElementById("nom").value,
+                    rang: document.getElementById("rang").value,
+                    souffle: document.getElementById("souffle").value,
+                    brigade: document.getElementById("brigade").value,
+                    pilier: document.getElementById("pilier").value,
+                    kinoe: document.getElementById("kinoe_ref").value,
+                    info: document.getElementById("info").value,
+                    menace: getMenace(document.getElementById("rang").value),
+                    photo: photoFinal
+                });
+                document.getElementById("mainForm").reset();
+            } catch (err) {
+                alert("Erreur : " + err.message);
+            } finally {
+                btn.disabled = false; btn.innerText = "Inscrire dans les Registres";
+            }
+        });
+    </script>
+</body>
+</html>
