@@ -21,6 +21,7 @@
             display: flex; flex-direction: column; align-items: center; min-height: 100vh;
         }
 
+        /* --- ANIMATIONS DE FOND (PARTICULES) --- */
         .bg-animation {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: radial-gradient(circle at center, #200000 0%, #050507 100%);
@@ -36,35 +37,44 @@
             100% { transform: translateY(-10vh) scale(1.2); opacity: 0; }
         }
 
+        /* --- BARRE D'AUTHENTIFICATION --- */
         #authBar {
             position: fixed; top: 25px; right: 25px; background: rgba(0,0,0,0.9);
             padding: 12px 20px; border: 1px solid #333; border-left: 5px solid var(--accent);
             z-index: 100; font-family: 'Cinzel', serif; backdrop-filter: blur(15px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.5);
         }
-        #authBar input { background: transparent; border: none; border-bottom: 1px solid #444; color: var(--accent); width: 100px; outline: none; padding: 5px; text-align: center; }
+        #authBar input { background: transparent; border: none; border-bottom: 1px solid #444; color: var(--accent); width: 100px; outline: none; padding: 5px; text-align: center; font-family: 'Cinzel'; }
 
+        /* --- TITRE ET STATS --- */
         .header-title {
             font-family: 'Cinzel', serif; font-size: clamp(2.5rem, 10vw, 5.5rem); font-weight: 900; 
-            letter-spacing: 20px; margin: 0 0 40px 0; background: var(--gold);
+            letter-spacing: 20px; margin: 0 0 30px 0; background: var(--gold);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
             text-transform: uppercase; filter: drop-shadow(0 0 20px rgba(212, 175, 55, 0.4));
-            text-align: center;
+            text-align: center; animation: glow 3s infinite alternate;
         }
+        @keyframes glow { from { filter: drop-shadow(0 0 10px rgba(212,175,55,0.2)); } to { filter: drop-shadow(0 0 25px rgba(212,175,55,0.6)); } }
 
         .global-stats {
             font-family: 'Cinzel', serif; font-size: 1.2rem; color: var(--accent);
             margin-bottom: 40px; letter-spacing: 3px; border-bottom: 1px solid var(--accent);
             padding-bottom: 10px; text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
         }
-        #totalCount { font-weight: 900; font-size: 1.5rem; margin-left: 10px; }
+        #totalCount { font-weight: 900; font-size: 1.6rem; margin-left: 10px; transition: 0.5s; }
 
+        /* --- FORMULAIRE --- */
         #mainForm {
             background: var(--card-bg); width: 100%; max-width: 1000px; padding: 50px;
             display: none; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;
             margin-bottom: 100px; border: 1px solid #333; position: relative;
             box-shadow: 0 0 80px rgba(0,0,0,0.9); border-top: 4px solid var(--accent);
+            animation: slideDown 0.6s ease-out;
         }
-        input, select, textarea { background: #0a0a0a; border: 1px solid #222; color: #fff; padding: 18px; outline: none; transition: 0.3s; }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+
+        input, select, textarea { background: #0a0a0a; border: 1px solid #222; color: #fff; padding: 18px; outline: none; transition: 0.3s; font-family: 'Noto Sans JP'; }
+        input:focus, select:focus { border-color: var(--accent); box-shadow: 0 0 10px rgba(212,175,55,0.1); }
         textarea { grid-column: 1 / -1; height: 120px; border-left: 3px solid var(--primary); }
 
         #btnSubmit {
@@ -74,41 +84,32 @@
         }
         #btnSubmit:hover { background: var(--accent); color: #000; box-shadow: 0 0 30px var(--accent); }
 
+        /* --- REGISTRE ET CARTES --- */
         .registry-wrapper { width: 100%; max-width: 1200px; }
-        .breath-group { 
-            margin-bottom: 50px; background: rgba(0,0,0,0.7); 
-            border: 1px solid #222; overflow: hidden; transition: 0.4s ease;
-        }
+        .breath-group { margin-bottom: 50px; background: rgba(0,0,0,0.7); border: 1px solid #222; overflow: hidden; transition: 0.4s ease; }
         
-        /* DÉCORS DES SOUFFLES */
         .breath-Eau { border-top: 3px solid #00a2ff; }
-        .breath-Eau:hover { box-shadow: 0 0 30px rgba(0, 162, 255, 0.4); }
         .breath-Flamme { border-top: 3px solid #ff4500; }
-        .breath-Flamme:hover { box-shadow: 0 0 30px rgba(255, 69, 0, 0.4); }
         .breath-Foudre { border-top: 3px solid #ffff00; }
-        .breath-Foudre:hover { box-shadow: 0 0 30px rgba(255, 255, 0, 0.4); }
         .breath-Roche { border-top: 3px solid #8b4513; }
-        .breath-Roche:hover { box-shadow: 0 0 30px rgba(139, 69, 19, 0.4); }
         .breath-Brume { border-top: 3px solid #a0a0a0; }
-        .breath-Brume:hover { box-shadow: 0 0 30px rgba(160, 160, 160, 0.4); }
         .breath-Son { border-top: 3px solid #ff00ff; }
-        .breath-Son:hover { box-shadow: 0 0 30px rgba(255, 0, 255, 0.4); }
-        .breath-Fleur { border-top: 3px solid #ffb7c5; } /* Rose Cerisier */
-        .breath-Fleur:hover { box-shadow: 0 0 30px rgba(255, 183, 197, 0.4); }
+        .breath-Fleur { border-top: 3px solid #ffb7c5; }
         .breath-Mort { border-top: 3px solid #444; opacity: 0.7; }
 
-        .breath-header { background: #0a0a0a; padding: 20px 40px; border-bottom: 1px solid #1a1a1a; }
+        .breath-header { background: #0a0a0a; padding: 20px 40px; border-bottom: 1px solid #1a1a1a; display: flex; justify-content: space-between; align-items: center; }
         .breath-header h3 { font-family: 'Charm', cursive; font-size: 1.8rem; margin: 0; color: #fff; letter-spacing: 4px; }
         
         .member-list { width: 100%; border-collapse: collapse; }
-        .member-list td { padding: 20px; text-align: center; border-bottom: 1px solid #111; }
+        .member-list td { padding: 20px; text-align: center; border-bottom: 1px solid #111; transition: 0.3s; }
+        .member-list tr:hover td { background: rgba(255,255,255,0.02); }
 
-        .pseudo { font-family: 'Cinzel', serif; cursor: pointer; color: #fff; font-weight: bold; font-size: 1.1rem; transition: 0.2s; }
-        .pseudo:hover { color: var(--accent); }
+        .pseudo { font-family: 'Cinzel', serif; cursor: pointer; color: #fff; font-weight: bold; font-size: 1.1rem; transition: 0.2s; position: relative; }
+        .pseudo:hover { color: var(--accent); letter-spacing: 1px; }
         .pseudo.mort { text-decoration: line-through; color: #555; }
 
-        .badge { padding: 8px 15px; font-weight: 700; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 2px; display: inline-block; min-width: 120px; }
-        
+        /* --- BADGES DE RANG --- */
+        .badge { padding: 8px 15px; font-weight: 700; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 2px; display: inline-block; min-width: 120px; border-radius: 2px; }
         .Pilier { background: #4b0000; border: 1px solid #ff0000; color: #ffcccc; box-shadow: 0 0 10px #600000; }
         .Kinoe, .Kinoto { background: #300000; color: #ffffff; border: 1px solid #800000; }
         .Hinoe, .Hinoto { background: #5d2906; color: #fff; border: 1px solid #8b4513; }
@@ -117,20 +118,19 @@
         .Mizunoe { background: #004d1a; color: #aaffaa; border: 1px solid #00ff66; }
         .Mizunoto { background: #e6ffed; color: #004d1a; border: 1px solid #004d1a; }
 
+        /* --- MODAL --- */
         #modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); z-index: 1000; justify-content: center; align-items: center; backdrop-filter: blur(15px); }
-        #modalContent { width: 95%; max-width: 750px; max-height: 90vh; background: #0a0a0c; border: 1px solid #222; padding: 50px; border-top: 5px solid var(--accent); overflow-y: auto; position: relative; }
-        #details img { display: block; max-width: 100%; max-height: 450px; border: 1px solid #333; margin: 30px auto; }
-        .close-btn { float: right; color: var(--accent); font-size: 3rem; cursor: pointer; line-height: 1; }
+        #modalContent { width: 95%; max-width: 750px; max-height: 90vh; background: #0a0a0c; border: 1px solid #222; padding: 50px; border-top: 5px solid var(--accent); overflow-y: auto; position: relative; animation: zoomIn 0.4s ease-out; }
+        @keyframes zoomIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+        #details img { display: block; max-width: 100%; max-height: 450px; border: 1px solid #333; margin: 30px auto; box-shadow: 0 0 30px rgba(0,0,0,0.5); }
+        .close-btn { float: right; color: var(--accent); font-size: 3rem; cursor: pointer; line-height: 1; transition: 0.3s; }
+        .close-btn:hover { transform: rotate(90deg); color: #fff; }
 
-        #photoLabel { padding: 25px; border: 1px dashed #444; cursor: pointer; display: block; transition: 0.3s; }
+        #photoLabel { padding: 25px; border: 1px dashed #444; cursor: pointer; display: block; transition: 0.3s; text-align: center; }
         #photoLabel.loaded { border-color: var(--accent); background: rgba(212, 175, 55, 0.1); color: var(--accent) !important; }
         
-        .show-more-btn { 
-            width: 100%; background: #000; border: none; padding: 15px; 
-            color: var(--accent); font-family: 'Cinzel'; cursor: pointer; 
-            border-top: 1px solid #222; transition: 0.3s;
-        }
-        .show-more-btn:hover { background: #080808; letter-spacing: 2px; }
+        .show-more-btn { width: 100%; background: #000; border: none; padding: 15px; color: var(--accent); font-family: 'Cinzel'; cursor: pointer; border-top: 1px solid #222; transition: 0.3s; letter-spacing: 2px; }
+        .show-more-btn:hover { background: #080808; letter-spacing: 4px; color: #fff; }
     </style>
 </head>
 <body>
@@ -174,11 +174,12 @@
             <option value="Souffle de la Fleur">Souffle de la Fleur</option>
         </select>
         <select id="statut"><option value="Vivant">VIVANT</option><option value="Mort">DÉCÉDÉ</option></select>
+        <input type="text" id="pilier_nom" placeholder="PILIER RÉFÉRENT">
         <input type="text" id="kinoe_nom" placeholder="KINOÉ RÉFÉRENT">
         <input type="number" id="jours_entrainement" placeholder="JOURS DE DISCIPLINE">
         <input type="text" id="veilleur_nom" placeholder="SIGNATURE VEILLEUR" required>
         <textarea id="info" placeholder="OBSERVATIONS ET SECRETS..."></textarea>
-        <div style="grid-column: 1 / -1; text-align: center;">
+        <div style="grid-column: 1 / -1;">
             <label id="photoLabel">
                 <span id="labelText">💠 SCELLER UN PORTRAIT 💠</span>
                 <input type="file" id="photo" accept="image/*" style="display:none" onchange="indicateImage(this)">
@@ -213,10 +214,10 @@
             "Souffle de l'Eau": { e: "🌊", c: "Eau" }, "Souffle de la Flamme": { e: "🔥", c: "Flamme" },
             "Souffle de la Foudre": { e: "⚡", c: "Foudre" }, "Souffle de la Roche": { e: "🪨", c: "Roche" },
             "Souffle de la Brume": { e: "🌫️", c: "Brume" }, "Souffle du Son": { e: "🔊", c: "Son" },
-            "Souffle de la Fleur": { e: "🌸", c: "Fleur" },
-            "POURFANDEURS TOMBÉS": { e: "🥀", c: "Mort" }
+            "Souffle de la Fleur": { e: "🌸", c: "Fleur" }, "POURFANDEURS TOMBÉS": { e: "🥀", c: "Mort" }
         };
 
+        // --- BACKGROUND PARTICULES ---
         const bg = document.getElementById('bgAnim');
         for(let i=0; i<25; i++) {
             const p = document.createElement('div'); p.className = 'particle';
@@ -244,33 +245,36 @@
 
         function renderTable() {
             onSnapshot(collection(db, "pourfendeurs"), (snap) => {
-                records = []; 
-                snap.forEach(s => records.push({ id: s.id, ...s.data() }));
+                records = []; snap.forEach(s => records.push({ id: s.id, ...s.data() }));
                 document.getElementById("totalCount").innerText = records.length;
                 const container = document.getElementById("registryBody");
                 container.innerHTML = "";
+                
                 const vivants = records.filter(r => r.statut !== "Mort");
                 const morts = records.filter(r => r.statut === "Mort");
+                
                 const groups = vivants.reduce((acc, obj) => {
                     const s = obj.souffle || "Inconnu";
                     if (!acc[s]) acc[s] = []; acc[s].push(obj); return acc;
                 }, {});
+                
                 Object.keys(groups).sort().forEach(n => createSection(n, groups[n], container));
-                if(morts.length > 0) createSection("POURFANDEURS TOMBÉS", morts, container, true);
+                if(morts.length > 0) createSection("POURFANDEURS TOMBÉS", morts, container);
             });
         }
 
-        function createSection(name, members, container, isMort = false) {
+        function createSection(name, members, container) {
             const decor = breathDecor[name] || {e:"⚔️", c:"Default"};
             const groupDiv = document.createElement("div");
             groupDiv.className = `breath-group breath-${decor.c}`;
             let html = `<div class="breath-header"><h3>${decor.e} ${name.toUpperCase()}</h3></div><table class="member-list">`;
+            
             members.forEach((d, idx) => {
                 const isHidden = idx >= 3;
                 let actions = "";
                 if(currentRole !== 'visiteur') {
-                    actions += `<td><button onclick="preparerModif('${d.id}')" style="background:none; border:none; cursor:pointer;">🖋️</button>`;
-                    if(currentRole === 'gerant') actions += `<button onclick="supprimerRecord('${d.id}')" style="background:none; border:none; cursor:pointer; color:#500; margin-left:15px;">✖</button>`;
+                    actions += `<td><button onclick="preparerModif('${d.id}')" style="background:none;border:none;cursor:pointer;font-size:1.2rem;">🖋️</button>`;
+                    if(currentRole === 'gerant') actions += `<button onclick="supprimerRecord('${d.id}')" style="background:none;border:none;cursor:pointer;color:#500;margin-left:15px;font-size:1.2rem;">✖</button>`;
                     actions += `</td>`;
                 }
                 html += `<tr class="${isHidden ? 'hidden-members' : ''}" style="${isHidden ? 'display:none' : ''}">
@@ -290,28 +294,29 @@
             const rows = group.querySelectorAll('.hidden-members');
             const isExp = btn.innerText.includes("OUVRIR");
             rows.forEach(r => r.style.display = isExp ? 'table-row' : 'none');
-            btn.innerText = isExp ? "SCELLER LE PARCHEMIN" : "OUVRIR LE PARCHEMIN (+"+(rows.length)+")";
+            btn.innerText = isExp ? "SCELLER LE PARCHEMIN" : "OUVRIR LE PARCHEMIN (+" + rows.length + ")";
         };
 
         window.voir = (id) => {
             const d = records.find(r => r.id === id);
-            const dateStr = d.date_enregistrement ? new Date(d.date_enregistrement.seconds * 1000).toLocaleDateString('fr-FR', {day:'numeric', month:'long', year:'numeric'}) : "Date Inconnue";
-            
+            const dateStr = d.date_enregistrement ? new Date(d.date_enregistrement.seconds * 1000).toLocaleDateString('fr-FR', {day:'numeric', month:'long', year:'numeric'}) : "Inconnue";
             document.getElementById("details").innerHTML = `
                 <div style="text-align:center">
-                    <h2 style="font-family:Cinzel; font-size:2.5rem; color:var(--accent); margin:0;">${d.nom}</h2>
+                    <h2 style="font-family:Cinzel; font-size:2.8rem; color:var(--accent); margin:0; letter-spacing:5px;">${d.nom}</h2>
                     <div class="badge ${d.rang}" style="margin-top:15px">${d.rang}</div>
                 </div>
                 ${d.photo ? `<img src="${d.photo}">` : ""}
-                <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; font-family:Cinzel; font-size:0.85rem; margin-top:30px; border-top:1px solid #222; padding-top:25px; color:#aaa;">
-                    <div>SOUFFLE : ${d.souffle}</div>
-                    <div>KINOÉ RÉFÉRENT : ${d.kinoe_nom || 'N/A'}</div>
-                    <div>EXPERIENCE : ${d.jours_entrainement || 0} Jours</div>
-                    <div>STATUT : ${d.statut}</div>
-                    <div style="grid-column: 1 / -1; border-top: 1px solid #111; padding-top: 10px;">RAPPORT ÉTABLI LE : ${dateStr}</div>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; font-family:Cinzel; font-size:0.9rem; margin-top:30px; border-top:1px solid #222; padding-top:25px; color:#aaa;">
+                    <div>SOUFFLE : <span style="color:#fff">${d.souffle}</span></div>
+                    <div>PILIER RÉFÉRENT : <span style="color:#fff">${d.pilier_nom || 'Non spécifié'}</span></div>
+                    <div>KINOÉ RÉFÉRENT : <span style="color:#fff">${d.kinoe_nom || 'N/A'}</span></div>
+                    <div>DISCIPLINE : <span style="color:#fff">${d.jours_entrainement || 0} Jours</span></div>
+                    <div style="grid-column: 1 / -1; border-top: 1px solid #111; padding-top: 10px; color:#666; font-size:0.75rem;">
+                        RAPPORT ARCHIVÉ LE : ${dateStr} | STATUT ACTUEL : ${d.statut}
+                    </div>
                 </div>
-                <div style="background:#050505; padding:25px; margin-top:30px; border-left:3px solid var(--primary); font-family:Charm; font-size:1.2rem;">"${d.info || '...'}"</div>
-                <div class="footer-meta" style="margin-top:20px; color:#555;"><span>✍️ VEILLEUR : ${d.veilleur}</span></div>`;
+                <div style="background:#050505; padding:30px; margin-top:30px; border-left:4px solid var(--primary); font-family:Charm; font-size:1.3rem; line-height:1.6; color:#ddd;">"${d.info || 'Aucune observation enregistrée.'}"</div>
+                <div style="margin-top:25px; color:#444; font-family:Cinzel; font-size:0.8rem; text-align:right;">SCRIBÉ PAR : ${d.veilleur}</div>`;
             document.getElementById("modal").style.display = "flex";
         };
 
@@ -321,6 +326,7 @@
             document.getElementById("rang").value = d.rang;
             document.getElementById("souffle").value = d.souffle;
             document.getElementById("statut").value = d.statut;
+            document.getElementById("pilier_nom").value = d.pilier_nom || "";
             document.getElementById("kinoe_nom").value = d.kinoe_nom || "";
             document.getElementById("jours_entrainement").value = d.jours_entrainement || 0;
             document.getElementById("veilleur_nom").value = d.veilleur || "";
@@ -328,9 +334,6 @@
             document.getElementById("btnSubmit").innerText = "Actualiser le Sceau";
             window.scrollTo({top:0, behavior:'smooth'});
         };
-
-        window.supprimerRecord = async (id) => { if(confirm("Supprimer ?")) await deleteDoc(doc(db, "pourfendeurs", id)); };
-        window.fermer = () => document.getElementById("modal").style.display = "none";
 
         document.getElementById("mainForm").addEventListener("submit", async (e) => {
             e.preventDefault();
@@ -341,7 +344,8 @@
                 const data = {
                     nom: document.getElementById("nom").value, rang: document.getElementById("rang").value,
                     souffle: document.getElementById("souffle").value, statut: document.getElementById("statut").value,
-                    kinoe_nom: document.getElementById("kinoe_nom").value, jours_entrainement: document.getElementById("jours_entrainement").value,
+                    pilier_nom: document.getElementById("pilier_nom").value, kinoe_nom: document.getElementById("kinoe_nom").value, 
+                    jours_entrainement: document.getElementById("jours_entrainement").value,
                     veilleur: document.getElementById("veilleur_nom").value, info: document.getElementById("info").value, photo: img,
                     date_enregistrement: serverTimestamp()
                 };
@@ -359,13 +363,16 @@
             r.onload = (e) => {
                 const i = new Image(); i.src = e.target.result;
                 i.onload = () => {
-                    const c = document.createElement('canvas'); const w = 500; const s = w/i.width;
-                    c.width = w; c.height = i.height*s;
+                    const c = document.createElement('canvas'); const w = 500;
+                    c.width = w; c.height = i.height*(w/i.width);
                     c.getContext('2d').drawImage(i,0,0,c.width,c.height);
                     res(c.toDataURL('image/jpeg', 0.65));
                 };
             };
         });
+
+        window.supprimerRecord = async (id) => { if(confirm("Voulez-vous rayer ce pourfendeur des archives ?")) await deleteDoc(doc(db, "pourfendeurs", id)); };
+        window.fermer = () => document.getElementById("modal").style.display = "none";
         renderTable();
     </script>
 </body>
