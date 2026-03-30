@@ -51,16 +51,10 @@
             text-align: center;
         }
 
-        /* NOUVEAU : COMPTEUR */
         .global-stats {
-            font-family: 'Cinzel', serif;
-            font-size: 1.2rem;
-            color: var(--accent);
-            margin-bottom: 40px;
-            letter-spacing: 3px;
-            border-bottom: 1px solid var(--accent);
-            padding-bottom: 10px;
-            text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+            font-family: 'Cinzel', serif; font-size: 1.2rem; color: var(--accent);
+            margin-bottom: 40px; letter-spacing: 3px; border-bottom: 1px solid var(--accent);
+            padding-bottom: 10px; text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
         }
         #totalCount { font-weight: 900; font-size: 1.5rem; margin-left: 10px; }
 
@@ -83,22 +77,24 @@
         .registry-wrapper { width: 100%; max-width: 1200px; }
         .breath-group { 
             margin-bottom: 50px; background: rgba(0,0,0,0.7); 
-            border: 1px solid #222; overflow: hidden; 
-            transition: 0.4s ease;
+            border: 1px solid #222; overflow: hidden; transition: 0.4s ease;
         }
         
+        /* DÉCORS DES SOUFFLES */
         .breath-Eau { border-top: 3px solid #00a2ff; }
-        .breath-Eau:hover { box-shadow: 0 0 30px rgba(0, 162, 255, 0.4); transform: translateY(-5px); }
+        .breath-Eau:hover { box-shadow: 0 0 30px rgba(0, 162, 255, 0.4); }
         .breath-Flamme { border-top: 3px solid #ff4500; }
-        .breath-Flamme:hover { box-shadow: 0 0 30px rgba(255, 69, 0, 0.4); transform: translateY(-5px); }
+        .breath-Flamme:hover { box-shadow: 0 0 30px rgba(255, 69, 0, 0.4); }
         .breath-Foudre { border-top: 3px solid #ffff00; }
-        .breath-Foudre:hover { box-shadow: 0 0 30px rgba(255, 255, 0, 0.4); transform: translateY(-5px); }
+        .breath-Foudre:hover { box-shadow: 0 0 30px rgba(255, 255, 0, 0.4); }
         .breath-Roche { border-top: 3px solid #8b4513; }
-        .breath-Roche:hover { box-shadow: 0 0 30px rgba(139, 69, 19, 0.4); transform: translateY(-5px); }
+        .breath-Roche:hover { box-shadow: 0 0 30px rgba(139, 69, 19, 0.4); }
         .breath-Brume { border-top: 3px solid #a0a0a0; }
-        .breath-Brume:hover { box-shadow: 0 0 30px rgba(160, 160, 160, 0.4); transform: translateY(-5px); }
+        .breath-Brume:hover { box-shadow: 0 0 30px rgba(160, 160, 160, 0.4); }
         .breath-Son { border-top: 3px solid #ff00ff; }
-        .breath-Son:hover { box-shadow: 0 0 30px rgba(255, 0, 255, 0.4); transform: translateY(-5px); }
+        .breath-Son:hover { box-shadow: 0 0 30px rgba(255, 0, 255, 0.4); }
+        .breath-Fleur { border-top: 3px solid #ffb7c5; } /* Rose Cerisier */
+        .breath-Fleur:hover { box-shadow: 0 0 30px rgba(255, 183, 197, 0.4); }
         .breath-Mort { border-top: 3px solid #444; opacity: 0.7; }
 
         .breath-header { background: #0a0a0a; padding: 20px 40px; border-bottom: 1px solid #1a1a1a; }
@@ -175,6 +171,7 @@
             <option value="Souffle de la Roche">Souffle de la Roche</option>
             <option value="Souffle de la Brume">Souffle de la Brume</option>
             <option value="Souffle du Son">Souffle du Son</option>
+            <option value="Souffle de la Fleur">Souffle de la Fleur</option>
         </select>
         <select id="statut"><option value="Vivant">VIVANT</option><option value="Mort">DÉCÉDÉ</option></select>
         <input type="text" id="kinoe_nom" placeholder="KINOÉ RÉFÉRENT">
@@ -196,7 +193,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getFirestore, collection, addDoc, onSnapshot, doc, deleteDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, onSnapshot, doc, deleteDoc, updateDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDHc5tFYxaWeGUkrxrGJAFjeEe1RJEJTHU",
@@ -216,6 +213,7 @@
             "Souffle de l'Eau": { e: "🌊", c: "Eau" }, "Souffle de la Flamme": { e: "🔥", c: "Flamme" },
             "Souffle de la Foudre": { e: "⚡", c: "Foudre" }, "Souffle de la Roche": { e: "🪨", c: "Roche" },
             "Souffle de la Brume": { e: "🌫️", c: "Brume" }, "Souffle du Son": { e: "🔊", c: "Son" },
+            "Souffle de la Fleur": { e: "🌸", c: "Fleur" },
             "POURFANDEURS TOMBÉS": { e: "🥀", c: "Mort" }
         };
 
@@ -248,10 +246,7 @@
             onSnapshot(collection(db, "pourfendeurs"), (snap) => {
                 records = []; 
                 snap.forEach(s => records.push({ id: s.id, ...s.data() }));
-                
-                // MISE A JOUR DU COMPTEUR
                 document.getElementById("totalCount").innerText = records.length;
-                
                 const container = document.getElementById("registryBody");
                 container.innerHTML = "";
                 const vivants = records.filter(r => r.statut !== "Mort");
@@ -300,6 +295,8 @@
 
         window.voir = (id) => {
             const d = records.find(r => r.id === id);
+            const dateStr = d.date_enregistrement ? new Date(d.date_enregistrement.seconds * 1000).toLocaleDateString('fr-FR', {day:'numeric', month:'long', year:'numeric'}) : "Date Inconnue";
+            
             document.getElementById("details").innerHTML = `
                 <div style="text-align:center">
                     <h2 style="font-family:Cinzel; font-size:2.5rem; color:var(--accent); margin:0;">${d.nom}</h2>
@@ -311,6 +308,7 @@
                     <div>KINOÉ RÉFÉRENT : ${d.kinoe_nom || 'N/A'}</div>
                     <div>EXPERIENCE : ${d.jours_entrainement || 0} Jours</div>
                     <div>STATUT : ${d.statut}</div>
+                    <div style="grid-column: 1 / -1; border-top: 1px solid #111; padding-top: 10px;">RAPPORT ÉTABLI LE : ${dateStr}</div>
                 </div>
                 <div style="background:#050505; padding:25px; margin-top:30px; border-left:3px solid var(--primary); font-family:Charm; font-size:1.2rem;">"${d.info || '...'}"</div>
                 <div class="footer-meta" style="margin-top:20px; color:#555;"><span>✍️ VEILLEUR : ${d.veilleur}</span></div>`;
@@ -344,7 +342,8 @@
                     nom: document.getElementById("nom").value, rang: document.getElementById("rang").value,
                     souffle: document.getElementById("souffle").value, statut: document.getElementById("statut").value,
                     kinoe_nom: document.getElementById("kinoe_nom").value, jours_entrainement: document.getElementById("jours_entrainement").value,
-                    veilleur: document.getElementById("veilleur_nom").value, info: document.getElementById("info").value, photo: img
+                    veilleur: document.getElementById("veilleur_nom").value, info: document.getElementById("info").value, photo: img,
+                    date_enregistrement: serverTimestamp()
                 };
                 if(window.editId) { await updateDoc(doc(db, "pourfendeurs", window.editId), data); window.editId = null; }
                 else { await addDoc(collection(db, "pourfendeurs"), data); }
