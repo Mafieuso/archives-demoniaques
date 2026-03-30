@@ -145,7 +145,7 @@
     <h1 class="header-title">Codex-Obscura</h1>
 
     <div class="global-stats">
-        POURFANDEURS RÉPERTORIÉS : <span id="totalCount">0</span>
+        POURFENDEURS RÉPERTORIÉS : <span id="totalCount">0</span>
     </div>
 
     <form id="mainForm">
@@ -214,7 +214,7 @@
             "Souffle de l'Eau": { e: "🌊", c: "Eau" }, "Souffle de la Flamme": { e: "🔥", c: "Flamme" },
             "Souffle de la Foudre": { e: "⚡", c: "Foudre" }, "Souffle de la Roche": { e: "🪨", c: "Roche" },
             "Souffle de la Brume": { e: "🌫️", c: "Brume" }, "Souffle du Son": { e: "🔊", c: "Son" },
-            "Souffle de la Fleur": { e: "🌸", c: "Fleur" }, "POURFANDEURS TOMBÉS": { e: "🥀", c: "Mort" }
+            "Souffle de la Fleur": { e: "🌸", c: "Fleur" }, "POURFENDEURS TOMBÉS": { e: "🥀", c: "Mort" }
         };
 
         // --- BACKGROUND PARTICULES ---
@@ -259,7 +259,7 @@
                 }, {});
                 
                 Object.keys(groups).sort().forEach(n => createSection(n, groups[n], container));
-                if(morts.length > 0) createSection("POURFANDEURS TOMBÉS", morts, container);
+                if(morts.length > 0) createSection("POURFENDEURS TOMBÉS", morts, container);
             });
         }
 
