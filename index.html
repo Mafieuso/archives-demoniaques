@@ -1,139 +1,346 @@
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import {
-  getFirestore, collection, addDoc, getDocs,
-  deleteDoc, doc, updateDoc
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Archives Démoniaques</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-// 🔥 TES CLÉS FIREBASE
-const firebaseConfig = {
-  apiKey: "AIzaSyDHc5tFYxaWeGUkrxrGJAFjeEe1RJEJTHU",
-  authDomain: "archives-demoniaques.firebaseapp.com",
-  projectId: "archives-demoniaques",
-  storageBucket: "archives-demoniaques.firebasestorage.app",
-  messagingSenderId: "660726727180",
-  appId: "1:660726727180:web:de33021940c7c8b0d8a429"
-};
+<style>
+:root{
+    --bg:#0f0f14;
+    --card:#1b1b26;
+    --accent:crimson;
+    --text:#e6e6e6;
+}
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+*{
+    box-sizing:border-box;
+}
 
-let editId = null;
+body{
+    margin:0;
+    font-family:Segoe UI, sans-serif;
+    background:linear-gradient(135deg,#0f0f14,#191927);
+    color:var(--text);
+}
 
-// 🩸 Calcul automatique de la menace selon le rang
+h1{
+    text-align:center;
+    padding:20px;
+    color:var(--accent);
+    letter-spacing:2px;
+}
+
+.container{
+    width:95%;
+    max-width:1200px;
+    margin:auto;
+}
+
+.card{
+    background:rgba(255,255,255,0.05);
+    backdrop-filter:blur(8px);
+    padding:20px;
+    border-radius:15px;
+    margin-bottom:25px;
+    box-shadow:0 0 20px rgba(0,0,0,0.4);
+}
+
+input, select, textarea{
+    width:100%;
+    padding:10px;
+    margin-bottom:12px;
+    border:none;
+    border-radius:8px;
+    background:#252536;
+    color:white;
+    font-size:14px;
+}
+
+input[type="file"]{
+    background:none;
+}
+
+button{
+    background:var(--accent);
+    border:none;
+    padding:10px 18px;
+    border-radius:8px;
+    cursor:pointer;
+    font-weight:bold;
+    transition:0.3s;
+}
+
+button:hover{
+    background:#ff1e4d;
+    transform:scale(1.05);
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+th, td{
+    padding:12px;
+    text-align:center;
+}
+
+th{
+    background:#202033;
+}
+
+tr{
+    background:#1a1a25;
+    transition:0.3s;
+}
+
+tr:hover{
+    background:#24243a;
+}
+
+.pseudo{
+    color:#ff4d6d;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+.Faible{color:gray;}
+.Fort{color:orange;}
+.Puissant{color:orangered;}
+.TresPuissant{color:red;}
+.Dangereux{color:crimson;font-weight:bold;}
+
+.modal{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.8);
+    justify-content:center;
+    align-items:center;
+}
+
+.modal-content{
+    background:var(--card);
+    padding:25px;
+    border-radius:15px;
+    width:90%;
+    max-width:400px;
+    text-align:center;
+    animation:fadeIn 0.3s ease;
+}
+
+.modal-content img{
+    width:180px;
+    border-radius:10px;
+    margin-bottom:15px;
+}
+
+@keyframes fadeIn{
+    from{opacity:0; transform:translateY(-10px);}
+    to{opacity:1; transform:translateY(0);}
+}
+</style>
+</head>
+
+<body>
+
+<h1>🩸 ARCHIVES DÉMONIAQUES 🩸</h1>
+
+<div class="container">
+
+<div class="card">
+<form id="form">
+<input type="text" id="nom" placeholder="Nom / Pseudo" required>
+
+<select id="rang">
+<option>Mizunoto</option>
+<option>Mizunoe</option>
+<option>Kanoto</option>
+<option>Kanoe</option>
+<option>Tsuchinoto</option>
+<option>Tsuchinoe</option>
+<option>Hinoto</option>
+<option>Hinoe</option>
+<option>Kinoto</option>
+<option>Kinoe</option>
+</select>
+
+<input type="text" id="brigade" placeholder="Brigade">
+
+<select id="souffle">
+<option>Souffle de la Flamme</option>
+<option>Souffle du Son</option>
+<option>Souffle de l'Eau</option>
+<option>Souffle de la Brume</option>
+<option>Souffle de la Roche</option>
+<option>Souffle de la Foudre</option>
+</select>
+
+<input type="text" id="pilier" placeholder="Pilier Référent">
+<input type="text" id="kinoe" placeholder="Kinoe Référent">
+
+<textarea id="info" placeholder="Informations supplémentaires"></textarea>
+
+<input type="file" id="photo" accept="image/*">
+
+<button type="submit">Ajouter / Modifier</button>
+</form>
+</div>
+
+<div class="card">
+<table>
+<thead>
+<tr>
+<th>Nom</th>
+<th>Rang</th>
+<th>Souffle</th>
+<th>Menace</th>
+<th>Actions</th>
+</tr>
+</thead>
+<tbody id="tableBody"></tbody>
+</table>
+</div>
+
+</div>
+
+<div class="modal" id="modal">
+<div class="modal-content" id="modalContent"></div>
+</div>
+
+<script>
+
+let data = JSON.parse(localStorage.getItem("archives")) || [];
+let editIndex = null;
+
 function getMenace(rang){
-  switch(rang){
-    case "Mizunoto":
-    case "Mizunoe": return "Faible";
-    case "Kanoto":
-    case "Kanoe": return "Fort";
-    case "Tsuchinoto":
-    case "Tsuchinoe": return "Puissant";
-    case "Hinoto":
-    case "Hinoe":
-    case "Kinoto": return "TresPuissant";
-    case "Kinoe": return "Dangereux";
-  }
+    switch(rang){
+        case "Mizunoto":
+        case "Mizunoe": return "Faible";
+        case "Kanoto":
+        case "Kanoe": return "Fort";
+        case "Tsuchinoto":
+        case "Tsuchinoe": return "Puissant";
+        case "Hinoto":
+        case "Hinoe":
+        case "Kinoto": return "TresPuissant";
+        case "Kinoe": return "Dangereux";
+        default: return "Inconnu";
+    }
 }
 
-// 🧠 Charger tous les pourfendeurs
-async function render(){
-  const table = document.getElementById("tableBody");
-  table.innerHTML = "";
-
-  const snapshot = await getDocs(collection(db, "pourfendeurs"));
-
-  snapshot.forEach(docSnap => {
-    const d = docSnap.data();
-
-    table.innerHTML += `
-      <tr>
-        <td class="pseudo" onclick='voir(${JSON.stringify(d).replace(/'/g,"&#39;")})'>${d.nom}</td>
-        <td>${d.rang}</td>
-        <td>${d.souffle}</td>
-        <td class="${d.menace}">${d.menace}</td>
-        <td>
-          <button onclick='modifier("${docSnap.id}", ${JSON.stringify(d).replace(/'/g,"&#39;")})'>Modifier</button>
-          <button onclick='supprimer("${docSnap.id}")'>Supprimer</button>
-        </td>
-      </tr>
-    `;
-  });
+function menaceValue(m){
+    return {
+        "Dangereux":5,
+        "TresPuissant":4,
+        "Puissant":3,
+        "Fort":2,
+        "Faible":1
+    }[m] || 0;
 }
 
-// 👁️ Voir fiche
-window.voir = function(d){
-  modalContent.innerHTML = `
-    <h2>${d.nom}</h2>
-    ${d.photo ? `<img src="${d.photo}">` : ""}
-    <p><b>Rang:</b> ${d.rang}</p>
-    <p><b>Brigade:</b> ${d.brigade}</p>
-    <p><b>Souffle:</b> ${d.souffle}</p>
-    <p><b>Pilier:</b> ${d.pilier}</p>
-    <p><b>Kinoe:</b> ${d.kinoe}</p>
-    <p><b>Menace:</b> ${d.menace}</p>
-    <p><b>Infos:</b> ${d.info}</p>
-    <button onclick="fermer()">Fermer</button>
-  `;
-  modal.style.display = "flex";
-};
+function save(){
+    localStorage.setItem("archives", JSON.stringify(data));
+}
 
-window.fermer = () => modal.style.display = "none";
+function render(){
+    data.sort((a,b)=>menaceValue(b.menace)-menaceValue(a.menace));
+    const table = document.getElementById("tableBody");
+    table.innerHTML="";
+    data.forEach((item,index)=>{
+        table.innerHTML+=`
+        <tr>
+            <td class="pseudo" onclick="voir(${index})">${item.nom}</td>
+            <td>${item.rang}</td>
+            <td>${item.souffle}</td>
+            <td class="${item.menace}">${item.menace}</td>
+            <td>
+                <button onclick="modifier(${index})">Modifier</button>
+                <button onclick="supprimer(${index})">Supprimer</button>
+            </td>
+        </tr>`;
+    });
+}
 
-// ❌ Supprimer
-window.supprimer = async function(id){
-  if(confirm("Supprimer cette cible ?")){
-    await deleteDoc(doc(db, "pourfendeurs", id));
-    render();
-  }
-};
+document.getElementById("form").addEventListener("submit",function(e){
+    e.preventDefault();
 
-// ✏️ Modifier
-window.modifier = function(id, d){
-  nom.value = d.nom;
-  rang.value = d.rang;
-  brigade.value = d.brigade;
-  souffle.value = d.souffle;
-  pilier.value = d.pilier;
-  kinoe.value = d.kinoe;
-  info.value = d.info;
-  editId = id;
-};
+    const file=document.getElementById("photo").files[0];
+    const reader=new FileReader();
 
-// ➕ Ajouter / Mettre à jour
-document.getElementById("form").addEventListener("submit", async (e)=>{
-  e.preventDefault();
+    reader.onload=function(){
+        const obj={
+            nom:nom.value,
+            rang:rang.value,
+            brigade:brigade.value,
+            souffle:souffle.value,
+            pilier:pilier.value,
+            kinoe:kinoe.value,
+            info:info.value,
+            menace:getMenace(rang.value),
+            photo:file?reader.result:(editIndex!==null?data[editIndex].photo:null)
+        };
 
-  const file = document.getElementById("photo").files[0];
-  const reader = new FileReader();
+        if(editIndex!==null){
+            data[editIndex]=obj;
+            editIndex=null;
+        }else{
+            data.push(obj);
+        }
 
-  reader.onload = async function(){
-    const obj = {
-      nom: nom.value,
-      rang: rang.value,
-      brigade: brigade.value,
-      souffle: souffle.value,
-      pilier: pilier.value,
-      kinoe: kinoe.value,
-      info: info.value,
-      menace: getMenace(rang.value),
-      photo: reader.result || null
+        save();
+        render();
+        form.reset();
     };
 
-    if(editId){
-      await updateDoc(doc(db, "pourfendeurs", editId), obj);
-      editId = null;
-    } else {
-      await addDoc(collection(db, "pourfendeurs"), obj);
-    }
-
-    form.reset();
-    render();
-  };
-
-  if(file) reader.readAsDataURL(file);
-  else reader.onload();
+    if(file) reader.readAsDataURL(file);
+    else reader.onload();
 });
+
+function voir(i){
+    const d=data[i];
+    modalContent.innerHTML=`
+        <h2>${d.nom}</h2>
+        ${d.photo?`<img src="${d.photo}">`:""}
+        <p><b>Rang:</b> ${d.rang}</p>
+        <p><b>Brigade:</b> ${d.brigade}</p>
+        <p><b>Souffle:</b> ${d.souffle}</p>
+        <p><b>Pilier:</b> ${d.pilier}</p>
+        <p><b>Kinoe:</b> ${d.kinoe}</p>
+        <p><b>Menace:</b> ${d.menace}</p>
+        <p><b>Infos:</b> ${d.info}</p>
+        <button onclick="fermer()">Fermer</button>
+    `;
+    modal.style.display="flex";
+}
+
+function fermer(){
+    modal.style.display="none";
+}
+
+function supprimer(i){
+    if(confirm("Supprimer cette cible ?")){
+        data.splice(i,1);
+        save();
+        render();
+    }
+}
+
+function modifier(i){
+    const d=data[i];
+    nom.value=d.nom;
+    rang.value=d.rang;
+    brigade.value=d.brigade;
+    souffle.value=d.souffle;
+    pilier.value=d.pilier;
+    kinoe.value=d.kinoe;
+    info.value=d.info;
+    editIndex=i;
+}
 
 render();
 </script>
+
+</body>
+</html>
