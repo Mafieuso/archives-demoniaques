@@ -217,7 +217,7 @@
             if(e.key === "Enter") {
                 const u = document.getElementById("userInput").value;
                 const p = document.getElementById("passInput").value;
-                if(u === "admin" && p === "admin") { setSession("gerant", "ADMINISTRATEUR"); }
+                if(u === "admin" && p === "admin312026") { setSession("gerant", "ADMINISTRATEUR"); }
                 else {
                     const q = query(collection(db, "users"), where("username", "==", u), where("password", "==", p));
                     const snap = await getDocs(q);
