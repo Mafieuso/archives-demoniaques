@@ -8,13 +8,28 @@
     
     <style>
         :root {
-            --primary: #800000; --accent: #d4af37; --bg: #050508;
-            --card-bg: rgba(10, 10, 15, 0.95); --text: #e0e0e0;
+            --primary: #800000; 
+            --accent: #d4af37; 
+            --bg: #050508;
+            --card-bg: rgba(10, 10, 15, 0.98); 
+            --text: #e0e0e0;
             --gold: linear-gradient(135deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
             --terminal: #00ff66;
-            --color-eau: #00a2ff; --color-flamme: #ff4500; --color-foudre: #ffff00;
-            --color-roche: #8b4513; --color-brume: #a0a0a0; --color-fleur: #ffb6c1;
-            --color-son: #daa520; --color-vent: #00ff9d; --color-tombeau: #555555;
+            
+            --color-eau: #00a2ff; 
+            --color-flamme: #ff4500; 
+            --color-foudre: #ffff00;
+            --color-roche: #8b4513; 
+            --color-brume: #a0a0a0; 
+            --color-fleur: #ffb6c1;
+            --color-son: #daa520; 
+            --color-vent: #00ff9d; 
+            --color-tombeau: #555555;
+            
+            --log-add: #00ff66; 
+            --log-edit: #00a2ff; 
+            --log-del: #ff3300; 
+            --log-auth: #d4af37;
         }
 
         @keyframes shine { 0% { background-position: -200%; } 100% { background-position: 200%; } }
@@ -22,6 +37,7 @@
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
         * { box-sizing: border-box; scroll-behavior: smooth; }
+        
         body {
             font-family: 'Noto Sans JP', sans-serif; background: var(--bg);
             color: var(--text); margin: 0; padding: 60px 15px; 
@@ -37,20 +53,20 @@
             letter-spacing: 12px; margin: 0; background: var(--gold);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
             background-size: 200% auto; animation: shine 6s linear infinite; text-align: center;
-            filter: drop-shadow(0 0 15px rgba(212, 175, 55, 0.3));
+            filter: drop-shadow(0 0 15px rgba(212, 175, 55, 0.4));
         }
 
         .global-stats { 
             font-family: 'Cinzel', serif; color: var(--accent); margin: 20px 0 40px; 
-            border-bottom: 1px solid rgba(212, 175, 55, 0.2); padding-bottom: 15px; 
+            border-bottom: 1px solid rgba(212, 175, 55, 0.3); padding-bottom: 15px; 
             text-transform: uppercase; letter-spacing: 5px; font-size: 0.85rem; text-align: center;
         }
 
         #authBar {
-            position: fixed; top: 20px; right: 20px; background: rgba(0,0,0,0.8);
+            position: fixed; top: 20px; right: 20px; background: rgba(0,0,0,0.85);
             padding: 10px 20px; border: 1px solid var(--accent); border-radius: 5px;
             z-index: 100; font-family: 'Cinzel', serif; backdrop-filter: blur(10px);
-            display: flex; gap: 12px; align-items: center; box-shadow: 0 0 15px rgba(0,0,0,0.5);
+            display: flex; gap: 12px; align-items: center; box-shadow: 0 0 20px rgba(0,0,0,0.8);
         }
         #authBar input { background: #111; border: 1px solid #333; color: var(--accent); width: 110px; padding: 8px; outline: none; font-size: 0.8rem; border-radius: 3px; }
 
@@ -58,13 +74,32 @@
             display: none; width: 100%; max-width: 1000px; background: var(--card-bg); 
             border: 1px solid rgba(212, 175, 55, 0.3); margin-bottom: 30px; padding: 30px; 
             border-top: 4px solid var(--accent); animation: fadeIn 0.8s ease-out;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.8); border-radius: 8px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.9); border-radius: 8px;
         }
 
-        #terminalLogs { height: 140px; overflow-y: auto; font-family: monospace; color: var(--terminal); background: #000; padding: 15px; border: 1px solid #222; font-size: 0.85rem; border-radius: 4px; }
+        #terminalLogs { height: 160px; overflow-y: auto; font-family: monospace; background: #000; padding: 15px; border: 1px solid #222; font-size: 0.85rem; border-radius: 4px; line-height: 1.6; }
+        .log-entry { border-left: 4px solid transparent; padding-left: 12px; margin-bottom: 6px; }
 
-        input, select, textarea { background: rgba(255,255,255,0.03); border: 1px solid #333; color: #fff; padding: 14px; outline: none; transition: 0.3s; border-radius: 4px; }
-        select option { background: #fff; color: #000; }
+        /* CORRECTIF DES MENUS DÉROULANTS */
+        input, select, textarea { 
+            background: rgba(255,255,255,0.03); 
+            border: 1px solid #333; 
+            color: #fff; 
+            padding: 14px; 
+            outline: none; 
+            transition: 0.3s; 
+            border-radius: 4px; 
+            appearance: none; /* Supprime le style par défaut */
+        }
+        
+        /* Force le fond sombre sur les options pour éviter le blanc sur blanc */
+        select option {
+            background-color: #0a0a0f !important;
+            color: #fff !important;
+            padding: 10px;
+        }
+
+        input:focus, select:focus { border-color: var(--accent); background: rgba(255,255,255,0.07); }
 
         #btnSubmit { 
             grid-column: 1 / -1; background: transparent; color: var(--accent); border: 2px solid var(--accent); 
@@ -74,48 +109,59 @@
         #btnSubmit:hover { background: var(--accent); color: #000; box-shadow: 0 0 30px rgba(212, 175, 55, 0.5); }
 
         .registry-wrapper { width: 100%; max-width: 1100px; padding-bottom: 100px; }
-        .breath-group { margin-bottom: 50px; background: var(--card-bg); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; overflow: hidden; animation: fadeIn 0.8s ease-out; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        .breath-header { padding: 20px 35px; background: rgba(255,255,255,0.02); display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .breath-header h3 { font-family: 'Charm'; font-size: 2.2rem; margin: 0; text-shadow: 0 0 15px currentColor; }
+        .breath-group { margin-bottom: 60px; background: var(--card-bg); border-radius: 12px; overflow: hidden; animation: fadeIn 0.8s ease-out; box-shadow: 0 15px 40px rgba(0,0,0,0.6); }
+        
+        .breath-header { padding: 25px 35px; background: rgba(255,255,255,0.02); display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .breath-header h3 { font-family: 'Charm'; font-size: 2.5rem; margin: 0; text-shadow: 0 0 20px currentColor; }
+        .count-badge { font-family: 'Cinzel'; color: var(--accent); border: 1px solid var(--accent); padding: 5px 15px; border-radius: 20px; font-size: 0.9rem; font-weight: bold; background: rgba(0,0,0,0.3); }
+
+        .breath-Eau { border-left: 12px solid var(--color-eau); border-right: 2px solid var(--color-eau); } .breath-Eau h3 { color: var(--color-eau); }
+        .breath-Flamme { border-left: 12px solid var(--color-flamme); border-right: 2px solid var(--color-flamme); } .breath-Flamme h3 { color: var(--color-flamme); }
+        .breath-Foudre { border-left: 12px solid var(--color-foudre); border-right: 2px solid var(--color-foudre); } .breath-Foudre h3 { color: var(--color-foudre); }
+        .breath-Roche { border-left: 12px solid var(--color-roche); border-right: 2px solid var(--color-roche); } .breath-Roche h3 { color: var(--color-roche); }
+        .breath-Brume { border-left: 12px solid var(--color-brume); border-right: 2px solid var(--color-brume); } .breath-Brume h3 { color: var(--color-brume); }
+        .breath-Fleur { border-left: 12px solid var(--color-fleur); border-right: 2px solid var(--color-fleur); } .breath-Fleur h3 { color: var(--color-fleur); }
+        .breath-Son { border-left: 12px solid var(--color-son); border-right: 2px solid var(--color-son); } .breath-Son h3 { color: var(--color-son); }
+        .breath-Vent { border-left: 12px solid var(--color-vent); border-right: 2px solid var(--color-vent); } .breath-Vent h3 { color: var(--color-vent); }
+        .breath-Tombeau { border-left: 12px solid var(--color-tombeau); opacity: 0.7; border-right: 2px solid #333; } .breath-Tombeau h3 { color: #888; }
+
         .member-list { width: 100%; border-collapse: collapse; }
-        .member-list td { padding: 18px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.02); }
-        .pseudo { font-family: 'Cinzel'; cursor: pointer; font-weight: 700; color: #fff; font-size: 1.1rem; letter-spacing: 1.5px; transition: 0.3s; }
+        .member-list td { padding: 22px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.03); }
+        
+        .pseudo { font-family: 'Cinzel'; cursor: pointer; font-weight: 700; color: #fff; font-size: 1.2rem; letter-spacing: 2px; transition: 0.3s; }
+        .pseudo:hover { color: var(--accent); text-shadow: 0 0 10px var(--accent); }
         .pseudo.mort { text-decoration: line-through; color: #666 !important; opacity: 0.6; }
-        .badge { padding: 6px 12px; font-size: 0.7rem; font-weight: bold; text-transform: uppercase; border-radius: 4px; display: inline-block; min-width: 110px; border: 1px solid; }
-        .Pilier { background: rgba(128, 0, 0, 0.3); border-color: #ff0000; color: #ff9999; box-shadow: 0 0 10px rgba(255,0,0,0.2); }
-        .Kinoe { background: rgba(212, 175, 55, 0.1); border-color: var(--accent); color: var(--accent); }
 
-        /* Styles spécifique Veilleurs */
-        .v-item { display: flex; justify-content: space-between; align-items: center; padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .v-pass-toggle { 
-            font-family: monospace; background: rgba(0,0,0,0.5); padding: 5px 12px; 
-            color: #444; border-radius: 4px; border: 1px solid #333; cursor: pointer;
-            transition: 0.3s; letter-spacing: 2px;
-        }
-        .v-pass-toggle:hover { border-color: var(--accent); color: var(--text); }
-        .v-pass-toggle.revealed { color: var(--terminal); border-color: var(--terminal); letter-spacing: 0px; }
-
-        /* Couleurs Souffles */
-        .breath-Eau { border-left: 8px solid var(--color-eau); } .breath-Eau h3 { color: var(--color-eau); }
-        .breath-Flamme { border-left: 8px solid var(--color-flamme); } .breath-Flamme h3 { color: var(--color-flamme); }
-        .breath-Foudre { border-left: 8px solid var(--color-foudre); } .breath-Foudre h3 { color: var(--color-foudre); }
-        .breath-Roche { border-left: 8px solid var(--color-roche); } .breath-Roche h3 { color: var(--color-roche); }
-        .breath-Brume { border-left: 8px solid var(--color-brume); } .breath-Brume h3 { color: var(--color-brume); }
-        .breath-Fleur { border-left: 8px solid var(--color-fleur); } .breath-Fleur h3 { color: var(--color-fleur); }
-        .breath-Son { border-left: 8px solid var(--color-son); } .breath-Son h3 { color: var(--color-son); }
-        .breath-Tombeau { border-left: 8px solid var(--color-tombeau); opacity: 0.8; } .breath-Tombeau h3 { color: #888; }
+        .badge { padding: 7px 14px; font-size: 0.75rem; font-weight: bold; text-transform: uppercase; border-radius: 4px; display: inline-block; min-width: 110px; border: 1px solid; letter-spacing: 1px; }
+        .Pilier { background: rgba(128, 0, 0, 0.4); border-color: #ff0000; color: #ff9999; box-shadow: 0 0 15px rgba(255,0,0,0.3); }
 
         #modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.98); z-index: 1000; justify-content: center; align-items: center; backdrop-filter: blur(30px); }
-        #modalContent { width: 95%; max-width: 900px; background: #050508; border: 1px solid var(--accent); position: relative; animation: fadeIn 0.4s ease-out; border-radius: 8px; overflow: hidden; box-shadow: 0 0 50px rgba(212,175,55,0.2); }
-        .info-header { background: linear-gradient(to bottom, #1a1a20, #050508); padding: 40px 20px; text-align: center; border-bottom: 1px solid rgba(212, 175, 55, 0.2); }
-        .info-body { padding: 40px; display: grid; grid-template-columns: 300px 1fr; gap: 40px; }
-        .info-photo-container { border: 2px solid var(--accent); padding: 8px; background: #000; }
-        .info-photo-container img { width: 100%; height: auto; display: block; border-radius: 2px; }
-        .info-label { color: var(--accent); font-family: 'Cinzel'; font-size: 0.7rem; border-bottom: 1px solid rgba(212, 175, 55, 0.1); margin-bottom: 8px; display: block; letter-spacing: 2px; opacity: 0.8; }
-        .info-value { color: #fff; margin-bottom: 25px; display: block; font-size: 1.3rem; font-weight: 700; }
-        .info-obs { grid-column: 1 / -1; background: rgba(255,255,255,0.03); padding: 25px; border-left: 4px solid var(--accent); font-family: 'Charm'; font-size: 1.6rem; color: #ddd; line-height: 1.4; }
+        #modalContent { width: 95%; max-width: 950px; background: #050508; border: 2px solid var(--accent); position: relative; border-radius: 12px; overflow-y: auto; max-height: 90vh; box-shadow: 0 0 100px rgba(212, 175, 55, 0.2); }
+        
+        .info-header { background: linear-gradient(to bottom, #15151a, #050508); padding: 40px; text-align: center; border-bottom: 1px solid rgba(212, 175, 55, 0.2); }
+        .info-body { padding: 40px; display: grid; grid-template-columns: 320px 1fr; gap: 40px; }
+        .info-photo-container { border: 3px solid var(--accent); padding: 10px; background: #000; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .info-photo-container img { width: 100%; height: auto; display: block; filter: grayscale(20%); }
+        
+        .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .info-item { display: flex; flex-direction: column; background: rgba(255,255,255,0.02); padding: 12px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.05); }
+        .info-label { color: var(--accent); font-family: 'Cinzel'; font-size: 0.7rem; letter-spacing: 2px; margin-bottom: 6px; text-transform: uppercase; }
+        .info-value { color: #fff; font-size: 1.15rem; font-weight: 700; }
+        
+        .info-obs { grid-column: 1 / -1; background: rgba(212, 175, 55, 0.04); padding: 25px; border-left: 5px solid var(--accent); font-family: 'Charm'; font-size: 1.7rem; color: #eee; line-height: 1.4; margin-top: 15px; }
+        .info-footer { grid-column: 1 / -1; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.05); font-size: 0.8rem; color: #666; display: flex; justify-content: space-between; }
 
-        @media (max-width: 800px) { .info-body { grid-template-columns: 1fr; } .info-photo-container { max-width: 200px; margin: 0 auto; } }
+        .v-item { display: flex; justify-content: space-between; align-items: center; padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.05); transition: 0.3s; }
+        .v-item:hover { background: rgba(255,255,255,0.02); }
+        .v-pass-toggle { 
+            font-family: monospace; background: #000; padding: 6px 15px; color: #444; border: 1px solid #333; 
+            cursor: pointer; transition: 0.3s; border-radius: 4px; font-size: 0.85rem;
+        }
+        .v-pass-toggle.revealed { color: var(--terminal); border-color: var(--terminal); background: rgba(0,255,102,0.05); }
+        
+        .hidden { display: none; }
+        .expand-btn { width: 100%; padding: 15px; background: rgba(255,255,255,0.02); border: none; color: var(--accent); font-family: 'Cinzel'; cursor: pointer; transition: 0.3s; }
+        .expand-btn:hover { background: rgba(255,255,255,0.05); letter-spacing: 2px; }
     </style>
 </head>
 <body>
@@ -129,35 +175,35 @@
     </div>
 
     <h1 class="header-title">Codex-Obscura</h1>
-    <div class="global-stats">✧ REGISTRE DES POURFENDEURS ✧ <br> EFFECTIF SOUS SURVEILLANCE : <span id="totalCount" style="color:white; font-size:1.5rem; text-shadow: 0 0 10px #fff;">0</span></div>
+    <div class="global-stats">✧ REGISTRE DES POURFENDEURS ✧ <br> EFFECTIF SOUS SURVEILLANCE : <span id="totalCount" style="color:white; font-size:1.6rem; text-shadow: 0 0 10px #fff;">0</span></div>
 
     <div id="adminPanel">
-        <h3 style="font-family:'Cinzel'; color:var(--accent); margin-top:0; letter-spacing:3px;">ACCRÉDITATIONS DES VEILLEURS</h3>
+        <h3 style="font-family:'Cinzel'; color:var(--accent); letter-spacing:3px; margin-bottom:20px;">ACCRÉDITATIONS DES VEILLEURS</h3>
         <div style="display:flex; gap:15px; margin-bottom:25px;">
             <input type="text" id="newVName" placeholder="NOM DU NOUVEAU VEILLEUR" style="flex:1">
-            <button onclick="addVeilleur()" id="btnSubmit" style="margin:0; padding:10px 25px; flex:0.4; font-size:0.8rem;">GÉNÉRER SCEAU</button>
+            <button onclick="addVeilleur()" id="btnSubmit" style="margin:0; padding:12px 25px; flex:0.4; font-size:0.85rem;">GÉNÉRER SCEAU</button>
         </div>
-        <div id="veilleursList" style="max-height:250px; overflow-y:auto; background:rgba(0,0,0,0.4); border-radius:8px; border: 1px solid #222;"></div>
+        <div id="veilleursList" style="max-height:250px; overflow-y:auto; border:1px solid #222; border-radius:5px; background:rgba(0,0,0,0.2);"></div>
     </div>
 
     <div id="terminalContainer">
-        <div id="terminalLogs">> Flux de données activé...</div>
+        <div id="terminalLogs"></div>
     </div>
 
     <form id="mainForm" style="grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px;">
         <input type="text" id="nom" placeholder="NOM DU POURFENDEUR" required>
         <select id="rang">
-            <option value="Mizunoto">RANG : MIZUNOTO</option>
-            <option value="Mizunoe">RANG : MIZUNOE</option>
-            <option value="Kanoto">RANG : KANOTO</option>
-            <option value="Kanoe">RANG : KANOE</option>
-            <option value="Tsuchinoto">RANG : TSUCHINOTO</option>
-            <option value="Tsuchinoe">RANG : TSUCHINOE</option>
-            <option value="Hinoto">RANG : HINOTO</option>
-            <option value="Hinoe">RANG : HINOE</option>
-            <option value="Kinoto">RANG : KINOTO</option>
-            <option value="Kinoe">RANG : KINOE</option>
             <option value="Pilier">RANG : PILIER</option>
+            <option value="Kinoe">RANG : KINOE</option>
+            <option value="Kinoto">RANG : KINOTO</option>
+            <option value="Hinoe">RANG : HINOE</option>
+            <option value="Hinoto">RANG : HINOTO</option>
+            <option value="Tsuchinoe">RANG : TSUCHINOE</option>
+            <option value="Tsuchinoto">RANG : TSUCHINOTO</option>
+            <option value="Kanoe">RANG : KANOE</option>
+            <option value="Kanoto">RANG : KANOTO</option>
+            <option value="Mizunoe">RANG : MIZUNOE</option>
+            <option value="Mizunoto">RANG : MIZUNOTO</option>
         </select>
         <select id="souffle">
             <option value="Inconnu">SOUFFLE / CATÉGORIE</option>
@@ -168,17 +214,21 @@
             <option value="Souffle de la Roche">Souffle de la Roche</option>
             <option value="Souffle de la Brume">Souffle de la Brume</option>
             <option value="Souffle du Son">Souffle du Son</option>
+            <option value="Souffle du Vent">Souffle du Vent</option>
         </select>
         <select id="statut"><option value="Vivant">STATUT : VIVANT</option><option value="Mort">STATUT : DÉCÉDÉ</option></select>
+        
         <input type="text" id="pilier_ref" placeholder="PILIER RÉFÉRENT">
         <input type="text" id="kinoe_ref" placeholder="KINOÉ RÉFÉRENT">
-        <input type="text" id="brigade" placeholder="BRIGADES">
+        <input type="text" id="brigade" placeholder="BRIGADES / UNITÉ">
         <input type="number" id="jours" placeholder="JOURS DE SERVICE">
         <input type="text" id="sign" placeholder="SCELLÉ PAR" readonly>
-        <textarea id="info" placeholder="Rédiger les chroniques ou observations ici..." style="grid-column: 1 / -1; min-height: 100px;"></textarea>
+        
+        <textarea id="info" placeholder="Observations détaillées du rapport..." style="grid-column: 1 / -1; min-height: 100px;"></textarea>
+        
         <div style="grid-column: 1 / -1;">
-            <label style="border: 2px dashed #444; padding: 30px; display: block; text-align: center; cursor: pointer;">
-                <span id="photoTxt" style="color:var(--accent); font-weight:bold;">💠 SCELLER LE PORTRAIT</span>
+            <label style="border: 2px dashed #444; padding: 20px; display: block; text-align: center; cursor: pointer; transition: 0.3s;">
+                <span id="photoTxt" style="color:var(--accent); font-weight:bold; letter-spacing:2px;">💠 SCELLER LE PORTRAIT</span>
                 <input type="file" id="photo" style="display:none" onchange="document.getElementById('photoTxt').innerText='✅ PORTRAIT RÉCEPTIONNÉ'">
             </label>
         </div>
@@ -189,7 +239,7 @@
 
     <div id="modal">
         <div id="modalContent">
-            <span onclick="document.getElementById('modal').style.display='none'" style="position:absolute; top:20px; right:30px; cursor:pointer; font-size:3rem; color:var(--accent); z-index:100;">&times;</span>
+            <span onclick="document.getElementById('modal').style.display='none'" style="position:absolute; top:20px; right:30px; cursor:pointer; font-size:3rem; color:var(--accent); z-index:100; transition:0.3s;" onmouseover="this.style.transform='rotate(90deg)'" onmouseout="this.style.transform='rotate(0)'">&times;</span>
             <div id="details"></div>
         </div>
     </div>
@@ -203,65 +253,86 @@
             authDomain: "archives-demoniaques.firebaseapp.com",
             projectId: "archives-demoniaques",
             storageBucket: "archives-demoniaques.firebasestorage.app",
-            messagingSenderId: "660726727180",
             appId: "1:660726727180:web:de33021940c7c8b0d8a429"
         };
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
+        
         let currentRole = "visiteur";
         let activeUser = "";
         let records = [];
+
+        const hierarchyIdx = { 
+            "Pilier": 1, "Kinoe": 2, "Kinoto": 3, "Hinoe": 4, "Hinoto": 5, 
+            "Tsuchinoe": 6, "Tsuchinoto": 7, "Kanoe": 8, "Kanoto": 9, 
+            "Mizunoe": 10, "Mizunoto": 11 
+        };
 
         window.handleLogin = async (e) => {
             if(e.key === "Enter") {
                 const u = document.getElementById("userInput").value;
                 const p = document.getElementById("passInput").value;
-                if(u === "admin" && p === "admin312026") { setSession("gerant", "ADMINISTRATEUR"); }
+                
+                if(u === "admin" && p === "admin312026") {
+                    setSession("gerant", "ADMINISTRATEUR");
+                } 
                 else {
                     const q = query(collection(db, "users"), where("username", "==", u), where("password", "==", p));
                     const snap = await getDocs(q);
-                    if(!snap.empty) { setSession("veilleur", u); }
-                    else { alert("Accès refusé."); }
+                    if(!snap.empty) {
+                        setSession("veilleur", u);
+                    } else {
+                        alert("Sceau invalide. Accès refusé par les Archives.");
+                    }
                 }
             }
         };
 
         function setSession(role, name) {
-            currentRole = role; activeUser = name;
+            currentRole = role; 
+            activeUser = name;
             document.getElementById("statusBadge").innerText = name.toUpperCase();
             document.getElementById("mainForm").style.display = "grid";
             document.getElementById("sign").value = name;
+            
             if(role === "gerant") {
                 document.getElementById("adminPanel").style.display = "block";
                 document.getElementById("terminalContainer").style.display = "block";
-                loadVeilleurs(); loadLogs();
+                loadVeilleurs(); 
+                loadLogs();
             }
             renderTable();
         }
 
-        // --- FONCTION DE MASQUAGE/RÉVÉLATION DU SCEAU ---
-        window.toggleSceau = (element, password) => {
-            if (element.classList.contains('revealed')) {
-                element.innerText = "••••••••";
-                element.classList.remove('revealed');
-            } else {
+        window.handleSceau = (element, password) => {
+            if (!element.classList.contains('revealed')) {
                 element.innerText = password;
                 element.classList.add('revealed');
+                setTimeout(() => { 
+                    element.innerText = "••••••••"; 
+                    element.classList.remove('revealed'); 
+                }, 5000);
             }
+        };
+        
+        window.copySceau = (password) => { 
+            navigator.clipboard.writeText(password); 
+            alert("Sceau copié dans le parchemin."); 
         };
 
         function loadVeilleurs() {
             onSnapshot(collection(db, "users"), (snap) => {
-                const div = document.getElementById("veilleursList"); div.innerHTML = "";
+                const div = document.getElementById("veilleursList"); 
+                div.innerHTML = "";
                 snap.forEach(d => {
                     const u = d.data();
                     div.innerHTML += `
                     <div class="v-item">
-                        <span style="font-weight:bold; color:var(--accent); font-family:Cinzel;">${u.username}</span>
-                        <div style="display:flex; align-items:center; gap:15px;">
-                            <span class="v-pass-toggle" onclick="toggleSceau(this, '${u.password}')">••••••••</span>
-                            <button onclick="revok('${d.id}','${u.username}')" style="color:#ff3300; background:none; border:none; cursor:pointer; font-weight:bold; font-size:0.8rem;">RÉVOQUER</button>
+                        <span style="font-weight:bold; color:var(--accent); font-family:Cinzel; font-size:1.1rem;">${u.username}</span>
+                        <div style="display:flex; gap:10px; align-items:center;">
+                            <span class="v-pass-toggle" onclick="handleSceau(this, '${u.password}')" ondblclick="copySceau('${u.password}')">••••••••</span>
+                            <button onclick="revok('${d.id}','${u.username}')" style="color:#ff3300; background:none; border:none; cursor:pointer; font-size:1.2rem;">✖</button>
                         </div>
                     </div>`;
                 });
@@ -269,52 +340,105 @@
         }
 
         async function logAction(action, cible) {
-            await addDoc(collection(db, "logs"), { user: activeUser, action: action, target: cible, date: serverTimestamp() });
+            await addDoc(collection(db, "logs"), { 
+                user: activeUser, 
+                action: action, 
+                target: cible, 
+                date: serverTimestamp() 
+            });
         }
 
         function loadLogs() {
             const q = query(collection(db, "logs"), orderBy("date", "desc"), limit(30));
             onSnapshot(q, (snap) => {
-                const box = document.getElementById("terminalLogs"); box.innerHTML = "";
+                const box = document.getElementById("terminalLogs"); 
+                box.innerHTML = "";
                 snap.forEach(d => {
                     const l = d.data();
                     const t = l.date ? new Date(l.date.seconds * 1000).toLocaleTimeString() : "..";
-                    box.innerHTML += `<div>[${t}] ${l.user} : ${l.action} -> ${l.target}</div>`;
+                    let color = "var(--terminal)";
+                    
+                    if(l.action.includes("INSCRIPTION")) color = "var(--log-add)";
+                    if(l.action.includes("MODIFICATION")) color = "var(--log-edit)";
+                    if(l.action.includes("SUPPRESSION") || l.action.includes("RÉVOCATION")) color = "var(--log-del)";
+                    if(l.action.includes("AUTORISATION")) color = "var(--log-auth)";
+                    
+                    box.innerHTML += `<div class="log-entry" style="border-color:${color}; color:${color}">[${t}] ${l.user} : ${l.action} -> ${l.target}</div>`;
                 });
             });
         }
 
-        window.addVeilleur = async () => {
-            const n = document.getElementById("newVName").value;
-            if(!n) return;
-            const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-            let pass = ""; for (let i = 0; i < 8; i++) pass += chars.charAt(Math.floor(Math.random() * chars.length));
-            await addDoc(collection(db, "users"), { username: n, password: pass });
-            logAction("AUTORISATION", n);
-            document.getElementById("newVName").value = "";
-        };
-
-        window.revok = async (id, name) => { if(confirm(`Révoquer ${name} ?`)) { await deleteDoc(doc(db, "users", id)); logAction("RÉVOCATION", name); } };
-
         function renderTable() {
-            const breathAssets = { "Souffle de l'Eau": "🌊", "Souffle de la Flamme": "🔥", "Souffle de la Foudre": "⚡", "Souffle de la Fleur": "🌸", "Souffle de la Roche": "🪨", "Souffle de la Brume": "🌫️", "Souffle du Son": "🔊", "TOMBEAU": "🕯️" };
+            const breathAssets = { 
+                "Souffle de l'Eau": "🌊", 
+                "Souffle de la Flamme": "🔥", 
+                "Souffle de la Foudre": "⚡", 
+                "Souffle de la Fleur": "🌸", 
+                "Souffle de la Roche": "🪨", 
+                "Souffle de la Brume": "🌫️", 
+                "Souffle du Son": "🔊", 
+                "Souffle du Vent": "🍃",
+                "TOMBEAU": "🕯️" 
+            };
+
             onSnapshot(collection(db, "pourfendeurs"), (snap) => {
-                records = []; snap.forEach(s => records.push({ id: s.id, ...s.data() }));
+                records = []; 
+                snap.forEach(s => records.push({ id: s.id, ...s.data() }));
                 document.getElementById("totalCount").innerText = records.length;
-                const container = document.getElementById("registryBody"); container.innerHTML = "";
+                
+                const container = document.getElementById("registryBody"); 
+                container.innerHTML = "";
+
                 const sections = records.reduce((acc, r) => {
                     const s = r.statut === "Mort" ? "TOMBEAU" : (r.souffle || "Inconnu");
-                    if(!acc[s]) acc[s] = []; acc[s].push(r); return acc;
+                    if(!acc[s]) acc[s] = []; 
+                    acc[s].push(r); 
+                    return acc;
                 }, {});
+
                 Object.keys(sections).sort().forEach(sec => {
+                    sections[sec].sort((a, b) => (hierarchyIdx[a.rang] || 99) - (hierarchyIdx[b.rang] || 99));
+                    
+                    let cssSuffix = "Inconnu";
+                    if(sec === "TOMBEAU") cssSuffix = "Tombeau";
+                    else if(sec.includes(" ")) cssSuffix = sec.split(' ').pop();
+
                     const div = document.createElement("div");
-                    div.className = `breath-group breath-${sec.split(' ').pop()}`;
-                    let html = `<div class="breath-header"><h3>${breathAssets[sec] || '⚔️'} ${sec.toUpperCase()}</h3></div><table class="member-list">`;
-                    sections[sec].forEach(m => {
-                        let btns = currentRole !== "visiteur" ? `<td><button onclick="preModif('${m.id}')" style="background:none; border:none; cursor:pointer;">🖋️</button> ${currentRole === 'gerant' ? `<button onclick="delRec('${m.id}')" style="background:none; border:none; cursor:pointer; color:red; margin-left:10px">✖</button>` : ''}</td>` : "";
-                        html += `<tr><td style="width:20%"><span class="badge ${m.rang}">${m.rang}</span></td><td style="text-align:left"><span class="pseudo ${m.statut === 'Mort' ? 'mort' : ''}" onclick="showRec('${m.id}')">${m.nom}</span></td><td style="color:#666; font-size:0.8rem;">${m.jours || 0}d</td>${btns}</tr>`;
+                    div.className = `breath-group breath-${cssSuffix}`;
+                    
+                    let html = `
+                        <div class="breath-header">
+                            <h3>${breathAssets[sec] || '⚔️'} ${sec.toUpperCase()}</h3>
+                            <span class="count-badge">${sections[sec].length} MEMBRES</span>
+                        </div>
+                        <table class="member-list">`;
+
+                    sections[sec].forEach((m, index) => {
+                        const isHidden = index >= 3 ? 'hidden' : '';
+                        let btns = currentRole !== "visiteur" ? `
+                            <td>
+                                <button onclick="preModif('${m.id}')" style="background:none; border:none; cursor:pointer; font-size:1.2rem;">🖋️</button> 
+                                ${currentRole === 'gerant' ? `<button onclick="delRec('${m.id}')" style="background:none; border:none; color:#ff3300; cursor:pointer; margin-left:15px; font-size:1.2rem;">✖</button>` : ''}
+                            </td>` : "";
+                        
+                        html += `
+                            <tr class="member-row ${isHidden}">
+                                <td><span class="badge ${m.rang}">${m.rang}</span></td>
+                                <td style="text-align:left">
+                                    <span class="pseudo ${m.statut === 'Mort' ? 'mort' : ''}" onclick="showRec('${m.id}')">${m.nom}</span>
+                                </td>
+                                <td style="color:#aaa; font-weight:bold;">${m.jours || 0} Jours</td>
+                                ${btns}
+                            </tr>`;
                     });
-                    div.innerHTML = html + "</table>";
+                    
+                    html += "</table>";
+                    
+                    if(sections[sec].length > 3) {
+                        html += `<button class="expand-btn" onclick="this.previousElementSibling.querySelectorAll('.member-row').forEach(r => r.classList.remove('hidden')); this.remove()">VOIR TOUTE LA BRIGADE ▼</button>`;
+                    }
+                    
+                    div.innerHTML = html; 
                     container.appendChild(div);
                 });
             });
@@ -324,72 +448,121 @@
             e.preventDefault();
             const photoFile = document.getElementById("photo").files[0];
             let img = null;
-            if(photoFile) img = await new Promise(r => {
-                const reader = new FileReader(); reader.readAsDataURL(photoFile);
-                reader.onload = () => r(reader.result);
-            });
+            
+            if(photoFile) {
+                img = await new Promise(r => {
+                    const reader = new FileReader(); 
+                    reader.readAsDataURL(photoFile);
+                    reader.onload = () => r(reader.result);
+                });
+            }
+
             const data = {
-                nom: document.getElementById("nom").value, rang: document.getElementById("rang").value,
-                souffle: document.getElementById("souffle").value, statut: document.getElementById("statut").value,
-                pilier_ref: document.getElementById("pilier_ref").value, kinoe_ref: document.getElementById("kinoe_ref").value,
-                brigade: document.getElementById("brigade").value, jours: document.getElementById("jours").value,
+                nom: document.getElementById("nom").value, 
+                rang: document.getElementById("rang").value,
+                souffle: document.getElementById("souffle").value, 
+                statut: document.getElementById("statut").value,
+                pilier_ref: document.getElementById("pilier_ref").value, 
+                kinoe_ref: document.getElementById("kinoe_ref").value,
+                brigade: document.getElementById("brigade").value, 
+                jours: document.getElementById("jours").value, 
                 info: document.getElementById("info").value, 
-                veilleur: activeUser,
+                veilleur: activeUser, 
                 photo: img || (window.editId ? records.find(r=>r.id===window.editId).photo : null),
                 date: serverTimestamp()
             };
-            if(window.editId) { await updateDoc(doc(db, "pourfendeurs", window.editId), data); logAction("MODIFICATION", data.nom); window.editId = null; }
-            else { await addDoc(collection(db, "pourfendeurs"), data); logAction("INSCRIPTION", data.nom); }
+
+            if(window.editId) { 
+                await updateDoc(doc(db, "pourfendeurs", window.editId), data); 
+                logAction("MODIFICATION", data.nom); 
+                window.editId = null; 
+            }
+            else { 
+                await addDoc(collection(db, "pourfendeurs"), data); 
+                logAction("INSCRIPTION", data.nom); 
+            }
+            
             document.getElementById("mainForm").reset();
-            document.getElementById("sign").value = activeUser;
             document.getElementById("photoTxt").innerText = "💠 SCELLER LE PORTRAIT";
         });
 
-        window.delRec = async (id) => { const r = records.find(x => x.id === id); if(confirm(`Supprimer ${r.nom} ?`)) { await deleteDoc(doc(db, "pourfendeurs", id)); logAction("SUPPRESSION", r.nom); } };
+        window.addVeilleur = async () => {
+            const n = document.getElementById("newVName").value; 
+            if(!n) return;
+            const pass = Math.random().toString(36).slice(-8).toUpperCase();
+            await addDoc(collection(db, "users"), { username: n, password: pass });
+            logAction("AUTORISATION", n); 
+            document.getElementById("newVName").value = "";
+        };
 
-        window.preModif = (id) => {
-            const d = records.find(r => r.id === id); window.editId = id;
-            document.getElementById("nom").value = d.nom;
-            document.getElementById("rang").value = d.rang;
-            document.getElementById("souffle").value = d.souffle;
-            document.getElementById("statut").value = d.statut;
-            document.getElementById("pilier_ref").value = d.pilier_ref || "";
-            document.getElementById("kinoe_ref").value = d.kinoe_ref || "";
-            document.getElementById("brigade").value = d.brigade || "";
-            document.getElementById("jours").value = d.jours || 0;
-            document.getElementById("info").value = d.info;
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+        window.revok = async (id, name) => { 
+            if(confirm(`Révoquer les droits de ${name}?`)) { 
+                await deleteDoc(doc(db, "users", id)); 
+                logAction("RÉVOCATION", name); 
+            } 
+        };
+
+        window.delRec = async (id) => { 
+            const r = records.find(x => x.id === id); 
+            if(confirm(`Supprimer définitivement ${r.nom} du Codex ?`)) { 
+                await deleteDoc(doc(db, "pourfendeurs", id)); 
+                logAction("SUPPRESSION", r.nom); 
+            } 
         };
 
         window.showRec = (id) => {
             const d = records.find(r => r.id === id);
-            const dateStr = d.date ? new Date(d.date.seconds * 1000).toLocaleDateString('fr-FR', {day:'numeric', month:'long', year:'numeric'}) : "Inconnue";
+            const reportDate = d.date ? new Date(d.date.seconds * 1000).toLocaleDateString('fr-FR', {day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute:'2-digit'}) : "Date Inconnue";
+            
             document.getElementById("details").innerHTML = `
                 <div class="info-header">
-                    <h2 style="font-family:Cinzel; color:var(--accent); margin:0; letter-spacing:10px; font-size:2.8rem;">${d.nom.toUpperCase()}</h2>
-                    <div style="margin-top:20px"><span class="badge ${d.rang}">${d.rang}</span></div>
+                    <h2 style="font-family:Cinzel; color:var(--accent); margin:0; font-size:2.5rem; letter-spacing:5px;">${d.nom}</h2>
+                    <span class="badge ${d.rang}" style="margin-top:15px;">${d.rang}</span>
                 </div>
                 <div class="info-body">
-                    <div class="info-photo-container"><img src="${d.photo || 'https://via.placeholder.com/400'}" alt="Portrait"></div>
-                    <div>
-                        <span class="info-label">SOUFFLE</span><span class="info-value">${d.souffle}</span>
-                        <span class="info-label">ÉTAT</span><span class="info-value" style="color:${d.statut === 'Mort' ? 'red' : 'var(--terminal)'}">${d.statut.toUpperCase()}</span>
-                        <span class="info-label">RÉFÉRENTS</span><span class="info-value">${d.pilier_ref || '/'} | ${d.kinoe_ref || '/'}</span>
-                        <span class="info-label">CHRONIQUEUR</span><span class="info-value">${d.veilleur || 'Anonyme'}</span>
-                        <div class="info-obs">"${d.info}"</div>
-                        <div style="text-align:right; margin-top:20px; font-size:0.7rem; color:var(--accent); font-family:monospace;">RAPPORT DU : ${dateStr}</div>
+                    <div class="info-photo-container">
+                        <img src="${d.photo || 'https://via.placeholder.com/400'}" alt="Portrait">
+                    </div>
+                    <div class="info-grid">
+                        <div class="info-item"><span class="info-label">MAÎTRISE</span><span class="info-value">${d.souffle}</span></div>
+                        <div class="info-item"><span class="info-label">STATUT ACTUEL</span><span class="info-value" style="color:${d.statut === 'Mort' ? '#ff3300' : 'var(--terminal)'}">${d.statut.toUpperCase()}</span></div>
+                        <div class="info-item"><span class="info-label">PILIER RÉFÉRENT</span><span class="info-value">${d.pilier_ref || 'NON ASSIGNÉ'}</span></div>
+                        <div class="info-item"><span class="info-label">KINOÉ RÉFÉRENT</span><span class="info-value">${d.kinoe_ref || 'NON ASSIGNÉ'}</span></div>
+                        <div class="info-item"><span class="info-label">BRIGADE</span><span class="info-value">${d.brigade || '-'}</span></div>
+                        <div class="info-item"><span class="info-label">SERVICE</span><span class="info-value">${d.jours || 0} Jours actifs</span></div>
+                        <div class="info-obs">"${d.info || 'Aucun rapport complémentaire scellé pour ce membre.'}"</div>
+                        <div class="info-footer">
+                            <span>SCELLÉ LE : ${reportDate}</span>
+                            <span>ARCHIVISTE : ${d.veilleur || 'Anonyme'}</span>
+                        </div>
                     </div>
                 </div>`;
             document.getElementById("modal").style.display = "flex";
         };
 
-        renderTable();
+        window.preModif = (id) => {
+            const d = records.find(r => r.id === id); 
+            window.editId = id;
+            document.getElementById("nom").value = d.nom;
+            document.getElementById("jours").value = d.jours || 0;
+            document.getElementById("pilier_ref").value = d.pilier_ref || "";
+            document.getElementById("kinoe_ref").value = d.kinoe_ref || "";
+            document.getElementById("souffle").value = d.souffle;
+            document.getElementById("rang").value = d.rang;
+            document.getElementById("statut").value = d.statut;
+            document.getElementById("brigade").value = d.brigade || "";
+            document.getElementById("info").value = d.info || "";
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        };
 
+        renderTable();
         const bg = document.getElementById('bgAnim');
-        for(let i=0; i<40; i++) {
+        for(let i=0; i<60; i++) {
             const p = document.createElement('div'); p.className = 'particle';
             p.style.left = Math.random() * 100 + 'vw';
+            p.style.width = p.style.height = (Math.random() * 3 + 1) + 'px';
             p.style.animationDuration = (Math.random() * 10 + 10) + 's';
+            p.style.animationDelay = (Math.random() * 5) + 's';
             bg.appendChild(p);
         }
     </script>
