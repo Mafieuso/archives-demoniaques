@@ -1902,7 +1902,6 @@ onSnapshot(collection(db,'whitelist'),snap=>{
     const roles=toRolesArray(u.roles||u.role);
     const badges=roles.map(r=>`<span class="wl-role role-${r}">${roleLabels[r]||r}</span>`).join('');
     const escapedName=(u.name||u.id).replace(/'/g,"\\'");
-    const escapedRoles=JSON.stringify(roles).replace(/'/g,"\\'");
     return `<div class="wl-item">
       <div>
         <div class="wl-name">${u.name||u.id}</div>
@@ -1911,7 +1910,7 @@ onSnapshot(collection(db,'whitelist'),snap=>{
       </div>
       <div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap;justify-content:flex-end">
         <div style="display:flex;gap:4px;flex-wrap:wrap">${badges}</div>
-        ${isAdmin?`<button class="btn btn-ghost btn-sm" onclick="openChangeRole('${u.id}','${escapedName}',${escapedRoles})" title="Changer les rôles">✎ Rôles</button><button class="btn btn-ghost btn-sm" onclick="resetCode('${u.id}','${escapedName}')">↺ Code</button><button class="btn btn-danger btn-sm" onclick="removeFromWhitelist('${u.id}','${escapedName}')">✕</button>`:''}
+        ${isAdmin?`<button class="btn btn-ghost btn-sm" onclick="openChangeRole('${u.id}','${escapedName}','${roles.join(',')}')" title="Changer les rôles">✎ Rôles</button><button class="btn btn-ghost btn-sm" onclick="resetCode('${u.id}','${escapedName}')">↺ Code</button><button class="btn btn-danger btn-sm" onclick="removeFromWhitelist('${u.id}','${escapedName}')">✕</button>`:''}
       </div>
     </div>`;
   }).join('');
@@ -1926,11 +1925,11 @@ const roleDescriptions={
   superadmin:'Accès total, rang le plus élevé.'
 };
 // Rôles qu'un Admin Sphère est autorisé à attribuer
-const _adminSphereAllowedRoles=['veilleur','sphere'];
+const _adminSphereAllowedRoles=['veilleur'];
 window.openChangeRole=(steamId,name,currentRoles)=>{
   document.getElementById('crSteamId').value=steamId;
   document.getElementById('crMemberName').textContent='Membre : '+name;
-  const rolesArr=toRolesArray(currentRoles);
+  const rolesArr=typeof currentRoles==='string'?currentRoles.split(',').filter(Boolean):toRolesArray(currentRoles);
   const isAdminSphere=hasRole('adminsphere')&&!hasAnyRole('admin','superadmin');
   document.querySelectorAll('#crRoleChecks input[type=checkbox]').forEach(cb=>{
     cb.checked=rolesArr.includes(cb.value);
@@ -2139,7 +2138,7 @@ window.enterCodex = () => {
   const splash=document.getElementById('splash');
   splash.classList.add('hidden');
   setTimeout(()=>splash.remove(),900);
-  _audio.play().then(()=>_showControls(true)).catch(()=>{});
+  if(_audio) _audio.play().then(()=>_showControls(true)).catch(()=>{});
 };
 
 /* ═══ MUSIQUE ═══ */
@@ -2149,17 +2148,19 @@ const _playlist = [
 ];
 let _trackIdx = 0;
 const _audio = document.getElementById('music-audio');
-_audio.volume = 0.7;
+if(_audio) _audio.volume = 0.7;
 
 function _loadTrack(idx, autoplay=false) {
+  if(!_audio) return;
   _trackIdx = ((idx % _playlist.length) + _playlist.length) % _playlist.length;
   _audio.src = _playlist[_trackIdx].src;
-  document.getElementById('music-track').textContent = _playlist[_trackIdx].label;
+  const trackEl = document.getElementById('music-track');
+  if(trackEl) trackEl.textContent = _playlist[_trackIdx].label;
   if (autoplay) _audio.play().catch(()=>{});
 }
 _loadTrack(0);
 
-_audio.addEventListener('ended', () => _loadTrack(_trackIdx + 1, true));
+if(_audio) _audio.addEventListener('ended', () => _loadTrack(_trackIdx + 1, true));
 
 function _showControls(playing) {
   document.getElementById('music-btn').textContent = playing ? '■' : '♪';
@@ -2171,6 +2172,7 @@ function _showControls(playing) {
 }
 
 window.toggleMusic = () => {
+  if(!_audio) return;
   if (_audio.paused) {
     _audio.play().then(() => _showControls(true)).catch(()=>{});
   } else {
