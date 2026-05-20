@@ -212,6 +212,9 @@ input,select,textarea{font-family:inherit;}
 .role-superadmin{background:rgba(201,162,39,.15);border:1px solid rgba(201,162,39,.35);color:var(--gold);}
 .role-admin{background:rgba(139,0,0,.18);border:1px solid rgba(139,0,0,.38);color:#ff9999;}
 .role-veilleur{background:rgba(0,162,255,.08);border:1px solid rgba(0,162,255,.2);color:#88ccff;}
+.role-sphere{background:rgba(120,0,180,.18);border:1px solid rgba(160,0,220,.4);color:#cc88ff;}
+.role-adminsphere{background:rgba(180,60,0,.18);border:1px solid rgba(220,100,0,.4);color:#ffaa66;}
+.role-accesplus{background:rgba(80,0,140,.2);border:1px solid rgba(160,80,220,.4);color:#dd99ff;}
 
 /* FORMS */
 .form-group{display:flex;flex-direction:column;gap:5px;}
@@ -230,7 +233,7 @@ input,select,textarea{font-family:inherit;}
 .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.93);z-index:500;justify-content:center;align-items:center;backdrop-filter:blur(12px);}
 .modal-overlay.open{display:flex;}
 .modal-box{width:95%;max-width:600px;background:#07070f;border:1px solid rgba(201,162,39,.2);border-top:3px solid var(--gold);border-radius:10px;padding:30px;animation:modal-in .25s ease-out;box-shadow:0 0 80px rgba(0,0,0,.8);max-height:90vh;overflow-y:auto;position:relative;}
-.modal-box.modal-wide{max-width:840px;}
+.modal-box.modal-wide{max-width:900px;padding:0;overflow:hidden;border-radius:12px;}
 .modal-box.modal-crimson{border-top-color:var(--crimson2);}
 .modal-title{font-family:'Cinzel',serif;font-size:.95rem;letter-spacing:4px;text-transform:uppercase;color:var(--gold);margin-bottom:20px;}
 .modal-title.crimson{color:#ff9999;}
@@ -250,40 +253,46 @@ input,select,textarea{font-family:inherit;}
 .btn-copy{padding:5px 12px;background:transparent;border:1px solid rgba(201,162,39,.3);color:var(--gold);font-family:'Cinzel',serif;font-size:.55rem;letter-spacing:2px;border-radius:3px;transition:.2s;}
 .btn-copy:hover{background:rgba(201,162,39,.1);}
 
-/* PROFILE */
-.profile-portrait{position:relative;width:calc(100% + 48px);margin:-30px -24px 0;height:380px;overflow:hidden;border-radius:8px 8px 0 0;background:#050304;}
-.profile-portrait img{width:100%;height:100%;object-fit:contain;display:block;}
-.profile-portrait-ph{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:6rem;color:rgba(201,162,39,.1);}
-.profile-portrait-grad{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.1) 0%,transparent 35%,transparent 45%,rgba(5,3,2,.75) 70%,rgba(5,3,2,1) 100%);pointer-events:none;}
-.profile-portrait-glow{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 100%,var(--pbc,#c9a227) 0%,transparent 55%);opacity:.12;pointer-events:none;}
-.profile-portrait-topbar{position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(to right,transparent,var(--pbc,#c9a227),transparent);}
-.profile-portrait-info{position:absolute;bottom:0;left:0;right:0;padding:18px 24px;}
-.profile-name{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:900;letter-spacing:4px;color:#fff;text-shadow:0 2px 20px rgba(0,0,0,.9),0 0 40px var(--pbc,#c9a227);margin-bottom:8px;line-height:1.2;}
-.profile-rang-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
-.profile-souffle-tag{font-family:'Cinzel',serif;font-size:.62rem;letter-spacing:3px;color:var(--pbc,#c9a227);border:1px solid rgba(255,255,255,.25);padding:3px 12px;border-radius:20px;background:rgba(0,0,0,.55);backdrop-filter:blur(4px);}
-/* infos sous le portrait */
-.profile-body{padding:20px 0 0;}
-.profile-divider{height:1px;background:linear-gradient(to right,transparent,var(--pbc,#c9a227),transparent);margin:0 0 16px;opacity:.3;}
-.profile-stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px;}
-.pf-stat{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:8px;padding:11px 8px;text-align:center;}
-.pf-stat-val{font-family:'Cinzel',serif;font-size:1rem;font-weight:700;color:var(--pbc,#c9a227);}
-.pf-stat-label{font-size:.5rem;letter-spacing:2px;color:var(--text-muted);text-transform:uppercase;margin-top:4px;font-family:'Cinzel',serif;}
-.profile-info-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;}
-.pf-info-item{background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.05);border-radius:7px;padding:9px 12px;}
-.pf-label{font-size:.5rem;letter-spacing:3px;color:var(--text-muted);text-transform:uppercase;font-family:'Cinzel',serif;margin-bottom:3px;}
-.pf-val{font-size:.78rem;color:var(--text);}
-.profile-obs-block{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.05);border-left:3px solid var(--pbc,#c9a227);border-radius:0 7px 7px 0;padding:12px 15px;font-size:.78rem;line-height:1.75;color:var(--text-muted);white-space:pre-wrap;margin-bottom:14px;}
-.profile-hist-title{font-family:'Cinzel',serif;font-size:.58rem;letter-spacing:4px;color:var(--text-muted);text-transform:uppercase;margin-bottom:8px;display:flex;align-items:center;gap:8px;}
+/* ── PROFILE — layout dossier split ── */
+.profile-dossier{display:flex;min-height:520px;border-radius:10px;overflow:hidden;background:#060302;}
+/* Côté gauche : portrait */
+.profile-col-img{position:relative;width:42%;flex-shrink:0;background:#030201;}
+.profile-col-img img{width:100%;height:100%;object-fit:contain;display:block;}
+.profile-portrait-ph{width:100%;height:100%;min-height:520px;display:flex;align-items:center;justify-content:center;font-size:6rem;color:rgba(201,162,39,.08);}
+.profile-img-overlay{position:absolute;inset:0;background:linear-gradient(to right,transparent 65%,rgba(6,3,2,1) 100%),linear-gradient(to bottom,rgba(0,0,0,.3) 0%,transparent 25%,transparent 75%,rgba(0,0,0,.6) 100%);pointer-events:none;}
+.profile-img-accent{position:absolute;top:0;left:0;bottom:0;width:3px;background:linear-gradient(to bottom,transparent,var(--pbc,#c9a227),transparent);}
+.profile-img-glow{position:absolute;inset:0;background:radial-gradient(ellipse at 100% 50%,var(--pbc,#c9a227) 0%,transparent 60%);opacity:.07;pointer-events:none;}
+/* Côté droit : infos */
+.profile-col-info{flex:1;display:flex;flex-direction:column;padding:28px 28px 22px;position:relative;overflow-y:auto;max-height:600px;}
+.profile-col-info::before{content:'DOSSIER CLASSIFIÉ';position:absolute;top:18px;right:20px;font-family:'Cinzel',serif;font-size:.42rem;letter-spacing:4px;color:rgba(200,0,0,.3);border:1px solid rgba(200,0,0,.2);padding:2px 8px;border-radius:2px;transform:rotate(2deg);}
+.profile-id-line{font-family:'Cinzel',serif;font-size:.5rem;letter-spacing:5px;color:var(--text-muted);text-transform:uppercase;margin-bottom:12px;opacity:.6;}
+.profile-name{font-family:'Cinzel',serif;font-size:2rem;font-weight:900;letter-spacing:3px;color:#fff;text-shadow:0 0 30px var(--pbc,#c9a227);margin-bottom:10px;line-height:1.15;}
+.profile-rang-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:20px;}
+.profile-souffle-tag{font-family:'Cinzel',serif;font-size:.62rem;letter-spacing:3px;color:var(--pbc,#c9a227);border:1px solid var(--pbc,#c9a227);padding:4px 14px;border-radius:20px;background:rgba(0,0,0,.4);}
+.profile-divider{height:1px;background:linear-gradient(to right,var(--pbc,#c9a227),transparent);margin:0 0 18px;opacity:.25;}
+.profile-stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px;}
+.pf-stat{background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.06);border-top:2px solid var(--pbc,#c9a227);border-radius:8px;padding:12px 8px;text-align:center;}
+.pf-stat-val{font-family:'Cinzel',serif;font-size:1.1rem;font-weight:700;color:var(--pbc,#c9a227);}
+.pf-stat-label{font-size:.48rem;letter-spacing:2px;color:var(--text-muted);text-transform:uppercase;margin-top:5px;font-family:'Cinzel',serif;}
+.profile-info-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px;}
+.pf-info-item{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.05);border-radius:7px;padding:10px 13px;}
+.pf-label{font-size:.48rem;letter-spacing:3px;color:var(--text-muted);text-transform:uppercase;font-family:'Cinzel',serif;margin-bottom:4px;}
+.pf-val{font-size:.82rem;color:var(--text);}
+.profile-obs-block{background:rgba(255,255,255,.02);border-left:3px solid var(--pbc,#c9a227);padding:13px 16px;font-size:.8rem;line-height:1.8;color:rgba(200,190,180,.75);white-space:pre-wrap;margin-bottom:16px;border-radius:0 6px 6px 0;}
+.profile-hist-title{font-family:'Cinzel',serif;font-size:.52rem;letter-spacing:4px;color:var(--text-muted);text-transform:uppercase;margin-bottom:8px;display:flex;align-items:center;gap:8px;}
 .profile-hist-title::after{content:'';flex:1;height:1px;background:var(--border);}
-.profile-hist-row{font-size:.65rem;color:var(--text-muted);padding:6px 0;border-bottom:1px solid rgba(255,255,255,.04);display:flex;justify-content:space-between;gap:8px;}
+.profile-hist-row{font-size:.67rem;color:var(--text-muted);padding:7px 0;border-bottom:1px solid rgba(255,255,255,.04);display:flex;justify-content:space-between;gap:8px;}
 .profile-hist-row:last-child{border-bottom:none;}
+@media(max-width:600px){.profile-dossier{flex-direction:column;}.profile-col-img{width:100%;height:260px;}.profile-col-info::before{display:none;}}
 
 /* MUSIC PLAYER (topbar) */
-#music-btn{background:none;border:1px solid rgba(201,162,39,.2);color:var(--text-muted);font-size:.95rem;width:32px;height:32px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .25s;flex-shrink:0;}
-#music-btn:hover{border-color:rgba(201,162,39,.5);color:var(--gold);}
+.music-controls{display:flex;align-items:center;gap:6px;}
+#music-btn,#music-skip{background:none;border:1px solid rgba(201,162,39,.2);color:var(--text-muted);font-size:.85rem;width:30px;height:30px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .25s;flex-shrink:0;}
+#music-btn:hover,#music-skip:hover{border-color:rgba(201,162,39,.5);color:var(--gold);}
 @keyframes musicRing{0%,100%{box-shadow:0 0 0 0 rgba(201,162,39,.25);}70%{box-shadow:0 0 0 8px rgba(201,162,39,0);}}
 #music-btn.playing{color:var(--gold);border-color:rgba(201,162,39,.5);animation:musicRing 2s ease-out infinite;}
-#music-vol{-webkit-appearance:none;width:64px;height:2px;border-radius:1px;background:linear-gradient(to right,var(--gold) var(--vp,70%),rgba(255,255,255,.12) var(--vp,70%));outline:none;cursor:pointer;}
+#music-track{font-family:'Cinzel',serif;font-size:.52rem;letter-spacing:2px;color:rgba(201,162,39,.45);max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+#music-vol{-webkit-appearance:none;width:60px;height:2px;border-radius:1px;background:linear-gradient(to right,var(--gold) var(--vp,70%),rgba(255,255,255,.12) var(--vp,70%));outline:none;cursor:pointer;}
 #music-vol::-webkit-slider-thumb{-webkit-appearance:none;width:9px;height:9px;border-radius:50%;background:var(--gold);cursor:pointer;}
 #music-vol::-moz-range-thumb{width:9px;height:9px;border-radius:50%;background:var(--gold);border:none;cursor:pointer;}
 /* SPLASH SCREEN */
@@ -305,6 +314,27 @@ input,select,textarea{font-family:inherit;}
 .toast{display:flex;align-items:center;gap:11px;padding:11px 16px;background:#0d0d1a;border:1px solid var(--border);border-left:3px solid var(--tc,#c9a227);border-radius:6px;font-size:.72rem;min-width:230px;box-shadow:0 8px 24px rgba(0,0,0,.6);animation:toast-in .3s ease-out;}
 .toast.removing{animation:toast-out .3s ease-in forwards;}
 
+/* ── ROLE CHECKBOXES ── */
+.role-checks{display:flex;flex-direction:column;gap:7px;margin-top:6px;}
+.role-check-item{display:flex;align-items:flex-start;gap:11px;padding:9px 12px;background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.06);border-radius:7px;cursor:pointer;transition:.15s;}
+.role-check-item:hover{background:rgba(201,162,39,.05);border-color:rgba(201,162,39,.15);}
+.role-check-item input[type=checkbox]{accent-color:var(--gold);width:15px;height:15px;flex-shrink:0;margin-top:2px;cursor:pointer;}
+.role-check-item input[type=checkbox]:checked + .rci-text .rci-label{color:var(--gold);}
+.rci-label{font-family:'Cinzel',serif;font-size:.66rem;letter-spacing:1px;color:var(--text);transition:color .15s;}
+.rci-desc{font-size:.58rem;color:var(--text-muted);margin-top:2px;line-height:1.4;}
+/* ── PROFILE CARD DECORATIONS ── */
+.profile-corner{position:absolute;width:22px;height:22px;opacity:.35;}
+.profile-corner.tl{top:10px;left:10px;border-top:2px solid var(--pbc,#c9a227);border-left:2px solid var(--pbc,#c9a227);}
+.profile-corner.tr{top:10px;right:10px;border-top:2px solid var(--pbc,#c9a227);border-right:2px solid var(--pbc,#c9a227);}
+.profile-corner.bl{bottom:10px;left:10px;border-bottom:2px solid var(--pbc,#c9a227);border-left:2px solid var(--pbc,#c9a227);}
+.profile-corner.br{bottom:10px;right:10px;border-bottom:2px solid var(--pbc,#c9a227);border-right:2px solid var(--pbc,#c9a227);}
+.profile-watermark{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:9rem;opacity:.025;pointer-events:none;user-select:none;color:var(--pbc,#c9a227);}
+.profile-ornament-line{display:flex;align-items:center;gap:10px;margin:14px 0;opacity:.4;}
+.profile-ornament-line::before,.profile-ornament-line::after{content:'';flex:1;height:1px;background:var(--pbc,#c9a227);}
+.profile-ornament-line span{font-size:.65rem;color:var(--pbc,#c9a227);}
+.profile-classified-stamp{display:inline-block;font-family:'Cinzel',serif;font-size:.45rem;letter-spacing:5px;color:rgba(200,0,0,.5);border:1px solid rgba(200,0,0,.3);padding:3px 10px;border-radius:2px;transform:rotate(-1.5deg);margin-bottom:10px;}
+.profile-tags-row{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px;}
+.profile-tag{font-family:'Cinzel',serif;font-size:.5rem;letter-spacing:2px;padding:3px 10px;border-radius:20px;border:1px solid rgba(255,255,255,.1);color:var(--text-muted);background:rgba(255,255,255,.03);}
 /* MISC */
 .empty-state{text-align:center;padding:50px 20px;color:var(--text-muted);}
 .empty-icon{font-size:2.5rem;margin-bottom:10px;opacity:.35;}
@@ -383,6 +413,42 @@ input[type=range].pos-slider::-moz-range-thumb{width:14px;height:14px;border-rad
 .pilier-info{padding:14px 15px 16px;text-align:center;}
 .pilier-name{font-family:'Cinzel',serif;font-size:.92rem;font-weight:700;letter-spacing:2px;color:#ffaaaa;text-shadow:0 0 16px rgba(255,80,80,.25);margin-bottom:5px;}
 .pilier-souffle{font-size:.63rem;color:var(--text-muted);letter-spacing:.5px;}
+/* ── SPHÈRE SECRÈTE ── */
+@keyframes redPulse{0%,100%{box-shadow:0 0 14px rgba(120,0,0,.15),0 8px 28px rgba(0,0,0,.6);}50%{box-shadow:0 0 28px rgba(180,0,0,.22),0 12px 36px rgba(0,0,0,.75);}}
+.sphere-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(420px,1fr));gap:20px;}
+.sphere-card{position:relative;background:linear-gradient(145deg,rgba(10,3,3,.98),rgba(5,1,1,.99));border:1px solid rgba(150,0,0,.25);border-top:3px solid rgba(200,0,0,.7);border-radius:12px;padding:24px 26px;overflow:hidden;animation:fadeUp .4s ease-out both,redPulse 5s ease-in-out infinite;transition:.25s;-webkit-font-smoothing:antialiased;}
+.sphere-card:hover{transform:translateY(-4px);border-color:rgba(200,0,0,.4);border-top-color:rgba(255,30,30,.85);box-shadow:0 12px 40px rgba(150,0,0,.18);}
+.sphere-card::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 0% 0%,rgba(150,0,0,.1),transparent 65%);pointer-events:none;}
+.sphere-stamp{position:absolute;top:16px;right:16px;font-family:'Cinzel',serif;font-size:.55rem;letter-spacing:3px;color:rgba(200,0,0,.55);border:1px solid rgba(200,0,0,.35);padding:3px 10px;border-radius:2px;text-transform:uppercase;transform:rotate(3deg);}
+.sphere-type{font-family:'Cinzel',serif;font-size:.72rem;letter-spacing:5px;color:rgba(220,50,50,.85);text-transform:uppercase;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid rgba(150,0,0,.2);}
+.sphere-target-block{display:flex;gap:16px;align-items:center;background:rgba(255,255,255,.025);border:1px solid rgba(200,0,0,.12);border-radius:10px;padding:14px 16px;margin-bottom:16px;}
+.sphere-target-photo{width:72px;height:72px;border-radius:8px;overflow:hidden;background:rgba(0,0,0,.5);flex-shrink:0;border:1px solid rgba(180,0,0,.4);display:flex;align-items:center;justify-content:center;font-size:1.6rem;}
+.sphere-target-photo img{width:100%;height:100%;object-fit:contain;}
+.sphere-target-name{font-family:'Cinzel',serif;font-size:1.05rem;font-weight:700;color:#ffbbbb;letter-spacing:1.5px;line-height:1.3;}
+.sphere-target-grade{font-size:.72rem;color:var(--text-muted);margin-top:4px;letter-spacing:.5px;}
+.sphere-notes{font-size:.82rem;color:rgba(200,180,180,.75);line-height:1.75;margin-bottom:16px;border-left:2px solid rgba(180,0,0,.45);padding-left:14px;font-style:italic;}
+.sphere-footer{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;padding-top:12px;border-top:1px solid rgba(150,0,0,.15);}
+.sphere-operateur{font-size:.68rem;color:var(--text-muted);font-family:'Cinzel',serif;letter-spacing:1px;}
+.sphere-statut{font-family:'Cinzel',serif;font-size:.62rem;letter-spacing:3px;padding:5px 14px;border-radius:20px;text-transform:uppercase;}
+.sphere-statut.encours{background:rgba(220,140,0,.12);border:1px solid rgba(220,140,0,.3);color:#e8a000;}
+.sphere-statut.terminee{background:rgba(0,80,0,.12);border:1px solid rgba(0,150,0,.25);color:#44cc44;}
+.sphere-statut.echec{background:rgba(80,0,0,.15);border:1px solid rgba(180,0,0,.3);color:#cc4444;}
+.sphere-statut.attente{background:rgba(40,40,60,.2);border:1px solid rgba(100,100,150,.2);color:#8888cc;}
+.sphere-prio{font-size:.6rem;letter-spacing:2px;font-family:'Cinzel',serif;color:rgba(200,0,0,.7);text-transform:uppercase;}
+.sphere-prio.critique{color:#ff4444;text-shadow:0 0 10px rgba(255,0,0,.35);animation:redPulse 2s ease-in-out infinite;}
+.sf-search-wrap{position:relative;}
+.sf-search-results{position:absolute;top:100%;left:0;right:0;background:#0a0704;border:1px solid rgba(201,162,39,.2);border-top:none;border-radius:0 0 8px 8px;max-height:200px;overflow-y:auto;z-index:300;display:none;box-shadow:0 12px 28px rgba(0,0,0,.7);}
+.sf-result{padding:9px 14px;cursor:pointer;font-size:.75rem;border-bottom:1px solid rgba(255,255,255,.04);transition:.15s;display:flex;align-items:center;gap:10px;}
+.sf-result:last-child{border-bottom:none;}
+.sf-result:hover{background:rgba(201,162,39,.06);}
+.sf-result-photo{width:30px;height:30px;border-radius:4px;overflow:hidden;background:rgba(0,0,0,.5);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:.8rem;}
+.sf-result-photo img{width:100%;height:100%;object-fit:contain;}
+.sf-result-info{flex:1;min-width:0;}
+.sf-result-name{color:var(--gold);font-family:'Cinzel',serif;font-size:.72rem;letter-spacing:1px;}
+.sf-result-meta{color:var(--text-muted);font-size:.6rem;margin-top:1px;}
+.sf-source-tag{font-size:.52rem;letter-spacing:2px;padding:1px 6px;border-radius:3px;background:rgba(255,255,255,.05);color:var(--text-muted);}
+.sf-source-tag.registre{color:#88ccff;border:1px solid rgba(136,204,255,.15);}
+.sf-source-tag.cible{color:#ffaaaa;border:1px solid rgba(255,100,100,.15);}
 /* ── ACCORDION (page Codex) ── */
 .accordion{display:flex;flex-direction:column;gap:8px;max-width:820px;margin:0 auto;}
 .acc-item{background:linear-gradient(135deg,rgba(12,8,4,.97),rgba(6,4,2,.99));border:1px solid rgba(201,162,39,.12);border-radius:10px;overflow:hidden;box-shadow:0 6px 20px rgba(0,0,0,.5);transition:box-shadow .3s;}
@@ -459,9 +525,7 @@ body::after{content:'';position:fixed;left:0;width:100%;height:2px;background:li
   <div class="splash-enter">— Cliquer pour entrer —</div>
   <div class="splash-scroll-hint">Que les ténèbres vous accueillent</div>
 </div>
-<audio id="music-audio" loop>
-  <source src="A Peaceful Sanctuary  Musique Relaxante à la flûte ( Musique Japonaise )  Musique Libre de Droit .mp3" type="audio/mpeg">
-</audio>
+<audio id="music-audio"></audio>
 <div class="bg-fx"></div>
 
 <!-- SIDEBAR -->
@@ -477,8 +541,9 @@ body::after{content:'';position:fixed;left:0;width:100%;height:2px;background:li
     <li class="nav-item"><button class="nav-btn" onclick="showSection('wanted')" data-s="wanted"><span class="nav-icon">🎯</span><span>Cibles Prioritaires</span><span class="nav-badge" id="badge-wanted" style="background:#8b0000">0</span></button></li>
     <li class="nav-item"><button class="nav-btn" onclick="showSection('missions')" data-s="missions"><span class="nav-icon">📜</span><span>Missions</span><span class="nav-badge" id="badge-missions" style="background:#1a5a2a">0</span></button></li>
     <div class="nav-divider"></div>
-    <li class="nav-item"><button class="nav-btn" onclick="showSection('historique')" data-s="historique"><span class="nav-icon">🕰</span><span>Historique</span></button></li>
+    <li class="nav-item" id="nav-historique" style="display:none"><button class="nav-btn" onclick="showSection('historique')" data-s="historique"><span class="nav-icon">🕰</span><span>Historique</span></button></li>
     <li class="nav-item"><button class="nav-btn" onclick="showSection('codex')" data-s="codex"><span class="nav-icon">📖</span><span>Codex</span></button></li>
+    <li class="nav-item" id="nav-sphere" style="display:none"><button class="nav-btn" onclick="showSection('sphere')" data-s="sphere"><span class="nav-icon">⚫</span><span>Sphère Secrète</span></button></li>
     <li class="nav-item" id="nav-admin" style="display:none"><button class="nav-btn" onclick="showSection('admin')" data-s="admin"><span class="nav-icon">🛡</span><span>Administration</span></button></li>
   </ul>
   <div class="sidebar-user" id="sidebarUser" style="display:none">
@@ -499,9 +564,11 @@ body::after{content:'';position:fixed;left:0;width:100%;height:2px;background:li
       <input type="text" id="globalSearch" placeholder="Rechercher un Pourfendeur..." oninput="handleSearch(this.value)">
     </div>
     <div class="topbar-right">
-      <button id="music-btn" onclick="toggleMusic()" title="Musique">♪</button>
-      <div id="music-vol-wrap" style="display:none;align-items:center;gap:6px">
-        <input type="range" id="music-vol" min="0" max="100" value="70" oninput="setMusicVol(this.value)" title="Volume">
+      <div class="music-controls" id="music-controls">
+        <button id="music-btn" onclick="toggleMusic()" title="Play / Pause">♪</button>
+        <button id="music-skip" onclick="skipTrack()" title="Piste suivante" style="display:none">⏭</button>
+        <span id="music-track" style="display:none"></span>
+        <input type="range" id="music-vol" min="0" max="100" value="70" oninput="setMusicVol(this.value)" title="Volume" style="display:none">
       </div>
       <div id="topbarUserInfo"></div>
       <span id="readonlyBadge">◈ Lecture seule</span>
@@ -577,6 +644,18 @@ body::after{content:'';position:fixed;left:0;width:100%;height:2px;background:li
       <div id="logsContainer"><div class="loader"></div></div>
     </section>
 
+    <!-- SPHÈRE SECRÈTE -->
+    <section id="section-sphere" class="section">
+      <div class="section-header">
+        <div>
+          <div class="section-title" style="color:#cc2222">⚫ Sphère Secrète</div>
+          <div class="section-sub" style="color:rgba(200,0,0,.5)">Opérations classifiées — Accès restreint au personnel autorisé</div>
+        </div>
+        <button class="btn btn-crimson" id="btnAddSphere" onclick="openFormSphere()">+ Nouvelle Opération</button>
+      </div>
+      <div id="sphereContainer"><div class="loader"></div></div>
+    </section>
+
     <!-- ADMIN -->
     <section id="section-admin" class="section">
       <div class="section-title">Administration</div>
@@ -597,11 +676,13 @@ body::after{content:'';position:fixed;left:0;width:100%;height:2px;background:li
             <input class="form-input" id="wlName" placeholder="Pseudo du membre">
           </div>
           <div class="form-group" style="margin-bottom:14px">
-            <label class="form-label">Rôle</label>
-            <select class="form-select" id="wlRole">
-              <option value="veilleur">Veilleur — Éditeur standard</option>
-              <option value="admin">Admin — Peut gérer les membres</option>
-            </select>
+            <label class="form-label">Rôles (plusieurs possibles)</label>
+            <div class="role-checks" id="wlRoleChecks">
+              <label class="role-check-item"><input type="checkbox" value="veilleur" checked><div class="rci-text"><div class="rci-label">Veilleur</div><div class="rci-desc">Peut modifier les fiches du registre</div></div></label>
+              <label class="role-check-item"><input type="checkbox" value="sphere"><div class="rci-text"><div class="rci-label">Sphère Secrète</div><div class="rci-desc">Accès en lecture aux opérations secrètes</div></div></label>
+              <label class="role-check-item"><input type="checkbox" value="adminsphere"><div class="rci-text"><div class="rci-label">Admin Sphère</div><div class="rci-desc">Historique + gestion, sans Sphère Secrète</div></div></label>
+              <label class="role-check-item"><input type="checkbox" value="admin"><div class="rci-text"><div class="rci-label">Admin</div><div class="rci-desc">Accès complet à tout</div></div></label>
+            </div>
           </div>
           <p class="form-hint">La personne ajoutée pourra choisir son code secret lors de sa première connexion.</p>
           <br>
@@ -706,6 +787,77 @@ body::after{content:'';position:fixed;left:0;width:100%;height:2px;background:li
   </main>
 </div>
 
+<!-- ═══ MODAL SPHÈRE SECRÈTE ═══ -->
+<div class="modal-overlay" id="modalSphere">
+  <div class="modal-box modal-crimson" style="max-width:520px">
+    <button class="modal-close" onclick="closeModal('modalSphere')">✕</button>
+    <div class="modal-title" style="color:#cc2222" id="sphereFormTitle">Nouvelle Opération</div>
+    <input type="hidden" id="sphereEditId">
+    <div class="form-grid">
+      <div class="form-group">
+        <label class="form-label">Type d'opération</label>
+        <select class="form-select" id="sfType">
+          <option>Élimination</option>
+          <option>Torture / Interrogatoire</option>
+          <option>Surveillance</option>
+          <option>Infiltration</option>
+          <option>Capture</option>
+          <option>Autre</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Priorité</label>
+        <select class="form-select" id="sfPrio">
+          <option value="Normale">Normale</option>
+          <option value="Haute">Haute</option>
+          <option value="Critique">Critique</option>
+        </select>
+      </div>
+      <input type="hidden" id="sfTargetIdHidden">
+      <div class="form-group full">
+        <label class="form-label">Rechercher une cible dans le Codex</label>
+        <div class="sf-search-wrap">
+          <input class="form-input" id="sfSearchInput" placeholder="Rechercher par nom dans le Registre ou les Cibles..." autocomplete="off" oninput="searchSphereTarget(this.value)" onfocus="searchSphereTarget(this.value)">
+          <div id="sfSearchResults" class="sf-search-results"></div>
+        </div>
+      </div>
+      <div id="sfTargetPreview" style="display:none" class="form-group full">
+        <div class="sphere-target-block">
+          <div class="sphere-target-photo" id="sfTargetPhoto"></div>
+          <div>
+            <div class="sphere-target-name" id="sfTargetName"></div>
+            <div class="sphere-target-grade" id="sfTargetGrade"></div>
+            <div style="font-size:.62rem;color:rgba(200,0,0,.6);margin-top:2px" id="sfTargetRaison"></div>
+          </div>
+          <button onclick="clearSphereTarget()" style="margin-left:auto;background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:.9rem" title="Effacer la sélection">✕</button>
+        </div>
+      </div>
+      <div class="form-group full">
+        <label class="form-label">— ou saisir manuellement si non répertoriée —</label>
+        <input class="form-input" id="sfTargetName2" placeholder="Nom de la cible...">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Opérateur assigné</label>
+        <input class="form-input" id="sfOperateur" placeholder="Nom ou codename...">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Statut</label>
+        <select class="form-select" id="sfStatut">
+          <option value="attente">En attente</option>
+          <option value="encours">En cours</option>
+          <option value="terminee">Terminée</option>
+          <option value="echec">Échec</option>
+        </select>
+      </div>
+      <div class="form-group full">
+        <label class="form-label">Notes opérationnelles</label>
+        <textarea class="form-textarea" id="sfNotes" placeholder="Détails classifiés..."></textarea>
+      </div>
+    </div>
+    <button class="form-submit" style="background:linear-gradient(135deg,#6a0000,#aa0000)" onclick="saveSphere()">Sceller l'Opération</button>
+  </div>
+</div>
+
 <!-- ═══ MODAL LOGIN (multi-étapes) ═══ -->
 <div class="modal-overlay" id="modalLogin">
   <div class="modal-box" style="max-width:420px">
@@ -787,9 +939,30 @@ body::after{content:'';position:fixed;left:0;width:100%;height:2px;background:li
 
 <!-- ═══ MODAL PROFIL ═══ -->
 <div class="modal-overlay" id="modalProfile">
-  <div class="modal-box modal-wide">
-    <button class="modal-close" onclick="closeModal('modalProfile')">✕</button>
+  <div class="modal-box modal-wide" style="position:relative;">
+    <button class="modal-close" onclick="closeModal('modalProfile')" style="position:absolute;top:12px;right:12px;z-index:10;">✕</button>
     <div id="profileContent"></div>
+  </div>
+</div>
+
+<!-- ═══ MODAL CHANGE ROLE ═══ -->
+<div class="modal-overlay" id="modalChangeRole">
+  <div class="modal-box" style="max-width:400px">
+    <button class="modal-close" onclick="closeModal('modalChangeRole')">✕</button>
+    <div class="modal-title" style="font-size:1rem">Changer les rôles</div>
+    <input type="hidden" id="crSteamId">
+    <p id="crMemberName" style="font-family:'Cinzel',serif;font-size:.75rem;color:var(--gold);margin-bottom:16px;letter-spacing:1px"></p>
+    <div class="form-group">
+      <label class="form-label">Rôles assignés (plusieurs possibles)</label>
+      <div class="role-checks" id="crRoleChecks">
+        <label class="role-check-item"><input type="checkbox" value="veilleur"><div class="rci-text"><div class="rci-label">Veilleur</div><div class="rci-desc">Peut modifier les fiches du registre</div></div></label>
+        <label class="role-check-item"><input type="checkbox" value="sphere"><div class="rci-text"><div class="rci-label">Sphère Secrète</div><div class="rci-desc">Accès en lecture aux opérations secrètes</div></div></label>
+        <label class="role-check-item"><input type="checkbox" value="adminsphere"><div class="rci-text"><div class="rci-label">Admin Sphère</div><div class="rci-desc">Historique + gestion, sans Sphère Secrète</div></div></label>
+        <label class="role-check-item"><input type="checkbox" value="admin"><div class="rci-text"><div class="rci-label">Admin</div><div class="rci-desc">Accès complet à tout</div></div></label>
+      </div>
+    </div>
+    <p class="form-hint" style="margin-bottom:14px">Au moins un rôle requis. Les changements prennent effet à la prochaine connexion.</p>
+    <button class="btn btn-gold" style="width:100%" onclick="saveWlRole()">✔ Confirmer les rôles</button>
   </div>
 </div>
 
@@ -799,6 +972,7 @@ body::after{content:'';position:fixed;left:0;width:100%;height:2px;background:li
     <button class="modal-close" onclick="closeModal('modalMembre')">✕</button>
     <div class="modal-title" id="membreFormTitle">Nouvelle Fiche de Service</div>
     <input type="hidden" id="membreEditId">
+    <input type="hidden" id="membreExistingPhoto">
     <div class="form-grid">
       <div class="form-group full"><label class="form-label">Nom du Pourfendeur</label><input class="form-input" id="fNom" placeholder="Nom complet"></div>
       <div class="form-group">
@@ -958,6 +1132,12 @@ const storage = getStorage(app);
 
 /* ═══ ÉTAT ═══ */
 let currentUser = null;
+// ─── Helpers rôles ───
+const _rolePriority=['superadmin','admin','adminsphere','accesplus','sphere','veilleur'];
+function toRolesArray(r){ return Array.isArray(r)?r:(r?[r]:['veilleur']); }
+function topRole(roles){ for(const r of _rolePriority) if(roles.includes(r)) return r; return roles[0]||'veilleur'; }
+function hasRole(r){ return !!(currentUser?.roles?.includes(r)); }
+function hasAnyRole(...rs){ return rs.some(r=>hasRole(r)); }
 let pendingPhotoMembre = null;
 let pendingPhotoWanted = null;
 let pendingUser = null; // données whitelist en attente de vérification code
@@ -1016,12 +1196,27 @@ window.previewFromUrl = (url, previewId) => {
   else preview.classList.remove('visible');
 };
 
-async function uploadPhoto(file, folder) {
-  const ext = file.name.split('.').pop();
-  const path = `uploads/${folder}/${Date.now()}.${ext}`;
-  const ref = storageRef(storage, path);
-  await uploadBytes(ref, file);
-  return await getDownloadURL(ref);
+async function uploadPhoto(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onerror = () => reject(new Error('Lecture du fichier impossible'));
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onerror = () => reject(new Error('Image invalide'));
+      img.onload = () => {
+        const MAX = 520;
+        let w = img.width, h = img.height;
+        if (w > MAX) { h = Math.round(h * MAX / w); w = MAX; }
+        else if (h > MAX) { w = Math.round(w * MAX / h); h = MAX; }
+        const canvas = document.createElement('canvas');
+        canvas.width = w; canvas.height = h;
+        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+        resolve(canvas.toDataURL('image/jpeg', 0.82));
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
 }
 
 function resetPhotoField(fileId, urlId, previewId) {
@@ -1081,7 +1276,7 @@ window.createCode = async () => {
     await signInAnonymously(auth);
     await updateDoc(doc(db, 'whitelist', pendingUser.steamId), { codeHash: hash });
     pendingUser.codeHash = hash;
-    await finishLogin(pendingUser.steamId, pendingUser.name, pendingUser.role, code);
+    await finishLogin(pendingUser.steamId, pendingUser.name, pendingUser.roles||pendingUser.role, code);
   } catch(e) { toast('Erreur : ' + e.message,'error'); }
   btn.disabled=false; btn.textContent='Valider mon Code ✓';
 };
@@ -1094,17 +1289,17 @@ window.verifyCode = async () => {
   try {
     const hash = await hashCode(pendingUser.steamId, code);
     if (hash !== pendingUser.codeHash) { toast('Code incorrect.','error'); btn.disabled=false; btn.textContent='Accéder aux Archives ⚔'; return; }
-    await finishLogin(pendingUser.steamId, pendingUser.name, pendingUser.role, code);
+    await finishLogin(pendingUser.steamId, pendingUser.name, pendingUser.roles||pendingUser.role, code);
   } catch(e) { toast('Erreur : ' + e.message,'error'); }
   btn.disabled=false; btn.textContent='Accéder aux Archives ⚔';
 };
 
-async function finishLogin(steamId, name, role, rawCode) {
+async function finishLogin(steamId, name, rolesRaw, rawCode) {
   await signInAnonymously(auth);
-  currentUser = { steamId, name: name||steamId, role: role||'veilleur' };
-  // Sauvegarder en local (steamId + code pour rappel + hash pour auto-login)
+  const roles = toRolesArray(rolesRaw);
+  currentUser = { steamId, name: name||steamId, roles, role: topRole(roles) };
   const hash = await hashCode(steamId, rawCode);
-  localStorage.setItem('codex_auth', JSON.stringify({ steamId, name: currentUser.name, role: currentUser.role, code: rawCode, codeHash: hash }));
+  localStorage.setItem('codex_auth', JSON.stringify({ steamId, name: currentUser.name, roles, code: rawCode, codeHash: hash }));
   closeModal('modalLogin');
   onUserLogin();
   await logAction('CONNEXION', currentUser.name, null, null);
@@ -1116,14 +1311,14 @@ async function finishLogin(steamId, name, role, rawCode) {
   const saved = localStorage.getItem('codex_auth');
   if (!saved) return;
   try {
-    const { steamId, name, role, codeHash } = JSON.parse(saved);
+    const { steamId, name, roles: savedRoles, role: savedRole, codeHash } = JSON.parse(saved);
     const snap = await getDoc(doc(db, 'whitelist', steamId));
     if (!snap.exists() || snap.data().codeHash !== codeHash) { localStorage.removeItem('codex_auth'); return; }
     await signInAnonymously(auth);
-    currentUser = { steamId, name: snap.data().name || name, role: snap.data().role || role };
-    // Mettre à jour le code local si le nom a changé
+    const roles = toRolesArray(snap.data().roles || snap.data().role || savedRoles || savedRole);
+    currentUser = { steamId, name: snap.data().name || name, roles, role: topRole(roles) };
     const stored = JSON.parse(localStorage.getItem('codex_auth'));
-    stored.name = currentUser.name; stored.role = currentUser.role;
+    stored.name = currentUser.name; stored.roles = currentUser.roles;
     localStorage.setItem('codex_auth', JSON.stringify(stored));
     onUserLogin();
   } catch(e) { localStorage.removeItem('codex_auth'); }
@@ -1143,14 +1338,36 @@ function onUserLogin() {
   document.getElementById('sidebarUser').style.display = 'block';
   document.getElementById('topbarUserInfo').style.display = 'block';
   document.getElementById('suName').textContent = currentUser.name;
-  document.getElementById('suRole').textContent = currentUser.role.toUpperCase();
+  // Afficher tous les badges de rôles dans la sidebar
+  document.getElementById('suRole').innerHTML = currentUser.roles.map(r=>`<span class="wl-role role-${r}" style="font-size:.48rem;padding:1px 6px">${roleLabels[r]||r}</span>`).join(' ');
   document.getElementById('topbarUserInfo').textContent = '⚔ ' + currentUser.name;
-  if (['admin','superadmin'].includes(currentUser.role)) {
+  if (hasAnyRole('admin','superadmin')) {
     document.getElementById('nav-admin').style.display = 'block';
+    document.getElementById('nav-sphere').style.display = 'block';
+    document.getElementById('nav-historique').style.display = 'block';
+  }
+  if (hasAnyRole('sphere','accesplus')) {
+    document.getElementById('nav-sphere').style.display = 'block';
+  }
+  if (hasRole('adminsphere')) {
+    document.getElementById('nav-admin').style.display = 'block';
+    document.getElementById('nav-historique').style.display = 'block';
   }
   document.querySelectorAll('.auth-only').forEach(b => b.style.display = 'inline-flex');
-  if(currentUser.role==='veilleur'){
+  // Masquer les boutons d'ajout si pas les droits
+  const canAdd = hasAnyRole('admin','superadmin','adminsphere');
+  if(!canAdd){
     ['btnAddWanted','btnAddMission'].forEach(id=>{const el=document.getElementById(id);if(el)el.style.display='none';});
+  }
+  if(!canAdd && !hasAnyRole('admin','superadmin')){
+    const el=document.getElementById('btnAddSphere');if(el)el.style.display='none';
+  }
+  // Admin Sphère : cacher les cases de rôles élevés dans le formulaire d'ajout
+  if(hasRole('adminsphere')&&!hasAnyRole('admin','superadmin')){
+    document.querySelectorAll('#wlRoleChecks input[type=checkbox]').forEach(cb=>{
+      const item=cb.closest('.role-check-item');
+      if(item) item.style.display=_adminSphereAllowedRoles.includes(cb.value)?'flex':'none';
+    });
   }
   // Préparer le modal identifiants
   const saved = JSON.parse(localStorage.getItem('codex_auth') || '{}');
@@ -1165,6 +1382,8 @@ function onUserLogout() {
   document.getElementById('sidebarUser').style.display = 'none';
   document.getElementById('topbarUserInfo').style.display = 'none';
   document.getElementById('nav-admin').style.display = 'none';
+  document.getElementById('nav-sphere').style.display = 'none';
+  document.getElementById('nav-historique').style.display = 'none';
   document.querySelectorAll('.auth-only').forEach(b => b.style.display = 'none');
 }
 
@@ -1282,10 +1501,13 @@ window.filterRegistre=(f,el)=>{registreFilter=f;document.querySelectorAll('#regi
 window.openFormMembre=(id=null)=>{
   document.getElementById('membreEditId').value=id||'';
   document.getElementById('membreFormTitle').textContent=id?'Modifier la Fiche':'Nouvelle Fiche de Service';
-  if(id){const m=allPourfendeurs.find(x=>x.id===id);if(m){document.getElementById('fNom').value=m.nom||'';document.getElementById('fRang').value=m.rang||'Kinoe';document.getElementById('fSouffle').value=m.souffle||"Souffle de l'Eau";document.getElementById('fStatut').value=m.statut||'Vivant';document.getElementById('fJours').value=m.jours||0;document.getElementById('fPilierRef').value=m.pilier_ref||'';document.getElementById('fKinoeRef').value=m.kinoe_ref||'';document.getElementById('fBrigade').value=m.brigade||'';document.getElementById('fPhoto').value=m.photo||'';document.getElementById('fInfo').value=m.info||'';
-    const pos=m.photoPosition??50;document.getElementById('fPhotoPos').value=pos;document.getElementById('fPhotoPos').style.setProperty('--pct',pos+'%');onPosSlider(document.getElementById('fPhotoPos'),'fPhotoPosVal','fPhotoPosPreview');if(m.photo)updatePosPreview('fPhotoPosPreview','fPhotoPos',m.photo);}}
-  else{['fNom','fPilierRef','fKinoeRef','fBrigade','fInfo'].forEach(i=>document.getElementById(i).value='');document.getElementById('fJours').value=0;document.getElementById('fRang').value='Kinoe';document.getElementById('fStatut').value='Vivant';document.getElementById('fPhotoPos').value=50;document.getElementById('fPhotoPos').style.setProperty('--pct','50%');document.getElementById('fPhotoPosVal').textContent='Centre';document.getElementById('fPhotoPosPreview').style.display='none';}
   pendingPhotoMembre=null; resetPhotoField('fPhotoFile','fPhoto','fPhotoPreview');
+  document.getElementById('membreExistingPhoto').value='';
+  document.getElementById('fPhotoPos').value=50; document.getElementById('fPhotoPos').style.setProperty('--pct','50%'); document.getElementById('fPhotoPosVal').textContent='Centre'; document.getElementById('fPhotoPosPreview').style.display='none';
+  if(id){const m=allPourfendeurs.find(x=>x.id===id);if(m){document.getElementById('fNom').value=m.nom||'';document.getElementById('fRang').value=m.rang||'Kinoe';document.getElementById('fSouffle').value=m.souffle||"Souffle de l'Eau";document.getElementById('fStatut').value=m.statut||'Vivant';document.getElementById('fJours').value=m.jours||0;document.getElementById('fPilierRef').value=m.pilier_ref||'';document.getElementById('fKinoeRef').value=m.kinoe_ref||'';document.getElementById('fBrigade').value=m.brigade||'';document.getElementById('fInfo').value=m.info||'';
+    document.getElementById('membreExistingPhoto').value=m.photo||'';
+    const pos=m.photoPosition??50;document.getElementById('fPhotoPos').value=pos;document.getElementById('fPhotoPos').style.setProperty('--pct',pos+'%');onPosSlider(document.getElementById('fPhotoPos'),'fPhotoPosVal','fPhotoPosPreview');if(m.photo)updatePosPreview('fPhotoPosPreview','fPhotoPos',m.photo);}}
+  else{['fNom','fPilierRef','fKinoeRef','fBrigade','fInfo'].forEach(i=>document.getElementById(i).value='');document.getElementById('fJours').value=0;document.getElementById('fRang').value='Kinoe';document.getElementById('fStatut').value='Vivant';}
   openModal('modalMembre');
 };
 
@@ -1294,8 +1516,8 @@ window.saveMembre=async()=>{
   const nom=document.getElementById('fNom').value.trim();
   if(!nom){toast('Le nom est requis.','warn');return;}
   const rang=document.getElementById('fRang').value;
-  let photoUrl=document.getElementById('fPhoto').value.trim();
-  if(pendingPhotoMembre){toast('Upload de l\'image...','info');try{photoUrl=await uploadPhoto(pendingPhotoMembre,'pourfendeurs');}catch(e){toast('Erreur upload : '+e.message,'error');return;}}
+  let photoUrl=document.getElementById('fPhoto').value.trim()||document.getElementById('membreExistingPhoto').value;
+  if(pendingPhotoMembre){toast('Compression de l\'image...','info');try{photoUrl=await uploadPhoto(pendingPhotoMembre);}catch(e){toast('Erreur image : '+e.message,'error');return;}}
   const data={nom,rang,rang_idx:hierarchyIdx[rang]||99,souffle:document.getElementById('fSouffle').value,statut:document.getElementById('fStatut').value,jours:parseInt(document.getElementById('fJours').value)||0,pilier_ref:document.getElementById('fPilierRef').value.trim(),kinoe_ref:document.getElementById('fKinoeRef').value.trim(),brigade:document.getElementById('fBrigade').value.trim(),photo:photoUrl,photoPosition:parseInt(document.getElementById('fPhotoPos').value)||50,info:document.getElementById('fInfo').value.trim(),updatedAt:serverTimestamp(),updatedBy:currentUser.steamId};
   const editId=document.getElementById('membreEditId').value;
   try{
@@ -1334,37 +1556,184 @@ window.openProfile=async(id)=>{
     m.kinoe_ref?['Kinoé Référent',m.kinoe_ref]:null,
   ].filter(Boolean);
   const pos = m.photoPosition ?? 50;
-  const portraitInner = m.photo
-    ? `<img src="${m.photo}" alt="${m.nom}" style="object-position:center ${pos}%" onerror="this.parentElement.innerHTML='<div class=profile-portrait-ph>⚔</div>'">`
+  const portraitCol = m.photo
+    ? `<img src="${m.photo}" alt="${m.nom}" style="object-position:center ${pos}%;min-height:100%" onerror="this.parentElement.innerHTML='<div class=profile-portrait-ph>⚔</div>'">`
     : `<div class="profile-portrait-ph">⚔</div>`;
   document.getElementById('profileContent').innerHTML=`
-    <div class="profile-portrait" style="--pbc:${color}">
-      ${portraitInner}
-      <div class="profile-portrait-grad"></div>
-      <div class="profile-portrait-glow"></div>
-      <div class="profile-portrait-topbar"></div>
-      <div class="profile-portrait-info">
+    <div class="profile-dossier" style="--pbc:${color}">
+      <div class="profile-col-img">
+        ${portraitCol}
+        <div class="profile-img-overlay"></div>
+        <div class="profile-img-accent"></div>
+        <div class="profile-img-glow"></div>
+      </div>
+      <div class="profile-col-info">
+        <div class="profile-corner tl"></div>
+        <div class="profile-corner tr"></div>
+        <div class="profile-corner bl"></div>
+        <div class="profile-corner br"></div>
+        <div class="profile-watermark">⚔</div>
+        <div class="profile-classified-stamp">Dossier Classifié</div>
+        <div class="profile-id-line">Ordre des Démons · Archive des Pourfendeurs</div>
         <div class="profile-name">${m.nom}</div>
         <div class="profile-rang-row">
-          <span class="badge badge-default" style="border-color:rgba(255,255,255,.3);color:#fff;background:rgba(0,0,0,.5)">${m.rang||'—'}</span>
+          <span class="badge badge-default" style="border-color:rgba(255,255,255,.25);color:#fff;background:rgba(0,0,0,.45);font-size:.65rem;padding:4px 14px">${m.rang||'—'}</span>
           ${m.souffle?`<span class="profile-souffle-tag">${souffleEmoji[m.souffle]||'⚔'} ${m.souffle}</span>`:''}
         </div>
+        <div class="profile-ornament-line"><span>◆</span></div>
+        <div class="profile-stats-grid">
+          <div class="pf-stat"><div class="pf-stat-val">${statutDot}${m.statut||'—'}</div><div class="pf-stat-label">Statut</div></div>
+          <div class="pf-stat"><div class="pf-stat-val">${m.jours||0}</div><div class="pf-stat-label">Jours de service</div></div>
+          <div class="pf-stat"><div class="pf-stat-val">${hist.length}</div><div class="pf-stat-label">Journal</div></div>
+        </div>
+        ${extras.length?`<div class="profile-info-grid">${extras.map(([l,v])=>`<div class="pf-info-item"><div class="pf-label">${l}</div><div class="pf-val">${v}</div></div>`).join('')}</div>`:''}
+        ${m.info?`<div class="profile-obs-block">${m.info}</div>`:''}
+        <div class="profile-ornament-line" style="margin:10px 0 12px"><span>⚔</span></div>
+        <div class="profile-hist-title">Journal des modifications</div>
+        ${histHtml}
+        ${currentUser?`<div class="modal-footer" style="margin-top:auto;padding-top:16px;display:flex;gap:8px;align-items:center"><button class="btn btn-gold btn-sm" onclick="closeModal('modalProfile');openFormMembre('${m.id}')">✎ Modifier la fiche</button><span style="font-size:.5rem;letter-spacing:3px;color:rgba(200,0,0,.4);font-family:'Cinzel',serif">CONFIDENTIEL</span></div>`:''}
       </div>
-    </div>
-    <div class="profile-body" style="--pbc:${color}">
-      <div class="profile-divider"></div>
-      <div class="profile-stats-grid">
-        <div class="pf-stat"><div class="pf-stat-val">${statutDot}${m.statut||'—'}</div><div class="pf-stat-label">Statut</div></div>
-        <div class="pf-stat"><div class="pf-stat-val">${m.jours||0}</div><div class="pf-stat-label">Jours de service</div></div>
-        <div class="pf-stat"><div class="pf-stat-val">${hist.length}</div><div class="pf-stat-label">Entrées journal</div></div>
-      </div>
-      ${extras.length?`<div class="profile-info-grid">${extras.map(([l,v])=>`<div class="pf-info-item"><div class="pf-label">${l}</div><div class="pf-val">${v}</div></div>`).join('')}</div>`:''}
-      ${m.info?`<div class="profile-obs-block">${m.info}</div>`:''}
-      <div class="profile-hist-title">Journal des modifications</div>
-      ${histHtml}
-      ${currentUser?`<div class="modal-footer" style="margin-top:16px"><button class="btn btn-gold btn-sm" onclick="closeModal('modalProfile');openFormMembre('${m.id}')">✎ Modifier la fiche</button></div>`:''}
     </div>`;
   openModal('modalProfile');
+};
+
+/* ═══ SPHÈRE SECRÈTE ═══ */
+let allSphere=[];
+onSnapshot(collection(db,'sphere'),snap=>{
+  allSphere=snap.docs.map(d=>({id:d.id,...d.data()})).filter(d=>!d.deleted);
+  renderSphere();
+});
+
+function renderSphere(){
+  const c=document.getElementById('sphereContainer');if(!c)return;
+  if(!allSphere.length){c.innerHTML='<div class="empty-state"><div class="empty-icon">⚫</div><p>Aucune opération enregistrée</p></div>';return;}
+  const sorted=[...allSphere].sort((a,b)=>{const p={Critique:0,Haute:1,Normale:2};return(p[a.priorite]??2)-(p[b.priorite]??2);});
+  c.innerHTML=`<div class="sphere-grid">${sorted.map(op=>{
+    const statutClass={'encours':'encours','terminee':'terminee','echec':'echec','attente':'attente'}[op.statut]||'attente';
+    const statutLabel={'encours':'En cours','terminee':'Terminée','echec':'Échec','attente':'En attente'}[op.statut]||'—';
+    const prioClass=op.priorite==='Critique'?'critique':'';
+    const targetBlock=op.targetName?`<div class="sphere-target-block">
+      <div class="sphere-target-photo">${op.targetPhoto?`<img src="${op.targetPhoto}" alt="">`:'⚔'}</div>
+      <div><div class="sphere-target-name">${op.targetName}</div>${op.targetGrade?`<div class="sphere-target-grade">${op.targetGrade}</div>`:''}${op.targetRaison?`<div class="sphere-target-grade" style="color:rgba(200,0,0,.5);margin-top:2px">${op.targetRaison}</div>`:''}</div>
+    </div>`:'';
+    return `<div class="sphere-card">
+      <div class="sphere-stamp">${op.priorite||'Normale'}</div>
+      <div class="sphere-type">${op.type||'Opération'}</div>
+      ${targetBlock}
+      ${op.notes?`<div class="sphere-notes">${op.notes}</div>`:''}
+      <div class="sphere-footer">
+        <span class="sphere-operateur">⚔ ${op.operateur||'—'}</span>
+        <span class="sphere-prio ${prioClass}">${op.priorite||''}</span>
+        <span class="sphere-statut ${statutClass}">${statutLabel}</span>
+        ${currentUser&&hasAnyRole('admin','superadmin')?`<div style="display:flex;gap:5px"><button class="btn btn-ghost btn-sm" onclick="openFormSphere('${op.id}')">✎</button><button class="btn btn-danger btn-sm" onclick="deleteSphere('${op.id}')">✕</button></div>`:''}
+      </div>
+    </div>`;
+  }).join('')}</div>`;
+}
+
+window.searchSphereTarget=(val)=>{
+  const resultsEl=document.getElementById('sfSearchResults');
+  const q=val.trim().toLowerCase();
+  if(!q){resultsEl.style.display='none';return;}
+  const pResults=allPourfendeurs
+    .filter(p=>(p.nom||'').toLowerCase().includes(q)||(p.souffle||'').toLowerCase().includes(q))
+    .slice(0,5).map(p=>({uid:'p_'+p.id,name:p.nom||'',grade:p.rang||'',photo:p.photo||'',raison:p.souffle||'',source:'registre'}));
+  const wResults=allWanted
+    .filter(w=>(`${w.prenom||''} ${w.nom||''}`).toLowerCase().includes(q)||(w.grade||'').toLowerCase().includes(q))
+    .slice(0,5).map(w=>({uid:'w_'+w.id,name:`${w.prenom||''} ${w.nom||''}`.trim(),grade:w.grade||'',photo:w.photo||'',raison:w.raison||'',source:'cible'}));
+  const all=[...pResults,...wResults].slice(0,8);
+  if(!all.length){resultsEl.style.display='none';return;}
+  resultsEl.innerHTML=all.map(r=>`<div class="sf-result" onclick="selectSphereTarget('${r.uid}','${r.name.replace(/'/g,"\\'")}','${r.grade.replace(/'/g,"\\'")}','${r.photo.replace(/'/g,"\\'")}','${r.raison.replace(/'/g,"\\'").replace(/\n/g,' ')}')" >
+    <div class="sf-result-photo">${r.photo?`<img src="${r.photo}" alt="">`:'⚔'}</div>
+    <div class="sf-result-info">
+      <div class="sf-result-name">${r.name}</div>
+      <div class="sf-result-meta">${r.grade} &nbsp;<span class="sf-source-tag ${r.source}">${r.source==='registre'?'Registre':'Cible'}</span></div>
+    </div>
+  </div>`).join('');
+  resultsEl.style.display='block';
+};
+document.addEventListener('click',e=>{if(!e.target.closest('.sf-search-wrap'))document.getElementById('sfSearchResults')&&(document.getElementById('sfSearchResults').style.display='none');});
+
+window.selectSphereTarget=(uid,name,grade,photo,raison)=>{
+  document.getElementById('sfSearchInput').value=name;
+  document.getElementById('sfTargetIdHidden').value=uid;
+  document.getElementById('sfSearchResults').style.display='none';
+  document.getElementById('sfTargetName').textContent=name;
+  document.getElementById('sfTargetGrade').textContent=grade;
+  document.getElementById('sfTargetRaison').textContent=raison;
+  document.getElementById('sfTargetPhoto').innerHTML=photo?`<img src="${photo}" alt="">`:'⚔';
+  document.getElementById('sfTargetPreview').style.display='block';
+  document.getElementById('sfTargetName2').value='';
+};
+
+window.clearSphereTarget=()=>{
+  document.getElementById('sfSearchInput').value='';
+  document.getElementById('sfTargetIdHidden').value='';
+  document.getElementById('sfTargetPreview').style.display='none';
+};
+
+window.openFormSphere=(id=null)=>{
+  document.getElementById('sphereEditId').value=id||'';
+  document.getElementById('sphereFormTitle').textContent=id?'Modifier l\'Opération':'Nouvelle Opération';
+  ['sfOperateur','sfNotes','sfTargetName2','sfSearchInput'].forEach(i=>document.getElementById(i).value='');
+  document.getElementById('sfTargetIdHidden').value='';
+  document.getElementById('sfTargetPreview').style.display='none';
+  document.getElementById('sfType').value='Élimination';
+  document.getElementById('sfPrio').value='Normale';
+  document.getElementById('sfStatut').value='attente';
+  if(id){
+    const op=allSphere.find(x=>x.id===id);
+    if(op){
+      document.getElementById('sfType').value=op.type||'Élimination';
+      document.getElementById('sfPrio').value=op.priorite||'Normale';
+      document.getElementById('sfOperateur').value=op.operateur||'';
+      document.getElementById('sfStatut').value=op.statut||'attente';
+      document.getElementById('sfNotes').value=op.notes||'';
+      if(op.targetName){
+        document.getElementById('sfSearchInput').value=op.targetName;
+        document.getElementById('sfTargetIdHidden').value=op.targetId||'';
+        document.getElementById('sfTargetName').textContent=op.targetName;
+        document.getElementById('sfTargetGrade').textContent=op.targetGrade||'';
+        document.getElementById('sfTargetRaison').textContent=op.targetRaison||'';
+        document.getElementById('sfTargetPhoto').innerHTML=op.targetPhoto?`<img src="${op.targetPhoto}" alt="">`:'⚔';
+        document.getElementById('sfTargetPreview').style.display='block';
+      } else {
+        document.getElementById('sfTargetName2').value=op.targetName||'';
+      }
+    }
+  }
+  openModal('modalSphere');
+};
+
+window.saveSphere=async()=>{
+  if(!currentUser){toast('Connexion requise.','warn');return;}
+  const uid=document.getElementById('sfTargetIdHidden').value;
+  const manualName=document.getElementById('sfTargetName2').value.trim();
+  const data={
+    type:document.getElementById('sfType').value,
+    priorite:document.getElementById('sfPrio').value,
+    operateur:document.getElementById('sfOperateur').value.trim(),
+    statut:document.getElementById('sfStatut').value,
+    notes:document.getElementById('sfNotes').value.trim(),
+    targetId:uid||null,
+    targetName:document.getElementById('sfSearchInput').value.trim()||manualName,
+    targetGrade:document.getElementById('sfTargetGrade').textContent||'',
+    targetPhoto:document.getElementById('sfTargetPhoto').querySelector('img')?.src||'',
+    targetRaison:document.getElementById('sfTargetRaison').textContent||'',
+    updatedAt:serverTimestamp(),updatedBy:currentUser.steamId
+  };
+  const editId=document.getElementById('sphereEditId').value;
+  try{
+    if(editId){await updateDoc(doc(db,'sphere',editId),data);toast('Opération mise à jour.','success');}
+    else{data.createdAt=serverTimestamp();data.createdBy=currentUser.steamId;await addDoc(collection(db,'sphere'),data);toast('Opération enregistrée.','success');}
+    closeModal('modalSphere');
+  }catch(e){toast('Erreur : '+e.message,'error');}
+};
+
+window.deleteSphere=async(id)=>{
+  if(!currentUser||!confirm('Supprimer cette opération ?'))return;
+  await updateDoc(doc(db,'sphere',id),{deleted:true});
+  toast('Opération supprimée.','warn');
 };
 
 /* ═══ WANTED ═══ */
@@ -1417,7 +1786,7 @@ window.saveWanted=async()=>{
   if(!prenom&&!nom){toast('Saisissez au moins un nom.','warn');return;}
   const s=parseInt(document.getElementById('wfDanger').value)||0;const{tier}=getDangerTier(s);
   let wPhotoUrl=document.getElementById('wfPhoto').value.trim();
-  if(pendingPhotoWanted){toast('Upload de l\'image...','info');try{wPhotoUrl=await uploadPhoto(pendingPhotoWanted,'wanted');}catch(e){toast('Erreur upload : '+e.message,'error');return;}}
+  if(pendingPhotoWanted){toast('Compression de l\'image...','info');try{wPhotoUrl=await uploadPhoto(pendingPhotoWanted);}catch(e){toast('Erreur image : '+e.message,'error');return;}}
   const data={prenom,nom,grade:document.getElementById('wfGrade').value,raison:document.getElementById('wfRaison').value.trim(),photo:wPhotoUrl,dangerScore:s,dangerTier:tier,updatedAt:serverTimestamp(),updatedBy:currentUser.steamId};
   const editId=document.getElementById('wantedEditId').value;
   try{if(editId){await updateDoc(doc(db,'wanted',editId),data);await logAction('MODIFICATION',`${prenom} ${nom}`,null,'wanted');toast('Mis à jour.','success');}else{data.createdAt=serverTimestamp();data.createdBy=currentUser.steamId;await addDoc(collection(db,'wanted'),data);await logAction('DÉSIGNATION',`${prenom} ${nom}`,null,'wanted');toast('Avis émis.','success');}closeModal('modalWanted');}
@@ -1491,43 +1860,113 @@ function renderLogs(){
   c.innerHTML=`<div class="log-list">${data.map(l=>{
     const color=logColors[l.action]||'#c9a227';
     const date=l.date?.toDate?l.date.toDate().toLocaleString('fr-FR'):'—';
-    const canRestore=l.action==='SUPPRESSION'&&l.snapshot&&currentUser&&['admin','superadmin'].includes(currentUser.role);
-    return `<div class="log-entry" style="--lc:${color}"><div class="log-action">${l.action||'—'}</div><div class="log-detail"><span class="log-target">${l.target||'—'}</span><br><span class="log-user">par ${l.userName||l.steamId||'?'}</span></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:5px"><span class="log-date">${date}</span>${canRestore?`<button class="btn btn-success btn-sm" onclick="restoreEntry('${l.id}')">↺ Restaurer</button>`:''}</div></div>`;
+    const canRestore=['SUPPRESSION','MODIFICATION'].includes(l.action)&&l.snapshot&&currentUser&&hasAnyRole('admin','superadmin','adminsphere');
+    const restoreLabel=l.action==='MODIFICATION'?'↺ Annuler modif':'↺ Restaurer';
+    return `<div class="log-entry" style="--lc:${color}"><div class="log-action">${l.action||'—'}</div><div class="log-detail"><span class="log-target">${l.target||'—'}</span><br><span class="log-user">par ${l.userName||l.steamId||'?'}</span></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:5px"><span class="log-date">${date}</span>${canRestore?`<button class="btn btn-success btn-sm" onclick="restoreEntry('${l.id}')">${restoreLabel}</button>`:''}</div></div>`;
   }).join('')}</div>`;
 }
 
 window.filterLogs=(f,el)=>{logFilter=f;document.querySelectorAll('[onclick^="filterLogs"]').forEach(c=>c.classList.remove('active'));el.classList.add('active');renderLogs();};
 
 window.restoreEntry=async(logId)=>{
-  if(!currentUser||!['admin','superadmin'].includes(currentUser.role)){toast('Accès admin requis.','error');return;}
+  if(!currentUser||!hasAnyRole('admin','superadmin','adminsphere')){toast('Accès insuffisant.','error');return;}
   const l=allLogs.find(x=>x.id===logId);
   if(!l?.snapshot||!l?.collection){toast('Snapshot introuvable.','error');return;}
-  if(!confirm(`Restaurer "${l.target}" ?`))return;
+  const isMod=l.action==='MODIFICATION';
+  const confirmMsg=isMod?`Annuler la modification de "${l.target}" et revenir à l'état précédent ?`:`Restaurer "${l.target}" ?`;
+  if(!confirm(confirmMsg))return;
   try{
-    const snap={...l.snapshot};delete snap.deleted;delete snap.deletedAt;delete snap.deletedBy;snap.restoredAt=serverTimestamp();snap.restoredBy=currentUser.steamId;
-    await addDoc(collection(db,l.collection),snap);
+    const snap={...l.snapshot};
+    delete snap.deleted;delete snap.deletedAt;delete snap.deletedBy;
+    snap.restoredAt=serverTimestamp();snap.restoredBy=currentUser.steamId;
+    if(isMod&&snap.id){
+      const{id,...data}=snap;
+      await setDoc(doc(db,l.collection,id),data);
+    } else {
+      const{id,...data}=snap;
+      await addDoc(collection(db,l.collection),data);
+    }
     await logAction('RESTAURATION',l.target,null,l.collection);
-    toast(`"${l.target}" restauré.`,'success');
+    toast(`"${l.target}" ${isMod?'revenu à l\'état précédent':'restauré'}.`,'success');
   }catch(e){toast('Erreur : '+e.message,'error');}
 };
 
 /* ═══ ADMIN — WHITELIST ═══ */
+const roleLabels={veilleur:'Veilleur',accesplus:'Accès+',sphere:'Sphère',adminsphere:'Admin Sphère',admin:'Admin',superadmin:'Superadmin'};
 onSnapshot(collection(db,'whitelist'),snap=>{
   const items=snap.docs.map(d=>({id:d.id,...d.data()}));
   const c=document.getElementById('whitelistContainer');if(!c)return;
   if(!items.length){c.innerHTML='<div style="font-size:.7rem;color:var(--text-muted)">Aucun membre autorisé.</div>';return;}
-  c.innerHTML=items.map(u=>`<div class="wl-item"><div><div class="wl-name">${u.name||u.id}</div><div class="wl-steam">${u.id}</div><div class="wl-code-status ${u.codeHash?'wl-code-set':'wl-code-pending'}">${u.codeHash?'✓ Code défini':'⏳ En attente (1ère connexion)'}</div></div><div style="display:flex;align-items:center;gap:7px"><span class="wl-role role-${u.role||'veilleur'}">${u.role||'veilleur'}</span>${currentUser&&['admin','superadmin'].includes(currentUser.role)?`<button class="btn btn-ghost btn-sm" onclick="resetCode('${u.id}','${(u.name||u.id).replace(/'/g,"\\'")}')">↺ Reset Code</button><button class="btn btn-danger btn-sm" onclick="removeFromWhitelist('${u.id}','${(u.name||u.id).replace(/'/g,"\\'")}')">✕</button>`:''}` +
-  `</div></div>`).join('');
+  const isAdmin=currentUser&&hasAnyRole('admin','superadmin');
+  c.innerHTML=items.map(u=>{
+    const roles=toRolesArray(u.roles||u.role);
+    const badges=roles.map(r=>`<span class="wl-role role-${r}">${roleLabels[r]||r}</span>`).join('');
+    const escapedName=(u.name||u.id).replace(/'/g,"\\'");
+    const escapedRoles=JSON.stringify(roles).replace(/'/g,"\\'");
+    return `<div class="wl-item">
+      <div>
+        <div class="wl-name">${u.name||u.id}</div>
+        <div class="wl-steam">${u.id}</div>
+        <div class="wl-code-status ${u.codeHash?'wl-code-set':'wl-code-pending'}">${u.codeHash?'✓ Code défini':'⏳ En attente (1ère connexion)'}</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap;justify-content:flex-end">
+        <div style="display:flex;gap:4px;flex-wrap:wrap">${badges}</div>
+        ${isAdmin?`<button class="btn btn-ghost btn-sm" onclick="openChangeRole('${u.id}','${escapedName}',${escapedRoles})" title="Changer les rôles">✎ Rôles</button><button class="btn btn-ghost btn-sm" onclick="resetCode('${u.id}','${escapedName}')">↺ Code</button><button class="btn btn-danger btn-sm" onclick="removeFromWhitelist('${u.id}','${escapedName}')">✕</button>`:''}
+      </div>
+    </div>`;
+  }).join('');
 });
 
+const roleDescriptions={
+  veilleur:'Peut modifier les fiches, mais pas ajouter de cibles, missions ou opérations Sphère.',
+  accesplus:'Veilleur avec accès en lecture à la Sphère Secrète. Ne peut pas créer d\'opérations.',
+  sphere:'Accès en lecture seule à la Sphère Secrète. Aucune modification possible.',
+  adminsphere:'Peut tout gérer sauf la Sphère Secrète. Accès à l\'Historique et à la restauration.',
+  admin:'Accès complet : Sphère Secrète, Historique, gestion des membres.',
+  superadmin:'Accès total, rang le plus élevé.'
+};
+// Rôles qu'un Admin Sphère est autorisé à attribuer
+const _adminSphereAllowedRoles=['veilleur','sphere'];
+window.openChangeRole=(steamId,name,currentRoles)=>{
+  document.getElementById('crSteamId').value=steamId;
+  document.getElementById('crMemberName').textContent='Membre : '+name;
+  const rolesArr=toRolesArray(currentRoles);
+  const isAdminSphere=hasRole('adminsphere')&&!hasAnyRole('admin','superadmin');
+  document.querySelectorAll('#crRoleChecks input[type=checkbox]').forEach(cb=>{
+    cb.checked=rolesArr.includes(cb.value);
+    // Masquer les rôles non autorisés pour Admin Sphère
+    const item=cb.closest('.role-check-item');
+    if(item) item.style.display=(isAdminSphere&&!_adminSphereAllowedRoles.includes(cb.value))?'none':'flex';
+  });
+  openModal('modalChangeRole');
+};
+window.saveWlRole=async()=>{
+  if(!currentUser||!hasAnyRole('admin','superadmin','adminsphere')){toast('Accès insuffisant.','error');return;}
+  const steamId=document.getElementById('crSteamId').value;
+  const isAdminSphere=hasRole('adminsphere')&&!hasAnyRole('admin','superadmin');
+  let newRoles=[...document.querySelectorAll('#crRoleChecks input[type=checkbox]:checked')].map(c=>c.value);
+  // Sécurité : Admin Sphère ne peut attribuer que des rôles autorisés
+  if(isAdminSphere) newRoles=newRoles.filter(r=>_adminSphereAllowedRoles.includes(r));
+  if(!newRoles.length){toast('Sélectionne au moins un rôle.','warn');return;}
+  try{
+    await updateDoc(doc(db,'whitelist',steamId),{roles:newRoles,role:topRole(newRoles)});
+    await logAction('MODIFICATION','Rôles → '+newRoles.map(r=>roleLabels[r]||r).join(', '),null,'whitelist');
+    toast('Rôles mis à jour : '+newRoles.map(r=>roleLabels[r]||r).join(', '),'success');
+    closeModal('modalChangeRole');
+  }catch(e){toast('Erreur : '+e.message,'error');}
+};
+
 window.addToWhitelist=async()=>{
-  if(!currentUser||!['admin','superadmin'].includes(currentUser.role)){toast('Accès admin requis.','error');return;}
+  if(!currentUser||!hasAnyRole('admin','superadmin')){toast('Accès admin requis.','error');return;}
   const steamId=document.getElementById('wlSteamId').value.trim();
   const name=document.getElementById('wlName').value.trim();
-  const role=document.getElementById('wlRole').value;
+  const isAdminSphere=hasRole('adminsphere')&&!hasAnyRole('admin','superadmin');
+  let newRoles=[...document.querySelectorAll('#wlRoleChecks input[type=checkbox]:checked')].map(c=>c.value);
+  if(isAdminSphere) newRoles=newRoles.filter(r=>_adminSphereAllowedRoles.includes(r));
+  if(!newRoles.length){toast('Sélectionne au moins un rôle.','warn');return;}
   if(!steamId){toast('Steam ID requis.','warn');return;}
   try{
-    await setDoc(doc(db,'whitelist',steamId),{name:name||steamId,role,codeHash:null,addedAt:serverTimestamp(),addedBy:currentUser.steamId});
+    await setDoc(doc(db,'whitelist',steamId),{name:name||steamId,roles:newRoles,role:topRole(newRoles),codeHash:null,addedAt:serverTimestamp(),addedBy:currentUser.steamId});
     await logAction('AUTORISATION',name||steamId,null,'whitelist');
     document.getElementById('wlSteamId').value='';document.getElementById('wlName').value='';
     toast(`${name||steamId} ajouté. Il pourra choisir son code à sa première connexion.`,'success');
@@ -1535,7 +1974,7 @@ window.addToWhitelist=async()=>{
 };
 
 window.resetCode=async(steamId,name)=>{
-  if(!currentUser||!['admin','superadmin'].includes(currentUser.role))return;
+  if(!currentUser||!hasAnyRole('admin','superadmin'))return;
   if(!confirm(`Réinitialiser le code de ${name} ? Il devra en choisir un nouveau à sa prochaine connexion.`))return;
   try{
     await updateDoc(doc(db,'whitelist',steamId),{codeHash:null});
@@ -1545,7 +1984,7 @@ window.resetCode=async(steamId,name)=>{
 };
 
 window.removeFromWhitelist=async(steamId,name)=>{
-  if(!currentUser||!['admin','superadmin'].includes(currentUser.role))return;
+  if(!currentUser||!hasAnyRole('admin','superadmin'))return;
   if(!confirm(`Retirer ${name} de la liste blanche ?`))return;
   try{await deleteDoc(doc(db,'whitelist',steamId));await logAction('RÉVOCATION',name,null,'whitelist');toast(`${name} retiré.`,'warn');}
   catch(e){toast('Erreur : '+e.message,'error');}
@@ -1700,31 +2139,47 @@ window.enterCodex = () => {
   const splash=document.getElementById('splash');
   splash.classList.add('hidden');
   setTimeout(()=>splash.remove(),900);
-  _audio.play().then(()=>{
-    document.getElementById('music-btn').textContent='■';
-    document.getElementById('music-btn').classList.add('playing');
-    document.getElementById('music-vol-wrap').style.display='flex';
-  }).catch(()=>{});
+  _audio.play().then(()=>_showControls(true)).catch(()=>{});
 };
 
 /* ═══ MUSIQUE ═══ */
+const _playlist = [
+  { src: "To Be Hero X (X) Main OST FULL — Chatterbox New Type of Hero Lyrics.mp3", label: "To Be Hero X" },
+  { src: "A Peaceful Sanctuary  Musique Relaxante à la flûte ( Musique Japonaise )  Musique Libre de Droit .mp3", label: "Peaceful Sanctuary" }
+];
+let _trackIdx = 0;
 const _audio = document.getElementById('music-audio');
 _audio.volume = 0.7;
 
+function _loadTrack(idx, autoplay=false) {
+  _trackIdx = ((idx % _playlist.length) + _playlist.length) % _playlist.length;
+  _audio.src = _playlist[_trackIdx].src;
+  document.getElementById('music-track').textContent = _playlist[_trackIdx].label;
+  if (autoplay) _audio.play().catch(()=>{});
+}
+_loadTrack(0);
+
+_audio.addEventListener('ended', () => _loadTrack(_trackIdx + 1, true));
+
+function _showControls(playing) {
+  document.getElementById('music-btn').textContent = playing ? '■' : '♪';
+  document.getElementById('music-btn').classList.toggle('playing', playing);
+  ['music-skip','music-track','music-vol'].forEach(id => {
+    document.getElementById(id).style.display = playing ? (id==='music-vol'?'block':'inline-flex') : 'none';
+  });
+  document.getElementById('music-track').style.display = playing ? 'block' : 'none';
+}
+
 window.toggleMusic = () => {
-  const btn=document.getElementById('music-btn');
-  const volWrap=document.getElementById('music-vol-wrap');
   if (_audio.paused) {
-    _audio.play().then(()=>{
-      btn.textContent='■'; btn.classList.add('playing');
-      volWrap.style.display='flex';
-    }).catch(()=>{});
+    _audio.play().then(() => _showControls(true)).catch(()=>{});
   } else {
     _audio.pause();
-    btn.textContent='♪'; btn.classList.remove('playing');
-    volWrap.style.display='none';
+    _showControls(false);
   }
 };
+
+window.skipTrack = () => _loadTrack(_trackIdx + 1, true);
 
 window.setMusicVol = (v) => {
   _audio.volume = v/100;
