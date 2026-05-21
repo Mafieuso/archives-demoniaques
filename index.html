@@ -54,6 +54,12 @@ input,select,textarea{font-family:inherit;}
 .nav-icon{font-size:1rem;width:20px;text-align:center;flex-shrink:0;}
 .nav-badge{margin-left:auto;background:var(--crimson);color:#fff;font-size:.52rem;min-width:18px;height:18px;border-radius:9px;display:flex;align-items:center;justify-content:center;padding:0 4px;}
 .nav-divider{height:1px;background:var(--border);margin:10px 16px;}
+.nav-divider-secret{margin:12px 16px 8px;display:flex;align-items:center;gap:8px;}
+.nav-divider-secret::before,.nav-divider-secret::after{content:'';flex:1;height:1px;background:linear-gradient(to right,transparent,rgba(180,0,0,.4));}
+.nav-divider-secret::before{background:linear-gradient(to left,transparent,rgba(180,0,0,.4));}
+.nav-divider-secret span{font-family:'Cinzel',serif;font-size:.38rem;letter-spacing:3px;color:rgba(180,0,0,.55);white-space:nowrap;text-transform:uppercase;}
+.nav-btn[data-s="sphere"]{color:rgba(220,100,100,.8)!important;}
+.nav-btn[data-s="sphere"]:hover,.nav-btn[data-s="sphere"].active{background:rgba(120,0,0,.2)!important;color:#ff9999!important;}
 .sidebar-user{padding:14px 18px;border-top:1px solid var(--border);}
 .su-name{font-family:'Cinzel',serif;color:var(--gold);letter-spacing:2px;font-size:.7rem;margin-bottom:2px;}
 .su-role{color:var(--text-muted);font-size:.56rem;letter-spacing:1px;margin-bottom:8px;}
@@ -199,7 +205,7 @@ input,select,textarea{font-family:inherit;}
 .log-date{font-size:.56rem;color:var(--text-muted);white-space:nowrap;font-family:'Cinzel',serif;}
 
 /* ADMIN */
-.admin-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+.admin-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;}.admin-grid>.admin-card[style*="grid-column:1/-1"]{grid-column:1/-1;}
 .admin-card{background:var(--card-bg);border:1px solid var(--border);border-radius:8px;padding:20px;}
 .admin-card-title{font-family:'Cinzel',serif;font-size:.68rem;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--border);}
 .wl-item{display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.03);gap:10px;}
@@ -314,6 +320,122 @@ input,select,textarea{font-family:inherit;}
 .toast{display:flex;align-items:center;gap:11px;padding:11px 16px;background:#0d0d1a;border:1px solid var(--border);border-left:3px solid var(--tc,#c9a227);border-radius:6px;font-size:.72rem;min-width:230px;box-shadow:0 8px 24px rgba(0,0,0,.6);animation:toast-in .3s ease-out;}
 .toast.removing{animation:toast-out .3s ease-in forwards;}
 
+/* ── SPHERE SEARCH ── */
+.sphere-search-wrap{position:relative;margin-bottom:28px;}
+.sphere-search-input{width:100%;background:rgba(5,1,1,.95);border:1px solid rgba(200,0,0,.3);border-bottom:2px solid rgba(200,0,0,.6);border-radius:10px;padding:18px 22px 18px 56px;font-family:'Cinzel',serif;font-size:1.1rem;letter-spacing:2px;color:#fff;outline:none;transition:.3s;box-shadow:0 4px 24px rgba(0,0,0,.5);}
+.sphere-search-input::placeholder{color:rgba(200,100,100,.35);letter-spacing:3px;}
+.sphere-search-input:focus{border-color:rgba(220,0,0,.6);box-shadow:0 0 0 3px rgba(180,0,0,.1),0 6px 30px rgba(0,0,0,.6);}
+.sphere-search-icon{position:absolute;left:20px;top:50%;transform:translateY(-50%);font-size:1.2rem;color:rgba(200,0,0,.5);pointer-events:none;}
+.sphere-search-clear{position:absolute;right:16px;top:50%;transform:translateY(-50%);background:none;border:none;color:rgba(200,0,0,.4);font-size:1rem;cursor:pointer;padding:4px 8px;display:none;}
+.sphere-search-clear:hover{color:rgba(255,50,50,.7);}
+.sphere-results{display:none;margin-bottom:24px;}
+.sphere-results-title{font-family:'Cinzel',serif;font-size:.55rem;letter-spacing:5px;color:rgba(200,0,0,.6);text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:10px;}
+.sphere-results-title::after{content:'';flex:1;height:1px;background:linear-gradient(to right,rgba(200,0,0,.3),transparent);}
+.sphere-result-card{background:linear-gradient(135deg,rgba(8,2,2,.98),rgba(4,1,1,.99));border:1px solid rgba(150,0,0,.2);border-left:3px solid var(--src-color,rgba(150,0,0,.6));border-radius:8px;padding:14px 16px;margin-bottom:10px;display:flex;gap:14px;align-items:flex-start;cursor:pointer;transition:.2s;animation:fadeUp .3s ease-out both;}
+.sphere-result-card:hover{border-color:rgba(200,0,0,.35);transform:translateX(3px);background:linear-gradient(135deg,rgba(12,3,3,.98),rgba(6,2,2,.99));}
+.sphere-result-photo{width:52px;height:52px;border-radius:6px;overflow:hidden;flex-shrink:0;background:rgba(0,0,0,.5);border:1px solid rgba(150,0,0,.3);display:flex;align-items:center;justify-content:center;font-size:1.3rem;}
+.sphere-result-photo img{width:100%;height:100%;object-fit:contain;}
+.sphere-result-body{flex:1;min-width:0;}
+.sphere-result-name{font-family:'Cinzel',serif;font-size:.9rem;font-weight:700;color:#ffcccc;letter-spacing:1px;margin-bottom:4px;}
+.sphere-result-source{display:inline-block;font-family:'Cinzel',serif;font-size:.44rem;letter-spacing:3px;padding:2px 8px;border-radius:20px;text-transform:uppercase;margin-bottom:6px;}
+.src-registre{background:rgba(0,100,200,.1);border:1px solid rgba(0,150,255,.2);color:#88ccff;}
+.src-cible{background:rgba(180,0,0,.12);border:1px solid rgba(220,50,50,.25);color:#ff9999;}
+.src-mission{background:rgba(180,120,0,.1);border:1px solid rgba(200,160,0,.2);color:#e8c060;}
+.src-sphere{background:rgba(100,0,0,.15);border:1px solid rgba(180,0,0,.3);color:#ff6666;}
+.sphere-result-meta{font-size:.7rem;color:rgba(180,160,160,.65);line-height:1.6;}
+.sphere-result-meta strong{color:rgba(220,180,180,.85);}
+.sphere-no-results{text-align:center;padding:30px;color:rgba(180,100,100,.5);font-family:'Cinzel',serif;font-size:.7rem;letter-spacing:3px;}
+/* ── RÈGLES D'OPÉRATION ── */
+.sphere-rules-wrap{background:linear-gradient(135deg,rgba(8,1,1,.98),rgba(4,0,0,1));border:1px solid rgba(150,0,0,.2);border-top:2px solid rgba(180,0,0,.5);border-radius:10px;margin-bottom:28px;overflow:hidden;}
+.sphere-rules-header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;cursor:pointer;transition:.2s;user-select:none;}
+.sphere-rules-header:hover{background:rgba(150,0,0,.06);}
+.sphere-rules-title{font-family:'Cinzel',serif;font-size:.8rem;letter-spacing:3px;color:rgba(220,100,100,.9);text-transform:uppercase;}
+.sphere-rules-sub{font-size:.58rem;color:rgba(180,100,100,.45);letter-spacing:2px;margin-top:2px;font-family:'Cinzel',serif;}
+.sphere-rules-chevron{font-size:.6rem;color:rgba(180,0,0,.5);transition:transform .35s cubic-bezier(.34,1.56,.64,1);}
+.sphere-rules-wrap.open .sphere-rules-chevron{transform:rotate(180deg);}
+.sphere-rules-body{max-height:0;overflow:hidden;transition:max-height .5s cubic-bezier(0,.85,.3,1);}
+.sphere-rules-wrap.open .sphere-rules-body{max-height:2000px;}
+.sphere-rule-item{display:flex;gap:18px;padding:18px 22px;border-top:1px solid rgba(150,0,0,.1);align-items:flex-start;transition:.15s;}
+.sphere-rule-item:hover{background:rgba(150,0,0,.04);}
+.sphere-rule-item.sphere-rule-critical{background:rgba(100,0,0,.08);border-left:3px solid rgba(200,0,0,.5);}
+.sphere-rule-num{font-family:'Cinzel',serif;font-size:.7rem;color:rgba(180,0,0,.6);min-width:28px;padding-top:3px;letter-spacing:1px;}
+.sphere-rule-name{font-family:'Cinzel',serif;font-size:.78rem;font-weight:700;color:rgba(230,150,150,.9);letter-spacing:2px;margin-bottom:6px;}
+.sphere-rule-text{font-size:.74rem;color:rgba(180,150,150,.65);line-height:1.8;}
+.sphere-rule-critical .sphere-rule-name{color:#ff7070;}
+.sphere-rule-critical .sphere-rule-text{color:rgba(200,160,160,.7);}
+.sphere-rule-footer{text-align:center;padding:16px 22px 18px;font-family:'Cinzel',serif;font-size:.5rem;letter-spacing:4px;color:rgba(150,0,0,.45);border-top:1px solid rgba(150,0,0,.1);text-transform:uppercase;}
+/* ── SPHÈRE OCCULTE ── */
+:root{--oc:#7b2fff;--oc2:#4a0080;--oc-text:#ddb0ff;}
+.occulte-header-wrap{background:linear-gradient(135deg,rgba(30,0,60,.97),rgba(15,0,35,1));border:1px solid rgba(123,47,255,.2);border-top:3px solid rgba(123,47,255,.6);border-radius:12px;padding:22px 26px;margin-bottom:24px;position:relative;overflow:hidden;}
+.occulte-header-wrap::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 0% 0%,rgba(123,47,255,.08),transparent 60%);pointer-events:none;}
+.occulte-section-title{font-family:'Cinzel',serif;font-size:1.1rem;letter-spacing:5px;color:var(--oc-text);text-transform:uppercase;margin-bottom:4px;}
+.occulte-section-sub{font-size:.6rem;color:rgba(180,130,255,.4);letter-spacing:3px;font-family:'Cinzel',serif;}
+/* Tabs */
+.occulte-tabs{display:flex;gap:6px;margin-bottom:22px;background:rgba(0,0,0,.3);border-radius:8px;padding:5px;}
+.oc-tab{flex:1;background:none;border:none;font-family:'Cinzel',serif;font-size:.58rem;letter-spacing:2px;color:rgba(180,130,255,.5);padding:9px 12px;border-radius:6px;cursor:pointer;transition:.2s;text-transform:uppercase;}
+.oc-tab.active{background:rgba(123,47,255,.2);border:1px solid rgba(123,47,255,.35);color:var(--oc-text);}
+.oc-tab:hover:not(.active){background:rgba(123,47,255,.08);color:rgba(200,160,255,.7);}
+.oc-panel{display:none;}
+.oc-panel.active{display:block;}
+/* Codex incantations */
+.oc-level-section{margin-bottom:18px;}
+.oc-level-header{display:flex;align-items:center;gap:12px;padding:13px 18px;background:rgba(123,47,255,.08);border:1px solid rgba(123,47,255,.2);border-radius:8px;cursor:pointer;transition:.2s;user-select:none;}
+.oc-level-header:hover{background:rgba(123,47,255,.13);}
+.oc-level-badge{font-family:'Cinzel',serif;font-size:.52rem;letter-spacing:3px;padding:3px 12px;border-radius:20px;border:1px solid rgba(123,47,255,.4);color:var(--oc-text);background:rgba(123,47,255,.15);}
+.oc-level-badge.niveau-1{border-color:rgba(80,144,204,.5);color:#88bbff;background:rgba(80,144,204,.1);}
+.oc-level-badge.niveau-2{border-color:rgba(128,80,204,.5);color:#bb88ff;background:rgba(128,80,204,.1);}
+.oc-level-badge.niveau-3{border-color:rgba(204,112,32,.5);color:#ffaa66;background:rgba(204,112,32,.1);}
+.oc-level-badge.niveau-4{border-color:rgba(204,32,80,.5);color:#ff8888;background:rgba(204,32,80,.1);}
+.oc-level-badge.niveau-5{border-color:rgba(201,162,39,.5);color:var(--gold);background:rgba(201,162,39,.1);}
+.oc-level-title{font-family:'Cinzel',serif;font-size:.78rem;color:rgba(200,160,255,.8);letter-spacing:2px;}
+.oc-level-count{font-size:.55rem;color:rgba(150,100,200,.5);margin-left:auto;}
+.oc-level-chevron{font-size:.55rem;color:rgba(123,47,255,.5);transition:transform .3s ease;}
+.oc-level-section.open .oc-level-chevron{transform:rotate(180deg);}
+.oc-incantations-list{max-height:0;overflow:hidden;transition:max-height .5s cubic-bezier(0,.85,.3,1);}
+.oc-level-section.open .oc-incantations-list{max-height:5000px;}
+.oc-inc-card{background:rgba(20,5,40,.95);border:1px solid rgba(123,47,255,.12);border-left:3px solid var(--oc,#7b2fff);border-radius:0 8px 8px 0;margin:8px 0 8px 8px;padding:16px 18px;transition:.2s;}
+.oc-inc-card:hover{background:rgba(30,8,55,.95);border-left-color:rgba(180,100,255,.5);}
+.oc-inc-name{font-family:'Cinzel',serif;font-size:.88rem;font-weight:700;color:var(--oc-text);letter-spacing:2px;margin-bottom:8px;}
+.oc-inc-field{margin-bottom:7px;}
+.oc-inc-label{font-family:'Cinzel',serif;font-size:.45rem;letter-spacing:3px;color:rgba(150,100,200,.6);text-transform:uppercase;margin-bottom:2px;}
+.oc-inc-value{font-size:.72rem;color:rgba(180,150,220,.7);line-height:1.7;}
+.oc-inc-text{font-size:.68rem;color:rgba(160,130,200,.55);line-height:1.8;font-style:italic;border-left:2px solid rgba(123,47,255,.25);padding-left:12px;margin:8px 0;white-space:pre-wrap;}
+.oc-inc-gains{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;}
+.oc-inc-gain{font-family:'Cinzel',serif;font-size:.5rem;letter-spacing:2px;padding:3px 10px;border-radius:20px;}
+.oc-gain-manip{background:rgba(80,144,204,.12);border:1px solid rgba(80,144,204,.3);color:#88bbff;}
+.oc-gain-puis{background:rgba(204,32,80,.1);border:1px solid rgba(204,32,80,.25);color:#ff9999;}
+.oc-gain-special{background:rgba(201,162,39,.1);border:1px solid rgba(201,162,39,.25);color:var(--gold);}
+/* Membres */
+.oc-membre-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;}
+.oc-membre-card{background:linear-gradient(145deg,rgba(20,5,40,.97),rgba(12,3,25,.99));border:1px solid rgba(123,47,255,.18);border-top:2px solid var(--rank-color,rgba(123,47,255,.5));border-radius:10px;padding:18px 20px;position:relative;transition:.25s;}
+.oc-membre-card:hover{transform:translateY(-3px);box-shadow:0 8px 28px rgba(123,47,255,.12);}
+.oc-membre-nom{font-family:'Cinzel',serif;font-size:.88rem;font-weight:700;color:var(--oc-text);letter-spacing:1.5px;margin-bottom:4px;}
+.oc-membre-rang{font-family:'Cinzel',serif;font-size:.52rem;letter-spacing:3px;color:var(--rank-color,rgba(180,130,255,.6));text-transform:uppercase;margin-bottom:14px;}
+.oc-pts-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}
+.oc-pts-box{background:rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.05);border-radius:7px;padding:10px;text-align:center;}
+.oc-pts-val{font-family:'Cinzel',serif;font-size:1.3rem;font-weight:700;}
+.oc-pts-val.manip{color:#88bbff;}
+.oc-pts-val.puis{color:#ff9999;}
+.oc-pts-label{font-size:.45rem;letter-spacing:2px;color:rgba(150,130,180,.5);text-transform:uppercase;font-family:'Cinzel',serif;margin-top:3px;}
+.oc-progress-bar{height:4px;background:rgba(255,255,255,.06);border-radius:2px;margin-top:10px;overflow:hidden;}
+.oc-progress-fill{height:100%;background:linear-gradient(to right,var(--oc),rgba(200,100,255,.8));border-radius:2px;transition:width .5s ease;}
+.oc-admin-pts{display:flex;gap:6px;margin-top:12px;}
+.oc-admin-pts input{flex:1;background:rgba(0,0,0,.4);border:1px solid rgba(123,47,255,.2);border-radius:5px;padding:6px 10px;font-size:.68rem;color:var(--oc-text);outline:none;}
+.oc-admin-pts input:focus{border-color:rgba(123,47,255,.5);}
+/* Rapport */
+.oc-rapport-form{background:rgba(20,5,40,.95);border:1px solid rgba(123,47,255,.2);border-radius:12px;padding:24px;}
+.oc-inc-select-card{background:rgba(0,0,0,.3);border:1px solid rgba(123,47,255,.15);border-radius:8px;padding:12px 15px;cursor:pointer;transition:.2s;margin-bottom:8px;}
+.oc-inc-select-card:hover{border-color:rgba(123,47,255,.4);background:rgba(123,47,255,.08);}
+.oc-inc-select-card.selected{border-color:rgba(123,47,255,.6);background:rgba(123,47,255,.15);}
+.oc-rapport-preview{background:rgba(123,47,255,.08);border:1px solid rgba(123,47,255,.25);border-radius:8px;padding:14px;margin:14px 0;display:none;}
+/* Rang badges */
+.rank-initie{--rank-color:#666;}
+.rank-incantateur{--rank-color:#5090cc;}
+.rank-marcheur{--rank-color:#8050cc;}
+.rank-collecteur{--rank-color:#cc7020;}
+.rank-marchand{--rank-color:#cc2050;}
+.rank-monarque{--rank-color:#c9a227;}
+.role-occulte{background:rgba(74,0,128,.2);border:1px solid rgba(123,47,255,.4);color:#cc99ff;}
 /* ── ROLE CHECKBOXES ── */
 .role-checks{display:flex;flex-direction:column;gap:7px;margin-top:6px;}
 .role-check-item{display:flex;align-items:flex-start;gap:11px;padding:9px 12px;background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.06);border-radius:7px;cursor:pointer;transition:.15s;}
@@ -540,11 +662,14 @@ body::after{content:'';position:fixed;left:0;width:100%;height:2px;background:li
     <li class="nav-item"><button class="nav-btn" onclick="showSection('registre')" data-s="registre"><span class="nav-icon">⚔</span><span>Registre</span><span class="nav-badge" id="badge-registre">0</span></button></li>
     <li class="nav-item"><button class="nav-btn" onclick="showSection('wanted')" data-s="wanted"><span class="nav-icon">🎯</span><span>Cibles Prioritaires</span><span class="nav-badge" id="badge-wanted" style="background:#8b0000">0</span></button></li>
     <li class="nav-item"><button class="nav-btn" onclick="showSection('missions')" data-s="missions"><span class="nav-icon">📜</span><span>Missions</span><span class="nav-badge" id="badge-missions" style="background:#1a5a2a">0</span></button></li>
+    <li class="nav-item"><button class="nav-btn" onclick="showSection('codex')" data-s="codex"><span class="nav-icon">📖</span><span>Codex</span></button></li>
     <div class="nav-divider"></div>
     <li class="nav-item" id="nav-historique" style="display:none"><button class="nav-btn" onclick="showSection('historique')" data-s="historique"><span class="nav-icon">🕰</span><span>Historique</span></button></li>
-    <li class="nav-item"><button class="nav-btn" onclick="showSection('codex')" data-s="codex"><span class="nav-icon">📖</span><span>Codex</span></button></li>
-    <li class="nav-item" id="nav-sphere" style="display:none"><button class="nav-btn" onclick="showSection('sphere')" data-s="sphere"><span class="nav-icon">⚫</span><span>Sphère Secrète</span></button></li>
     <li class="nav-item" id="nav-admin" style="display:none"><button class="nav-btn" onclick="showSection('admin')" data-s="admin"><span class="nav-icon">🛡</span><span>Administration</span></button></li>
+    <div class="nav-divider-secret" id="nav-divider-sphere" style="display:none"><span>⚫ Accès Restreint</span></div>
+    <li class="nav-item" id="nav-sphere" style="display:none"><button class="nav-btn" onclick="showSection('sphere')" data-s="sphere"><span class="nav-icon">⚫</span><span>Sphère Secrète</span></button></li>
+    <div class="nav-divider-secret" id="nav-divider-occulte" style="display:none;--dc:rgba(123,47,255,.4)"><span style="color:rgba(150,80,255,.55)">⚗ Sphère Occulte</span></div>
+    <li class="nav-item" id="nav-occulte" style="display:none"><button class="nav-btn" onclick="showSection('occulte')" data-s="occulte" style="color:rgba(180,130,255,.8)"><span class="nav-icon">⚗</span><span>Sphère Occulte</span></button></li>
   </ul>
   <div class="sidebar-user" id="sidebarUser" style="display:none">
     <div class="su-name" id="suName">—</div>
@@ -653,7 +778,141 @@ body::after{content:'';position:fixed;left:0;width:100%;height:2px;background:li
         </div>
         <button class="btn btn-crimson" id="btnAddSphere" onclick="openFormSphere()">+ Nouvelle Opération</button>
       </div>
+
+      <!-- BARRE DE RECHERCHE GLOBALE -->
+      <div class="sphere-search-wrap">
+        <span class="sphere-search-icon">🔍</span>
+        <input class="sphere-search-input" id="sphereGlobalSearch" type="text"
+          placeholder="Rechercher un nom, rang, souffle..."
+          oninput="sphereGlobalSearch(this.value)"
+          autocomplete="off">
+        <button class="sphere-search-clear" id="sphereSearchClear" onclick="clearSphereSearch()">✕</button>
+      </div>
+
+      <!-- RÉSULTATS DE RECHERCHE -->
+      <div id="sphereSearchResults" class="sphere-results"></div>
+
+      <!-- RÈGLES D'OPÉRATION -->
+      <div class="sphere-rules-wrap">
+        <div class="sphere-rules-header" onclick="toggleSphereRules(this)">
+          <div style="display:flex;align-items:center;gap:12px">
+            <span style="font-size:1.1rem">📜</span>
+            <div>
+              <div class="sphere-rules-title">Règles d'Opération</div>
+              <div class="sphere-rules-sub">Protocoles de la Sphère — Lecture obligatoire</div>
+            </div>
+          </div>
+          <span class="sphere-rules-chevron">▼</span>
+        </div>
+        <div class="sphere-rules-body">
+          <div class="sphere-rule-item">
+            <div class="sphere-rule-num">I</div>
+            <div>
+              <div class="sphere-rule-name">Discrétion Absolue</div>
+              <div class="sphere-rule-text">Aucune information relative à la Sphère Secrète ne doit être divulguée à quiconque n'appartenant pas à ses rangs. Cela inclut les Veilleurs, les officiers extérieurs, et toute autre entité non initiée — quelle que soit leur autorité apparente.</div>
+            </div>
+          </div>
+          <div class="sphere-rule-item">
+            <div class="sphere-rule-num">II</div>
+            <div>
+              <div class="sphere-rule-name">L'Ombre Avant Tout</div>
+              <div class="sphere-rule-text">La Sphère Secrète n'existe pas. Ses membres opèrent dans l'anonymat le plus total. Toute mission doit être conduite sans laisser de trace identifiable. Les noms, les visages et les méthodes restent dans l'ombre.</div>
+            </div>
+          </div>
+          <div class="sphere-rule-item sphere-rule-critical">
+            <div class="sphere-rule-num">III</div>
+            <div>
+              <div class="sphere-rule-name">Élimination des Témoins</div>
+              <div class="sphere-rule-text">Tout individu ayant connaissance d'une opération en cours ou de l'existence de la Sphère constitue une menace directe. L'élimination sans sommation est autorisée — et parfois exigée. Aucune hésitation ne sera tolérée.</div>
+            </div>
+          </div>
+          <div class="sphere-rule-item">
+            <div class="sphere-rule-num">IV</div>
+            <div>
+              <div class="sphere-rule-name">Obéissance à la Chaîne de Commandement</div>
+              <div class="sphere-rule-text">Les ordres provenant des échelons supérieurs de la Sphère sont non négociables. Aucune remise en question sur le terrain. L'exécution prime sur la compréhension. Les doutes se formulent après la mission, jamais pendant.</div>
+            </div>
+          </div>
+          <div class="sphere-rule-item">
+            <div class="sphere-rule-num">V</div>
+            <div>
+              <div class="sphere-rule-name">Aucune Trace, Aucun Lien</div>
+              <div class="sphere-rule-text">Toute communication concernant les opérations passe exclusivement par les canaux officiels de la Sphère. L'utilisation de voies non sécurisées, la conservation de preuves ou d'artefacts compromettants sont strictement interdites.</div>
+            </div>
+          </div>
+          <div class="sphere-rule-item">
+            <div class="sphere-rule-num">VI</div>
+            <div>
+              <div class="sphere-rule-name">La Mission Avant la Vie</div>
+              <div class="sphere-rule-text">En cas de capture ou de compromission grave, l'opérateur doit prioriser l'intégrité de la Sphère. Mourir en silence vaut mieux que trahir par la parole. La Sphère vous a choisi — honorez ce choix jusqu'au bout.</div>
+            </div>
+          </div>
+          <div class="sphere-rule-footer">
+            <span>⚫</span> Ces règles sont gravées dans le sang. Leur violation est punie de la peine capitale sans procès. <span>⚫</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- OPÉRATIONS -->
       <div id="sphereContainer"><div class="loader"></div></div>
+    </section>
+
+    <!-- SPHÈRE OCCULTE -->
+    <section id="section-occulte" class="section">
+      <div class="occulte-header-wrap">
+        <div class="occulte-section-title">⚗ Sphère Occulte</div>
+        <div class="occulte-section-sub">Ordre des Incantateurs — Archives des Rituels & Progression</div>
+      </div>
+      <div class="occulte-tabs">
+        <button class="oc-tab active" onclick="switchOcTab('codex',this)">📜 Codex des Incantations</button>
+        <button class="oc-tab" onclick="switchOcTab('membres',this)">⚗ Membres & Progression</button>
+        <button class="oc-tab" onclick="switchOcTab('rapport',this)">✦ Soumettre un Rapport</button>
+      </div>
+      <!-- Codex -->
+      <div class="oc-panel active" id="oc-tab-codex">
+        <div id="occodexContainer"></div>
+      </div>
+      <!-- Membres -->
+      <div class="oc-panel" id="oc-tab-membres">
+        <div id="ocMembresContainer"><div class="loader"></div></div>
+      </div>
+      <!-- Rapport -->
+      <div class="oc-panel" id="oc-tab-rapport">
+        <div class="oc-rapport-form">
+          <div class="form-group">
+            <label class="form-label" style="color:var(--oc-text)">Choisir une incantation</label>
+            <div id="ocRapportIncList" style="max-height:300px;overflow-y:auto;padding-right:4px"></div>
+          </div>
+          <div class="oc-rapport-preview" id="ocRapportPreview">
+            <div class="oc-inc-label">Gains si validé</div>
+            <div id="ocRapportGains" class="oc-inc-gains" style="margin-top:6px"></div>
+          </div>
+          <div class="form-group" style="margin-top:14px">
+            <label class="form-label" style="color:var(--oc-text)">Note / Contexte RP <span style="opacity:.5">(optionnel)</span></label>
+            <textarea class="form-input" id="ocRapportNote" rows="3" placeholder="Décrivez brièvement le contexte du rituel..." style="resize:vertical"></textarea>
+          </div>
+          <div class="form-group" style="margin-top:14px">
+            <label class="form-label" style="color:var(--oc-text)">Capture d'écran <span style="color:#ff5555;font-size:.7rem">★ Obligatoire</span></label>
+            <div id="ocRapportScreenWrap" style="display:none;margin-bottom:8px;text-align:center">
+              <img id="ocRapportScreenPreview" style="max-width:100%;max-height:180px;border-radius:8px;border:1px solid rgba(123,47,255,.35);box-shadow:0 0 18px rgba(123,47,255,.2)">
+              <br>
+              <button type="button" class="btn btn-ghost btn-sm" style="margin-top:6px;font-size:.55rem" onclick="clearOcRapportScreen()">✕ Supprimer la capture</button>
+            </div>
+            <input type="file" id="ocRapportScreenFile" accept="image/*" style="display:none" onchange="previewOcRapportScreen(this)">
+            <button type="button" id="ocRapportScreenBtn" class="btn btn-ghost" style="border:1px dashed rgba(123,47,255,.4);width:100%;padding:12px;font-size:.62rem;color:rgba(180,130,255,.7)" onclick="document.getElementById('ocRapportScreenFile').click()">📷 Joindre une capture d'écran de la scène RP</button>
+          </div>
+          <div class="form-group" id="ocRapportForWrap" style="margin-top:14px;display:none">
+            <label class="form-label" style="color:var(--oc-text)">Soumettre pour le membre <span style="color:#c9a227;font-size:.6rem">(Admin)</span></label>
+            <select class="form-select" id="ocRapportForMembre" style="background:rgba(20,5,40,.8);border-color:rgba(123,47,255,.3);color:var(--oc-text)">
+              <option value="">— Soi-même —</option>
+            </select>
+          </div>
+          <input type="hidden" id="ocRapportSelected">
+          <input type="hidden" id="ocRapportScreenData">
+          <button class="btn" style="background:rgba(123,47,255,.2);border:1px solid rgba(123,47,255,.4);color:var(--oc-text);width:100%;margin-top:8px" onclick="submitOcRapport()">✦ Soumettre le Rapport</button>
+        </div>
+        <div id="ocRapportsHistory" style="margin-top:20px"></div>
+      </div>
     </section>
 
     <!-- ADMIN -->
@@ -661,9 +920,14 @@ body::after{content:'';position:fixed;left:0;width:100%;height:2px;background:li
       <div class="section-title">Administration</div>
       <div class="section-sub">Gestion des accès et des données</div>
       <div class="admin-grid">
-        <div class="admin-card">
+        <div class="admin-card" style="grid-column:1/-1">
           <div class="admin-card-title">🔐 Liste Blanche Steam</div>
           <div id="whitelistContainer"><div class="loader"></div></div>
+        </div>
+        <div class="admin-card" id="adminOcculteCard" style="grid-column:1/-1;display:none">
+          <div class="admin-card-title">⚗ Sphère Occulte — Points des Membres</div>
+          <div style="font-size:.6rem;color:rgba(150,100,200,.5);margin-bottom:14px">Membres avec le rôle Occulte. Ajustez leurs points directement (± relatif · = valeur absolue pour Superadmin).</div>
+          <div id="adminOcculteContainer"><div class="loader"></div></div>
         </div>
         <div class="admin-card">
           <div class="admin-card-title">➕ Ajouter un Éditeur</div>
@@ -678,8 +942,9 @@ body::after{content:'';position:fixed;left:0;width:100%;height:2px;background:li
           <div class="form-group" style="margin-bottom:14px">
             <label class="form-label">Rôles (plusieurs possibles)</label>
             <div class="role-checks" id="wlRoleChecks">
-              <label class="role-check-item"><input type="checkbox" value="veilleur" checked><div class="rci-text"><div class="rci-label">Veilleur</div><div class="rci-desc">Peut modifier les fiches du registre</div></div></label>
-              <label class="role-check-item"><input type="checkbox" value="sphere"><div class="rci-text"><div class="rci-label">Sphère Secrète</div><div class="rci-desc">Accès en lecture aux opérations secrètes</div></div></label>
+              <label class="role-check-item"><input type="checkbox" value="veilleur" checked><div class="rci-text"><div class="rci-label">Veilleur</div><div class="rci-desc">Accès au registre, cibles et missions</div></div></label>
+              <label class="role-check-item"><input type="checkbox" value="sphere"><div class="rci-text"><div class="rci-label">Sphère Secrète</div><div class="rci-desc">Accès aux opérations secrètes</div></div></label>
+              <label class="role-check-item"><input type="checkbox" value="occulte"><div class="rci-text"><div class="rci-label">Sphère Occulte</div><div class="rci-desc">Accès aux incantations et rapports occultes</div></div></label>
               <label class="role-check-item"><input type="checkbox" value="adminsphere"><div class="rci-text"><div class="rci-label">Admin Sphère</div><div class="rci-desc">Historique + gestion, sans Sphère Secrète</div></div></label>
               <label class="role-check-item"><input type="checkbox" value="admin"><div class="rci-text"><div class="rci-label">Admin</div><div class="rci-desc">Accès complet à tout</div></div></label>
             </div>
@@ -957,6 +1222,7 @@ body::after{content:'';position:fixed;left:0;width:100%;height:2px;background:li
       <div class="role-checks" id="crRoleChecks">
         <label class="role-check-item"><input type="checkbox" value="veilleur"><div class="rci-text"><div class="rci-label">Veilleur</div><div class="rci-desc">Peut modifier les fiches du registre</div></div></label>
         <label class="role-check-item"><input type="checkbox" value="sphere"><div class="rci-text"><div class="rci-label">Sphère Secrète</div><div class="rci-desc">Accès en lecture aux opérations secrètes</div></div></label>
+        <label class="role-check-item"><input type="checkbox" value="occulte"><div class="rci-text"><div class="rci-label">Sphère Occulte</div><div class="rci-desc">Accès aux incantations et rapports occultes</div></div></label>
         <label class="role-check-item"><input type="checkbox" value="adminsphere"><div class="rci-text"><div class="rci-label">Admin Sphère</div><div class="rci-desc">Historique + gestion, sans Sphère Secrète</div></div></label>
         <label class="role-check-item"><input type="checkbox" value="admin"><div class="rci-text"><div class="rci-label">Admin</div><div class="rci-desc">Accès complet à tout</div></div></label>
       </div>
@@ -1344,10 +1610,16 @@ function onUserLogin() {
   if (hasAnyRole('admin','superadmin')) {
     document.getElementById('nav-admin').style.display = 'block';
     document.getElementById('nav-sphere').style.display = 'block';
+    document.getElementById('nav-divider-sphere').style.display = 'flex';
     document.getElementById('nav-historique').style.display = 'block';
   }
   if (hasAnyRole('sphere','accesplus')) {
     document.getElementById('nav-sphere').style.display = 'block';
+    document.getElementById('nav-divider-sphere').style.display = 'flex';
+  }
+  if (hasAnyRole('occulte','admin','superadmin','adminsphere')) {
+    document.getElementById('nav-occulte').style.display = 'block';
+    document.getElementById('nav-divider-occulte').style.display = 'flex';
   }
   if (hasRole('adminsphere')) {
     document.getElementById('nav-admin').style.display = 'block';
@@ -1374,6 +1646,12 @@ function onUserLogin() {
   document.getElementById('credSteamId').textContent = currentUser.steamId;
   document.getElementById('credCode').textContent = '••••••';
   document.getElementById('credCode').dataset.real = saved.code || '—';
+  // Rafraîchir les sections dépendantes du rôle
+  setTimeout(()=>{
+    renderWhitelist();
+    renderAdminOcculte();
+    refreshOcRapportMemberSelect();
+  },200);
 }
 
 function onUserLogout() {
@@ -1383,6 +1661,9 @@ function onUserLogout() {
   document.getElementById('topbarUserInfo').style.display = 'none';
   document.getElementById('nav-admin').style.display = 'none';
   document.getElementById('nav-sphere').style.display = 'none';
+  document.getElementById('nav-divider-sphere').style.display = 'none';
+  document.getElementById('nav-occulte').style.display = 'none';
+  document.getElementById('nav-divider-occulte').style.display = 'none';
   document.getElementById('nav-historique').style.display = 'none';
   document.querySelectorAll('.auth-only').forEach(b => b.style.display = 'none');
 }
@@ -1630,6 +1911,86 @@ function renderSphere(){
     </div>`;
   }).join('')}</div>`;
 }
+
+/* ── RECHERCHE GLOBALE SPHÈRE ── */
+window.toggleSphereRules=(header)=>{
+  header.closest('.sphere-rules-wrap').classList.toggle('open');
+};
+
+window.sphereGlobalSearch=(val)=>{
+  const q=val.trim().toLowerCase();
+  const clearBtn=document.getElementById('sphereSearchClear');
+  const resultsEl=document.getElementById('sphereSearchResults');
+  const containerEl=document.getElementById('sphereContainer');
+  if(clearBtn) clearBtn.style.display=q?'block':'none';
+  if(!q){
+    resultsEl.style.display='none';resultsEl.innerHTML='';
+    if(containerEl) containerEl.style.display='block';
+    return;
+  }
+  if(containerEl) containerEl.style.display='none';
+  // Chercher dans toutes les sources
+  const results=[];
+  // 1. Registre Pourfendeurs
+  allPourfendeurs.filter(p=>!p.deleted).forEach(p=>{
+    const fields=[p.nom,p.rang,p.souffle,p.brigade,p.statut,p.info,p.pilier_ref,p.kinoe_ref].filter(Boolean).join(' ').toLowerCase();
+    if(fields.includes(q)) results.push({source:'registre',name:p.nom||'—',sub:p.rang||'',extra:p.souffle||'',photo:p.photo||'',info:p.info||'',id:p.id,data:p});
+  });
+  // 2. Cibles (Wanted)
+  allWanted.filter(w=>!w.deleted).forEach(w=>{
+    const nom=`${w.prenom||''} ${w.nom||''}`.trim();
+    const fields=[nom,w.grade,w.raison,w.description].filter(Boolean).join(' ').toLowerCase();
+    if(fields.includes(q)) results.push({source:'cible',name:nom||'—',sub:w.grade||'',extra:w.raison||'',photo:w.photo||'',info:w.description||w.raison||'',id:w.id,data:w});
+  });
+  // 3. Missions
+  allMissions.filter(m=>!m.deleted).forEach(m=>{
+    const fields=[m.titre,m.description,m.cible,m.responsable,m.statut].filter(Boolean).join(' ').toLowerCase();
+    if(fields.includes(q)) results.push({source:'mission',name:m.titre||'—',sub:m.statut||'',extra:m.cible?'Cible : '+m.cible:'',photo:'',info:m.description||'',id:m.id,data:m});
+  });
+  // 4. Opérations Sphère
+  allSphere.forEach(s=>{
+    const fields=[s.targetName,s.targetGrade,s.type,s.notes,s.operateur,s.statut,s.priorite].filter(Boolean).join(' ').toLowerCase();
+    if(fields.includes(q)) results.push({source:'sphere',name:s.targetName||s.type||'—',sub:s.type||'',extra:s.statut||'',photo:s.targetPhoto||'',info:s.notes||'',id:s.id,data:s});
+  });
+  if(!results.length){
+    resultsEl.style.display='block';
+    resultsEl.innerHTML=`<div class="sphere-no-results">⚫ Aucune trace trouvée pour "<em>${val}</em>"</div>`;
+    return;
+  }
+  // Grouper par source
+  const groups={registre:[],cible:[],mission:[],sphere:[]};
+  results.forEach(r=>groups[r.source].push(r));
+  const sourceLabels={registre:'📋 Registre des Pourfendeurs',cible:'🎯 Cibles Répertoriées',mission:'⚔ Missions',sphere:'⚫ Opérations Sphère'};
+  let html='';
+  for(const [src,items] of Object.entries(groups)){
+    if(!items.length) continue;
+    html+=`<div class="sphere-results-title">${sourceLabels[src]} <span style="font-size:.5rem;opacity:.6">(${items.length})</span></div>`;
+    items.forEach(r=>{
+      const photoHtml=r.photo?`<img src="${r.photo}" alt="">`:'⚔';
+      const infoTrunc=r.info.length>120?r.info.slice(0,120)+'…':r.info;
+      const clickAction=src==='registre'?`showSection('registre');openProfile('${r.id}')`:src==='cible'?`showSection('wanted')`:src==='sphere'?'':'';
+      html+=`<div class="sphere-result-card" style="--src-color:${src==='registre'?'rgba(0,150,255,.5)':src==='cible'?'rgba(220,50,50,.6)':src==='mission'?'rgba(200,160,0,.5)':'rgba(180,0,0,.6)'}"
+        ${clickAction?`onclick="${clickAction}"`:''}>
+        <div class="sphere-result-photo">${photoHtml}</div>
+        <div class="sphere-result-body">
+          <div class="sphere-result-name">${r.name}</div>
+          <span class="sphere-result-source src-${src}">${sourceLabels[src].replace(/^.+ /,'')}</span>
+          <div class="sphere-result-meta">
+            ${r.sub?`<strong>${r.sub}</strong>`:''}
+            ${r.extra?` · ${r.extra}`:''}
+            ${infoTrunc?`<br><span style="opacity:.75">${infoTrunc}</span>`:''}
+          </div>
+        </div>
+      </div>`;
+    });
+  }
+  resultsEl.innerHTML=html;
+  resultsEl.style.display='block';
+};
+window.clearSphereSearch=()=>{
+  const input=document.getElementById('sphereGlobalSearch');
+  if(input){input.value='';sphereGlobalSearch('');}
+};
 
 window.searchSphereTarget=(val)=>{
   const resultsEl=document.getElementById('sfSearchResults');
@@ -1891,30 +2252,575 @@ window.restoreEntry=async(logId)=>{
   }catch(e){toast('Erreur : '+e.message,'error');}
 };
 
-/* ═══ ADMIN — WHITELIST ═══ */
-const roleLabels={veilleur:'Veilleur',accesplus:'Accès+',sphere:'Sphère',adminsphere:'Admin Sphère',admin:'Admin',superadmin:'Superadmin'};
-onSnapshot(collection(db,'whitelist'),snap=>{
-  const items=snap.docs.map(d=>({id:d.id,...d.data()}));
-  const c=document.getElementById('whitelistContainer');if(!c)return;
-  if(!items.length){c.innerHTML='<div style="font-size:.7rem;color:var(--text-muted)">Aucun membre autorisé.</div>';return;}
-  const isAdmin=currentUser&&hasAnyRole('admin','superadmin');
-  c.innerHTML=items.map(u=>{
-    const roles=toRolesArray(u.roles||u.role);
-    const badges=roles.map(r=>`<span class="wl-role role-${r}">${roleLabels[r]||r}</span>`).join('');
-    const escapedName=(u.name||u.id).replace(/'/g,"\\'");
-    return `<div class="wl-item">
+/* ═══ SPHÈRE OCCULTE ═══ */
+const OC_RANKS=[
+  {id:'initie',    label:'Initié',             color:'#666',    manip:0,   puis:0},
+  {id:'incantateur',label:'Incantateur',       color:'#5090cc', manip:0,   puis:0},
+  {id:'marcheur',  label:'Marcheur des Voiles',color:'#8050cc', manip:15,  puis:15},
+  {id:'collecteur',label:'Collecteur d\'Ombre',color:'#cc7020', manip:30,  puis:45},
+  {id:'marchand',  label:'Marchand des Âmes',  color:'#cc2050', manip:65,  puis:90},
+  {id:'monarque',  label:'Monarque des Ombres',color:'#c9a227', manip:115, puis:260},
+];
+function calcOcRank(manipulation,puissance){
+  if(puissance>=260&&manipulation>=115)return OC_RANKS[5];
+  if(puissance>=90&&manipulation>=65)return OC_RANKS[4];
+  if(puissance>=45&&manipulation>=30)return OC_RANKS[3];
+  if(puissance>=15&&manipulation>=15)return OC_RANKS[2];
+  return OC_RANKS[1];
+}
+const OC_INCANTATIONS=[
+  // ── INCANTATEUR ──
+  {id:'voile_penombre',nom:'Voile de Pénombre',niveau:'Incantateur',niveauId:'incantateur',
+   cas:'Troubler légèrement la perception visuelle dans une zone restreinte, sans masquer totalement un lieu ou une personne.',
+   objet:'Oui, une source de flamme faible (bougie, braise, lampe vacillante).',
+   explication:`L'Incantateur canalise une énergie occulte mineure à travers la flamme afin de provoquer une instabilité lumineuse temporaire. La pénombre créée atténue légèrement les contrastes, fatigue les yeux et rend les contours incertains.`,
+   incantation:`Per flammam fragilem, voco umbram naissante,\nnon pour couvrir, mais pour hésiter.\nLux, noli fugi, sed vacilla,\nreste présente, mais incertaine.\nUmbra non regnat, elle frôle seulement,\nelle effleure les murs et les regards.\nNulla caecitas, nulla disparition,\njuste un trouble léger dans l'instant.\nInter lumen et tenebras,\nje marche sans m'y cacher.\nSic transit penumbra,\néphémère, instable, imparfaite.`,
+   manip:1,puis:0},
+  {id:'frisson_seuil',nom:'Frisson du Seuil',niveau:'Incantateur',niveauId:'incantateur',
+   cas:'Provoquer une sensation diffuse de malaise ou de présence indéfinissable dans une zone très restreinte.',
+   objet:'Oui, un objet personnel de l\'Incantateur (bague, pendentif).',
+   explication:`L'Incantateur projette une impulsion occulte mineure imprégnée de son propre état émotionnel. L'effet ne crée ni peur incontrôlable ni hallucination, mais un simple inconfort : frisson, impression d'être observé.`,
+   incantation:`Ad limen sensuum, ego susurro,\nnon comme un cri, mais comme un doute.\nCor non tremat, sed hesitet,\nque l'instant perde sa stabilité.\nNulla vis, nulla dominatio,\nje n'impose rien, je suggère.\nFrigus leviter descendit,\nun frisson sans raison apparente.\nInter praesentiam et vacuum,\nje laisse une trace fragile.\nSic manet sensatio,\néphémère, contestable, humaine.`,
+   manip:1,puis:0},
+  {id:'offrande_sang',nom:'Offrande du Sang Vacillant',niveau:'Incantateur',niveauId:'incantateur',
+   cas:'Libérer une poussée de puissance occulte exceptionnelle au prix d\'une vie, afin de renforcer son énergie occulte.',
+   objet:'Oui, le Socle du Sang Écarlate et une vie consciente offerte volontairement ou immobilisée rituellement.',
+   explication:`L'Incantateur utilise le socle comme catalyseur pour convertir l'énergie vitale d'une vie en flux occulte brut. Cette énergie amplifie brièvement l'effet ciblé sans en modifier la nature. Un mauvais contrôle peut entraîner une perte de conscience.`,
+   incantation:`Per sanguinem viventem, voco vim interdictam,\nnon comme un maître, mais comme un désespéré.\nVita solvitur, anima tremit,\net la chair paie le prix.\nHoc non est donum,\nc'est une dette.\nSanguis cadit, potestas surgit,\ninstabilis, affamée.\nNulla permanencia, nulla gloria,\nseulement l'instant volé.\nInter mortem et voluntatem,\nje tends la main.\nSi ego cado,\nqu'il en soit ainsi.`,
+   socle:'Socle du Sang Écarlate — Lorsque vous sacrifiez une vie afin de libérer une puissance occulte brute.',
+   manip:0,puis:1},
+  {id:'dechirure_offrande',nom:'Déchirure de l\'Offrande',niveau:'Incantateur',niveauId:'incantateur',
+   cas:'Rompre un verrou occulte mineur, dissiper une manifestation surnaturelle et absorber l\'énergie d\'une entité.',
+   objet:'Oui, le Socle de l\'Autel des Âmes Damnées et une vie offerte dans le cercle rituel.',
+   explication:`L'Incantateur canalise l'agonie et l'extinction d'une vie à travers l'autel afin de provoquer une décharge occulte incontrôlée. Cette énergie agit comme une onde de rupture qui peut briser, dissiper ou perturber ce qui est déjà fragilisé.`,
+   incantation:`Per mortem data, frango quod resistit,\nnon par sagesse, mais par violence.\nVita clamat, anima solvitur,\net le seuil cède.\nHoc non est judicium,\nc'est une fracture.\nSanguis fluit, nexus rumpitur,\ndans un cri muet.\nNulla directio, nulla misericordia,\nseulement l'impact.\nInter finem et chaos,\nje libère ce qui ne devrait pas l'être.\nSi locus tremit,\nque l'offrande en porte la faute.\nSic scinditur vinculum.`,
+   socle:'Socle de l\'Autel des Âmes Damnées — Lorsque vous consommez entièrement l\'énergie d\'une vie pour provoquer une rupture occulte violente.',
+   manip:0,puis:1},
+  {id:'masque_chair',nom:'Masque de Chair Profane',niveau:'Incantateur',niveauId:'incantateur',
+   cas:'Forcer la renaissance temporaire d\'un démon sous une forme humaine, afin qu\'il puisse interagir avec le monde des vivants.',
+   objet:'Oui, le Socle des Réincarnations, un réceptacle humain vide ou consentant, et une trace symbolique du démon.',
+   explication:`L'incantation impose au démon un masque de chair instable. L'entité renaît temporairement dans un corps humain imparfait. La durée est limitée — à l'expiration du rituel, le masque se dissout.`,
+   incantation:`Per circulum vitae falsae, ego nego naturam,\nnon pour purifier, mais pour dissimuler.\nDaemon, non mutaris,\ntu revêts seulement la chair.\nCaro humana, recipis quod n'es pas,\nsans le comprendre.\nPer reincarnationem imperfectam,\nje lie l'instant au mensonge.\nVitium manet, instinctus manet,\nles failles traversent le masque.\nMimesis perfecta, sed non sincera,\nl'humain est joué, jamais vécu.\nSi tempus frangitur,\nque la forme se rompe.\nInter daemon et hominem,\nje suspends l'existence.\nSic cadit masca carnis.`,
+   socle:'Socle des Réincarnations — Lorsque vous forcez une renaissance temporaire et imparfaite.',
+   manip:2,puis:1},
+  {id:'silence_ame',nom:'Silence de l\'Âme Errante',niveau:'Incantateur',niveauId:'incantateur',
+   cas:'Entrer dans un état de méditation profonde afin de ressentir son énergie occulte et préparer mentalement un rituel futur.',
+   objet:'Oui, le Socle des Purifications éternels.',
+   explication:`L'Incantateur ferme son esprit aux stimuli extérieurs et se concentre sur les vibrations des ombres environnantes. L'incantation sert uniquement à stabiliser l'esprit et améliorer légèrement la perception. Toute interruption brise l'état.`,
+   incantation:`Silentium animae, veni ad me,\nnon pour entendre, mais pour sentir.\nPer umbras leviter, per fluxus parvos,\nje touche ce qui est à peine là.\nNulla potentia, nulla vis,\njuste l'attention, fragile et fluide.\nInter sonum et vacuum,\nje repose l'esprit.\nRespira, cogita, observo,\nchaque frisson, chaque souffle.\nSi externum turbavit,\ntout est perdu.\nSic maneo in silentio,\ntemporaire, humble, patient.`,
+   manip:2,puis:0},
+  {id:'submergence_damnes',nom:'Submergence des Damnés',niveau:'Incantateur',niveauId:'incantateur',
+   cas:'Faire surgir la puissance démoniaque latente chez une personne, révéler ses instincts sombres et sa nature occulte cachée.',
+   objet:'Non, un cercle tracé ou un simple espace sombre suffit.',
+   explication:`L'Incantateur invoque les forces des abysses pour révéler la noirceur refoulée d'un individu. L'effet dévoile la nature démoniaque cachée.`,
+   incantation:`"Oh, forces des abysses, entendez mon appel !\nQue l'obscurité voilée consume la lumière qui voile l'âme,\nQue les instincts anciens se réveillent et prennent chair !\nPar le murmure du Néant, par le souffle des damnés,\nRévèle en ce corps la noirceur refoulée et les ombres cachées !\n\nTenebrae Intimae, Vis Malorum,\nEx Profundis Daemonium Resurget,\nSanguis, Furor et Insidia,\nLibera animam et fac veritatem apparere !\n\nIgnis Tenebris, Dominae Malorum,\nResurget Umbra Ex Profundis,\nQue les chaînes tombent et que la vérité démoniaque éclate,\nFragile et dangereuse, dans chaque geste et chaque souffle !"`,
+   manip:1,puis:1},
+  // ── MARCHEUR DES VOILES ──
+  {id:'fissure_voile',nom:'Fissure du Voile Errant',niveau:'Marcheur des Voiles',niveauId:'marcheur',
+   cas:'Ouvrir temporairement un passage instable entre deux lieux distincts, en forçant une déchirure à travers le Voile.',
+   objet:'Non, mais la présence d\'une zone d\'ombre profonde ou d\'un reflet sombre facilite la canalisation.',
+   explication:`Le Marcheur des Voiles impose une correspondance imparfaite entre deux lieux. Le passage provoque souvent désorientation, malaise ou perte momentanée de repères.`,
+   incantation:`Velum inter spatia, audi gradum meum,\nje ne viens pas briser, je viens forcer le seuil.\nPer umbras dissonantes et lieux disjoints,\naccorde un instant ce qui ne doit pas l'être.\nHic locus me connaît,\nillic locus m'appelle.\nNulla via recta, nulla securitas,\nje marche entre les lignes.\nFissura nascitur non par volonté,\nmais par équilibre fragile.\nSi vis deficit,\nque le Voile se referme.\nSi error venit,\nque l'espace décide.\nPorta aperitur, porta tremit,\nau rythme de mon souffle.\nInter hic et alibi,\nje traverse sans promesse.\nSic fit transitus per Velum,\néphémère, incertain, réel.`,
+   manip:2,puis:0},
+  {id:'moisson_souffle',nom:'Moisson du Souffle Éteint',niveau:'Marcheur des Voiles',niveauId:'marcheur',
+   cas:'Absorber et transférer la puissance occulte résiduelle d\'Incantateurs inactifs ou ayant renoncé à leur pratique.',
+   objet:'Oui, le Socle des Âmes et la présence physique ou symbolique des Incantateurs ciblés.',
+   explication:`Le Marcheur aspire le flux occulte dormant présent chez les Incantateurs inactifs. Ce rituel arrache définitivement la capacité d'incantation restante. Les cibles survivent, mais deviennent incapables de pratiquer toute magie occulte.`,
+   incantation:`O animae dormientes, flammae sine souffle,\nvous qui portez encore l'écho du pouvoir.\nNon ad mortem voco,\nmais à la dépossession.\nPer Soclum Animarum, aperio collectio,\nque ce qui sommeille soit arraché.\nVis occulta, non t'appartiens plus,\nchange de porteur.\nNulla voluntas, nulla pugna,\ncar le souffle est déjà éteint.\nEx Incantatore vacuo,\nje retire la braise.\nSi corpus manet,\npotestas cadit.\nInter transfertum et rupture,\nje prends le risque.\nSic fit messis,\net le silence demeure.`,
+   socle:'Socle des Âmes — Lorsque vous souhaitez extraire la puissance occulte liée à une vie, sans en consumer l\'existence.',
+   manip:0,puis:0,special:'Transfert de points entre membres'},
+  {id:'sceau_silence',nom:'Sceau du Silence Déchu',niveau:'Marcheur des Voiles',niveauId:'marcheur',
+   cas:'Créer un sceau occulte sur un démon capable de manipuler l\'énergie occulte, lui interdire toute divulgation liée à la Sphère.',
+   objet:'Oui, le Socle des Glyphes du Néant et un support de sceau.',
+   explication:`Le Marcheur grave un glyphe de contrainte absolue liant le sceau directement à l'essence démoniaque. Une fois apposé : toute tentative de manipulation d'énergie est absorbée. Le démon ne peut plus formuler d'informations sur la Sphère.`,
+   incantation:`Per glyphum vetitum et nexus infernum,\nje grave le silence dans l'essence.\nDaemon loquax, verba tua cadant,\navant même de naître.\nNon per mortem, non per oubli,\nmais par contrainte absolue.\nSoclum Glyphorum, aperire vinculum,\nlie l'ombre à la marque.\nVis occulta, si surgis,\nstatim consume et solve.\nNulla manipulatio, nulla emissio,\nchaque flux est drainé.\nDe Sphaera Occulta, tace,\nni signe, ni détour.\nSi lingua mentitur,\nque l'énergie se vide.\nInter daemon et scellum,\nje fixe la loi.\nSic stat Sigillum,\net le silence règne.`,
+   socle:'Socle des Glyphes du Néant — Lorsque vous souhaitez sceller, lier et drainer totalement une entité.',
+   manip:2,puis:0},
+  {id:'offrande_spoliation',nom:'Offrande de Spoliation Profane',niveau:'Marcheur des Voiles',niveauId:'marcheur',
+   cas:'Sacrifier un Pourfendeur afin de consumer son essence et d\'absorber l\'énergie libérée à travers la salle rituelle.',
+   objet:'Oui, le Socle de l\'Autel des Âmes Damnées, la présence physique du Pourfendeur vivant, et une salle rituelle.',
+   explication:`Le Pourfendeur est lié au socle par des glyphes de contrainte. La salle agit comme un amplificateur. L'essence vitale et l'énergie accumulée sont arrachées et absorbées par le Marcheur.`,
+   incantation:`Soclum Altaris, expergiscere,\nouvre la gueule des damnés.\nHic stat venator,\nnon comme juge, mais comme offrande.\nPer vincula glyphorum,\nje lie sa volonté.\nSala resonat, parietes audiunt,\nretenez ce qui va se briser.\nSanguis cadit, anima clamat,\nne la laissez pas fuir.\nPer mortem non sacrée,\nje fracture l'essence.\nVis collecta, converge,\nne te disperse pas.\nEgo non sum salvator,\nego sum preneur.\nSi energia resistit,\nque la chair paie le prix.\nAltare, consume,\net rends-moi ce qui reste.\nSic fit sacrificium,\net la puissance est volée.`,
+   socle:'Socle de l\'Autel des Âmes Damnées — Lorsque vous souhaitez consommer entièrement l\'énergie d\'une vie par un sacrifice amplifié.',
+   manip:2,puis:3},
+  {id:'profanation_voile',nom:'Profanation du Voile Charnel',niveau:'Marcheur des Voiles',niveauId:'marcheur',
+   cas:'Corrompre et transformer un Pourfendeur vivant en une créature démoniaque imparfaite.',
+   objet:'Oui, le Socle des Âmes, ainsi qu\'un espace clos.',
+   explication:`Le Marcheur force l'âme du Pourfendeur à entrer en résonance avec le Voile, fissurant son essence. L'énergie démoniaque s'infiltre dans le corps et l'esprit. La créature résultante conserve des souvenirs fragmentés.`,
+   incantation:`Soclum Animarum, audi cladem,\nceci n'est pas une ascension.\nHic stat venator,\nbrisé mais vivant.\nPer Velum laceratum,\nje fracture son reflet.\nAnima humana, ne fuge,\ntu serviras de fondation.\nVis daemonica, intra lente,\nne consume pas tout.\nCaro mutat, ossa respondent,\nle corps apprend à souffrir.\nMens resistit ?\nAlors brise-la.\nNon facio dominum,\nje façonne une aberration.\nInter hominem et daemonem,\nqu'il marche sans repos.\nSi Voluntas cadit,\nforma restat.\nVelum claude,\nlaisse la chose respirer.\nSic fit profanatio,\net le Pourfendeur n'est plus.`,
+   socle:'Socle des Âmes — Lorsque vous souhaitez altérer, détourner ou corrompre l\'essence d\'une vie.',
+   manip:4,puis:2},
+  {id:'erosion_presence',nom:'Érosion de Présence — Sceau du Nom Dissous',niveau:'Marcheur des Voiles',niveauId:'marcheur',
+   cas:'Altérer de manière rituelle l\'identité d\'un individu en lui faisant oublier son prénom et en fragmentant ~15% de ses souvenirs.',
+   objet:'Oui, le Socle des Glyphes du Néant, ainsi qu\'un support de focalisation.',
+   explication:`Le Marcheur inscrit un sceau d'érosion identitaire sur le socle, reliant l'ancrage mémoriel de la cible au Néant. Le prénom est dissocié du flux de conscience tandis qu'une portion contrôlée des souvenirs est dispersée.`,
+   incantation:`Soclum Glyphorum, sustine me,\nceci n'est pas un effacement.\nHic nomen scriptum est,\net je le détache.\nPer signum vetitum,\nje ne brise pas la mémoire,\nje la fragmente.\nPraenomen solvitur,\nretiré du flux.\nQuinque et decem partes recordationis,\nerrent entre les lignes.\nMens non cadit,\nmens vacillat.\nSouviens-toi d'exister,\noublie comment tu te nommes.\nSocle, retiens sans dévorer,\nle temps que le Voile décide.\nQuand le glyphe s'effacera,\nle fil se renouera.\nNon est poena aeterna,\nsed mora identitatis.\nSic stat sigillum,\net l'oubli demeure… temporaire.`,
+   socle:'Socle des Glyphes du Néant — Lorsque vous souhaitez lier, fragmenter ou suspendre temporairement une identité.',
+   manip:2,puis:0},
+];
+
+// Niveaux disponibles pour le codex
+const OC_LEVELS=[
+  {id:'incantateur',label:'Incantateur',classe:'niveau-1'},
+  {id:'marcheur',label:'Marcheur des Voiles',classe:'niveau-2'},
+  {id:'collecteur',label:'Collecteur d\'Ombre',classe:'niveau-3'},
+  {id:'marchand',label:'Marchand des Âmes',classe:'niveau-4'},
+  {id:'monarque',label:'Monarque des Ombres',classe:'niveau-5'},
+];
+
+function renderOcCodex(){
+  const c=document.getElementById('occodexContainer');if(!c)return;
+  let html='';
+  OC_LEVELS.forEach(lvl=>{
+    const incs=OC_INCANTATIONS.filter(i=>i.niveauId===lvl.id);
+    if(!incs.length&&lvl.id!=='collecteur'&&lvl.id!=='marchand'&&lvl.id!=='monarque') return;
+    html+=`<div class="oc-level-section" id="oc-lvl-${lvl.id}">
+      <div class="oc-level-header" onclick="this.closest('.oc-level-section').classList.toggle('open')">
+        <span class="oc-level-badge ${lvl.classe}">${lvl.label}</span>
+        <span class="oc-level-title">— Incantations disponibles</span>
+        <span class="oc-level-count">${incs.length} rituel${incs.length>1?'s':''}</span>
+        <span class="oc-level-chevron">▼</span>
+      </div>
+      <div class="oc-incantations-list">`;
+    if(!incs.length){
+      html+=`<div style="padding:18px 20px;font-size:.7rem;color:rgba(150,100,200,.4);font-family:'Cinzel',serif;letter-spacing:2px;text-align:center">Incantations à venir...</div>`;
+    } else {
+      incs.forEach(inc=>{
+        const gainsHtml=inc.special
+          ?`<span class="oc-inc-gain oc-gain-special">✦ ${inc.special}</span>`
+          :[inc.manip?`<span class="oc-inc-gain oc-gain-manip">+${inc.manip} Manipulation Occulte</span>`:'',
+             inc.puis?`<span class="oc-inc-gain oc-gain-puis">+${inc.puis} Puissance Occulte</span>`:''].filter(Boolean).join('');
+        html+=`<div class="oc-inc-card">
+          <div class="oc-inc-name">${inc.nom}</div>
+          <div class="oc-inc-field"><div class="oc-inc-label">Dans quel cas</div><div class="oc-inc-value">${inc.cas}</div></div>
+          <div class="oc-inc-field"><div class="oc-inc-label">Objet requis</div><div class="oc-inc-value">${inc.objet}</div></div>
+          <div class="oc-inc-field"><div class="oc-inc-label">Fonctionnement</div><div class="oc-inc-value">${inc.explication}</div></div>
+          <div class="oc-inc-field"><div class="oc-inc-label">Incantation</div><div class="oc-inc-text">${inc.incantation}</div></div>
+          ${inc.socle?`<div class="oc-inc-field"><div class="oc-inc-label">Socle</div><div class="oc-inc-value" style="color:rgba(200,162,39,.6)">${inc.socle}</div></div>`:''}
+          <div class="oc-inc-gains">${gainsHtml}</div>
+        </div>`;
+      });
+    }
+    html+=`</div></div>`;
+  });
+  c.innerHTML=html;
+}
+renderOcCodex();
+
+// Remplir la liste des incantations dans le formulaire rapport
+function renderOcRapportList(){
+  const c=document.getElementById('ocRapportIncList');if(!c)return;
+  const available=OC_INCANTATIONS.filter(i=>i.manip>0||i.puis>0||i.special);
+  c.innerHTML=available.map(inc=>`<div class="oc-inc-select-card" data-id="${inc.id}" onclick="selectOcInc('${inc.id}')">
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:12px">
       <div>
-        <div class="wl-name">${u.name||u.id}</div>
-        <div class="wl-steam">${u.id}</div>
-        <div class="wl-code-status ${u.codeHash?'wl-code-set':'wl-code-pending'}">${u.codeHash?'✓ Code défini':'⏳ En attente (1ère connexion)'}</div>
+        <div style="font-family:'Cinzel',serif;font-size:.75rem;color:var(--oc-text);letter-spacing:1px">${inc.nom}</div>
+        <div style="font-size:.58rem;color:rgba(150,100,200,.5);margin-top:2px">${inc.niveau}</div>
       </div>
-      <div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap;justify-content:flex-end">
-        <div style="display:flex;gap:4px;flex-wrap:wrap">${badges}</div>
-        ${isAdmin?`<button class="btn btn-ghost btn-sm" onclick="openChangeRole('${u.id}','${escapedName}','${roles.join(',')}')" title="Changer les rôles">✎ Rôles</button><button class="btn btn-ghost btn-sm" onclick="resetCode('${u.id}','${escapedName}')">↺ Code</button><button class="btn btn-danger btn-sm" onclick="removeFromWhitelist('${u.id}','${escapedName}')">✕</button>`:''}
+      <div style="display:flex;gap:5px;flex-shrink:0">
+        ${inc.special?`<span class="oc-inc-gain oc-gain-special" style="font-size:.44rem">✦ Spécial</span>`:''}
+        ${inc.manip?`<span class="oc-inc-gain oc-gain-manip" style="font-size:.44rem">+${inc.manip} M</span>`:''}
+        ${inc.puis?`<span class="oc-inc-gain oc-gain-puis" style="font-size:.44rem">+${inc.puis} P</span>`:''}
       </div>
+    </div>
+  </div>`).join('');
+}
+renderOcRapportList();
+
+window.selectOcInc=(id)=>{
+  document.querySelectorAll('.oc-inc-select-card').forEach(c=>c.classList.remove('selected'));
+  const card=document.querySelector(`.oc-inc-select-card[data-id="${id}"]`);
+  if(card)card.classList.add('selected');
+  document.getElementById('ocRapportSelected').value=id;
+  const inc=OC_INCANTATIONS.find(i=>i.id===id);if(!inc)return;
+  const preview=document.getElementById('ocRapportPreview');
+  const gains=document.getElementById('ocRapportGains');
+  gains.innerHTML=inc.special
+    ?`<span class="oc-inc-gain oc-gain-special">✦ ${inc.special}</span>`
+    :[inc.manip?`<span class="oc-inc-gain oc-gain-manip">+${inc.manip} Manipulation Occulte</span>`:'',
+       inc.puis?`<span class="oc-inc-gain oc-gain-puis">+${inc.puis} Puissance Occulte</span>`:''].filter(Boolean).join('');
+  preview.style.display='block';
+};
+
+window.switchOcTab=(tab,btn)=>{
+  document.querySelectorAll('.oc-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.oc-tab').forEach(b=>b.classList.remove('active'));
+  document.getElementById('oc-tab-'+tab).classList.add('active');
+  btn.classList.add('active');
+};
+
+/* ── Membres Occulte ── */
+let allOcMembres=[];
+onSnapshot(collection(db,'occulte_membres'),snap=>{
+  allOcMembres=snap.docs.map(d=>({id:d.id,...d.data()}));
+  renderOcMembres();
+  renderOcRapportsHistory();
+  renderAdminOcculte();
+});
+
+let allOcRapports=[];
+onSnapshot(collection(db,'occulte_rapports'),snap=>{
+  allOcRapports=snap.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.date?.seconds||0)-(a.date?.seconds||0));
+  renderOcRapportsHistory();
+});
+
+function renderOcMembres(){
+  const c=document.getElementById('ocMembresContainer');if(!c)return;
+  const canAdmin=currentUser&&hasAnyRole('admin','superadmin','adminsphere');
+  const isSuperAdmin=currentUser&&hasRole('superadmin');
+  if(!allOcMembres.length){
+    c.innerHTML=`<div class="empty-state"><div class="empty-icon">⚗</div><p>Aucun membre Occulte enregistré</p></div>`;
+    return;
+  }
+  const sorted=[...allOcMembres].sort((a,b)=>{
+    const rA=OC_RANKS.findIndex(r=>r.id===calcOcRank(a.manipulation||0,a.puissance||0).id);
+    const rB=OC_RANKS.findIndex(r=>r.id===calcOcRank(b.manipulation||0,b.puissance||0).id);
+    return rB-rA||(b.puissance||0)-(a.puissance||0);
+  });
+  const nextThresholds=(m,p)=>{
+    for(const r of OC_RANKS.slice().reverse()){
+      if(r.manip>m||r.puis>p){return r;}
+    }return null;
+  };
+  c.innerHTML=`<div class="oc-membre-grid">${sorted.map(mem=>{
+    const manip=mem.manipulation||0,puis=mem.puissance||0;
+    const rank=calcOcRank(manip,puis);
+    const next=nextThresholds(manip,puis);
+    const pct=next?Math.min(100,Math.round(((manip+puis)/(next.manip+next.puis))*100)):100;
+    return `<div class="oc-membre-card rank-${rank.id}" style="--rank-color:${rank.color}">
+      <div class="oc-membre-nom">${mem.nom||mem.id}</div>
+      <div class="oc-membre-rang">${rank.label}</div>
+      <div class="oc-pts-row">
+        <div class="oc-pts-box"><div class="oc-pts-val manip">${manip}</div><div class="oc-pts-label">Manipulation</div></div>
+        <div class="oc-pts-box"><div class="oc-pts-val puis">${puis}</div><div class="oc-pts-label">Puissance</div></div>
+      </div>
+      ${next?`<div style="font-size:.5rem;color:rgba(150,100,200,.4);font-family:'Cinzel',serif;letter-spacing:1px;margin-bottom:4px">Prochain rang : ${next.label}</div>
+      <div class="oc-progress-bar"><div class="oc-progress-fill" style="width:${pct}%"></div></div>`:'<div style="font-size:.5rem;color:var(--gold);font-family:\'Cinzel\',serif;letter-spacing:2px;text-align:center;margin-top:6px">⭐ RANG SUPRÊME</div>'}
+      ${canAdmin?`<div class="oc-admin-pts">
+        <input type="number" placeholder="Δ Manip" id="oc-m-${mem.id}" style="color:#88bbff;width:68px" title="Variation (+/- relatif)">
+        <input type="number" placeholder="Δ Puis" id="oc-p-${mem.id}" style="color:#ff9999;width:68px" title="Variation (+/- relatif)">
+        <button class="btn btn-ghost btn-sm" onclick="adjustOcPts('${mem.id}',false)" title="Appliquer variation ±">±</button>
+        ${isSuperAdmin?`<button class="btn btn-sm" style="background:rgba(201,162,39,.15);border:1px solid rgba(201,162,39,.4);color:#c9a227;font-size:.55rem;padding:3px 7px" onclick="adjustOcPts('${mem.id}',true)" title="Définir valeur absolue (superadmin)">=</button>`:''}
+        <button class="btn btn-danger btn-sm" onclick="deleteOcMembre('${mem.id}','${(mem.nom||mem.id).replace(/'/g,"\\'")}')">✕</button>
+      </div>
+      ${isSuperAdmin?`<div style="font-size:.48rem;color:rgba(150,100,200,.4);text-align:center;margin-top:2px">± relatif &nbsp;|&nbsp; <span style="color:rgba(201,162,39,.5)">= valeur absolue (superadmin)</span></div>`:''}`:''}
+    </div>`;
+  }).join('')}</div>
+  ${canAdmin?`<div style="margin-top:20px;background:rgba(123,47,255,.06);border:1px solid rgba(123,47,255,.15);border-radius:10px;padding:18px">
+    <div style="font-family:'Cinzel',serif;font-size:.65rem;letter-spacing:3px;color:rgba(180,130,255,.6);margin-bottom:12px">➕ Ajouter un membre Occulte</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <input class="form-input" id="ocNewNom" placeholder="Nom du membre" style="flex:1;min-width:150px">
+      <input type="number" class="form-input" id="ocNewManip" placeholder="Manip initial" style="width:95px" value="0" title="Points de Manipulation Occulte de départ">
+      <input type="number" class="form-input" id="ocNewPuis" placeholder="Puis initial" style="width:95px" value="0" title="Points de Puissance Occulte de départ">
+      <button class="btn" style="background:rgba(123,47,255,.2);border:1px solid rgba(123,47,255,.4);color:var(--oc-text)" onclick="addOcMembre()">+ Ajouter</button>
+    </div>
+  </div>`:''}`;
+}
+
+function renderOcRapportsHistory(){
+  const c=document.getElementById('ocRapportsHistory');if(!c)return;
+  if(!allOcRapports.length){c.innerHTML='';return;}
+  const canAdmin=currentUser&&hasAnyRole('admin','superadmin','adminsphere');
+  c.innerHTML=`<div style="font-family:'Cinzel',serif;font-size:.55rem;letter-spacing:4px;color:rgba(150,100,200,.5);margin-bottom:12px;text-transform:uppercase">Derniers rapports soumis</div>
+  ${allOcRapports.slice(0,15).map(r=>{
+    const inc=OC_INCANTATIONS.find(i=>i.id===r.incantationId);
+    const d=r.date?.toDate?r.date.toDate().toLocaleString('fr-FR'):'—';
+    const statut=r.valide?'✔ Validé':'⏳ En attente';
+    const statutColor=r.valide?'#44cc44':'#e8a000';
+    return `<div style="background:rgba(20,5,40,.8);border:1px solid rgba(123,47,255,.1);border-radius:8px;padding:12px 15px;margin-bottom:8px">
+      <div style="display:flex;gap:12px;align-items:flex-start">
+        <div style="flex:1">
+          <div style="font-family:'Cinzel',serif;font-size:.72rem;color:var(--oc-text);margin-bottom:3px">${inc?.nom||r.incantationId}</div>
+          <div style="font-size:.6rem;color:rgba(150,100,200,.5)">par ${r.nomMembre||r.steamId||'—'} · ${d}${r.soumisParNom&&r.soumisParNom!==r.nomMembre?` <span style="opacity:.6">· via ${r.soumisParNom}</span>`:''}</div>
+          ${r.note?`<div style="font-size:.65rem;color:rgba(160,130,200,.5);margin-top:4px;font-style:italic">"${r.note}"</div>`:''}
+          ${inc?`<div style="font-size:.55rem;color:rgba(120,90,180,.5);margin-top:3px">+${inc.manip||0} Manip &nbsp;·&nbsp; +${inc.puis||0} Puis</div>`:''}
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:5px;flex-shrink:0">
+          <span style="font-size:.5rem;color:${statutColor};font-family:'Cinzel',serif;letter-spacing:2px">${statut}</span>
+          ${!r.valide&&canAdmin?`<button class="btn btn-success btn-sm" onclick="validateOcRapport('${r.id}','${r.steamId}','${r.incantationId}')">✔ Valider</button>`:''}
+        </div>
+      </div>
+      ${r.screenshot?`<div style="margin-top:10px"><img src="${r.screenshot}" style="max-width:100%;max-height:220px;border-radius:6px;border:1px solid rgba(123,47,255,.25);cursor:pointer;box-shadow:0 0 14px rgba(80,30,140,.3)" onclick="this.style.maxHeight=this.style.maxHeight==='none'?'220px':'none'" title="Cliquer pour agrandir/réduire"></div>`:'<div style="margin-top:8px;font-size:.5rem;color:rgba(150,100,200,.3);font-style:italic">⚠ Aucune capture jointe</div>'}
+    </div>`;
+  }).join('')}`;
+}
+
+window.adjustOcPts=async(memId, absolute=false)=>{
+  if(!currentUser||!hasAnyRole('admin','superadmin','adminsphere')){toast('Accès insuffisant.','error');return;}
+  if(absolute&&!hasRole('superadmin')){toast('La définition de valeur absolue est réservée au Superadmin.','error');return;}
+  // Chercher les inputs (dans la vue Membres OU dans la vue Admin)
+  const inpM=document.getElementById('oc-m-'+memId)||document.getElementById('aom-m-'+memId);
+  const inpP=document.getElementById('oc-p-'+memId)||document.getElementById('aom-p-'+memId);
+  const rawM=inpM?.value;
+  const rawP=inpP?.value;
+  const dM=rawM!==''?parseInt(rawM):NaN;
+  const dP=rawP!==''?parseInt(rawP):NaN;
+  if(isNaN(dM)&&isNaN(dP)){toast('Entre au moins une valeur.','warn');return;}
+  const mem=allOcMembres.find(m=>m.id===memId);if(!mem)return;
+  let newM, newP;
+  if(absolute){
+    newM=isNaN(dM)?mem.manipulation||0:Math.max(0,dM);
+    newP=isNaN(dP)?mem.puissance||0:Math.max(0,dP);
+  } else {
+    newM=Math.max(0,(mem.manipulation||0)+(isNaN(dM)?0:dM));
+    newP=Math.max(0,(mem.puissance||0)+(isNaN(dP)?0:dP));
+  }
+  try{
+    await updateDoc(doc(db,'occulte_membres',memId),{manipulation:newM,puissance:newP});
+    const label=absolute?'Valeurs fixées':'Points ajustés';
+    toast(`${label} — Manip : ${newM} | Puis : ${newP}`,'success');
+    if(inpM) inpM.value='';
+    if(inpP) inpP.value='';
+  }catch(e){toast('Erreur : '+e.message,'error');}
+};
+
+window.addOcMembre=async()=>{
+  if(!currentUser||!hasAnyRole('admin','superadmin','adminsphere')){toast('Accès insuffisant.','error');return;}
+  const nom=document.getElementById('ocNewNom')?.value.trim();
+  if(!nom){toast('Nom requis.','warn');return;}
+  const manip=Math.max(0,parseInt(document.getElementById('ocNewManip')?.value)||0);
+  const puis=Math.max(0,parseInt(document.getElementById('ocNewPuis')?.value)||0);
+  try{
+    const ref=await addDoc(collection(db,'occulte_membres'),{nom,manipulation:manip,puissance:puis,createdAt:serverTimestamp(),createdBy:currentUser.steamId});
+    toast(`${nom} ajouté à la Sphère Occulte.`,'success');
+    document.getElementById('ocNewNom').value='';
+    document.getElementById('ocNewManip').value='0';
+    document.getElementById('ocNewPuis').value='0';
+  }catch(e){toast('Erreur : '+e.message,'error');}
+};
+
+window.deleteOcMembre=async(id,nom)=>{
+  if(!confirm(`Supprimer ${nom} de la Sphère Occulte ?`))return;
+  try{await deleteDoc(doc(db,'occulte_membres',id));toast(`${nom} supprimé.`,'warn');}
+  catch(e){toast('Erreur : '+e.message,'error');}
+};
+
+window.previewOcRapportScreen=async(input)=>{
+  const file=input.files[0];if(!file)return;
+  try{
+    toast('Compression de la capture...','info');
+    // Compression plus large pour les screenshots (max 900px)
+    const compressed=await new Promise((resolve,reject)=>{
+      const reader=new FileReader();
+      reader.onerror=()=>reject(new Error('Lecture impossible'));
+      reader.onload=e=>{
+        const img=new Image();
+        img.onerror=()=>reject(new Error('Image invalide'));
+        img.onload=()=>{
+          const MAX=900;
+          let w=img.width,h=img.height;
+          if(w>MAX){h=Math.round(h*MAX/w);w=MAX;}
+          else if(h>MAX){w=Math.round(w*MAX/h);h=MAX;}
+          const cv=document.createElement('canvas');
+          cv.width=w;cv.height=h;
+          cv.getContext('2d').drawImage(img,0,0,w,h);
+          resolve(cv.toDataURL('image/jpeg',0.8));
+        };
+        img.src=e.target.result;
+      };
+      reader.readAsDataURL(file);
+    });
+    document.getElementById('ocRapportScreenData').value=compressed;
+    document.getElementById('ocRapportScreenPreview').src=compressed;
+    document.getElementById('ocRapportScreenWrap').style.display='block';
+    document.getElementById('ocRapportScreenBtn').style.display='none';
+    toast('Capture ajoutée.','success');
+  }catch(e){toast('Erreur image : '+e.message,'error');}
+};
+
+window.clearOcRapportScreen=()=>{
+  document.getElementById('ocRapportScreenData').value='';
+  document.getElementById('ocRapportScreenPreview').src='';
+  document.getElementById('ocRapportScreenWrap').style.display='none';
+  document.getElementById('ocRapportScreenBtn').style.display='';
+  document.getElementById('ocRapportScreenFile').value='';
+};
+
+window.submitOcRapport=async()=>{
+  if(!currentUser){toast('Connexion requise.','error');return;}
+  if(!hasAnyRole('occulte','admin','superadmin','adminsphere')){toast('Accès insuffisant — rôle Occulte requis.','error');return;}
+  const incId=document.getElementById('ocRapportSelected').value;
+  if(!incId){toast('Sélectionne une incantation.','warn');return;}
+  // Screenshot obligatoire
+  const screenData=document.getElementById('ocRapportScreenData').value;
+  if(!screenData){toast('Une capture d\'écran de la scène RP est obligatoire.','warn');document.getElementById('ocRapportScreenFile').click();return;}
+  const note=document.getElementById('ocRapportNote').value.trim();
+  const inc=OC_INCANTATIONS.find(i=>i.id===incId);if(!inc)return;
+  // Déterminer le membre cible (admin/superadmin/adminsphere peut choisir)
+  const isAdmin=hasAnyRole('admin','superadmin','adminsphere');
+  let targetSteamId=currentUser.steamId, targetNom=currentUser.name;
+  if(isAdmin){
+    const sel=document.getElementById('ocRapportForMembre')?.value;
+    if(sel){const [sid,nom]=sel.split('|');targetSteamId=sid;targetNom=nom;}
+  }
+  try{
+    toast('Envoi du rapport...','info');
+    await addDoc(collection(db,'occulte_rapports'),{
+      steamId:targetSteamId,nomMembre:targetNom,
+      soumisParSteamId:currentUser.steamId,soumisParNom:currentUser.name,
+      incantationId:incId,note,manip:inc.manip||0,puis:inc.puis||0,
+      screenshot:screenData,
+      valide:false,date:serverTimestamp()
+    });
+    toast('Rapport soumis ! En attente de validation.','success');
+    document.getElementById('ocRapportSelected').value='';
+    document.getElementById('ocRapportNote').value='';
+    document.getElementById('ocRapportScreenData').value='';
+    document.getElementById('ocRapportScreenWrap').style.display='none';
+    document.getElementById('ocRapportScreenBtn').style.display='';
+    document.getElementById('ocRapportScreenFile').value='';
+    document.querySelectorAll('.oc-inc-select-card').forEach(c=>c.classList.remove('selected'));
+    document.getElementById('ocRapportPreview').style.display='none';
+  }catch(e){
+    if(e.code==='permission-denied'||e.message?.includes('insufficient permissions')){
+      toast('❌ Firestore bloque l\'écriture — mets à jour tes règles de sécurité (voir console).','error');
+      console.error('FIRESTORE RULES MANQUANTES pour occulte_rapports',e);
+    } else {
+      toast('Erreur : '+e.message,'error');
+    }
+  }
+};
+
+window.validateOcRapport=async(rapportId,steamId,incId)=>{
+  if(!currentUser||!hasAnyRole('admin','superadmin','adminsphere')){toast('Accès insuffisant.','error');return;}
+  const rapport=allOcRapports.find(r=>r.id===rapportId);if(!rapport)return;
+  const inc=OC_INCANTATIONS.find(i=>i.id===incId);if(!inc)return;
+  try{
+    await updateDoc(doc(db,'occulte_rapports',rapportId),{valide:true,validePar:currentUser.steamId,valideAt:serverTimestamp()});
+    // Trouver le membre correspondant et ajouter les points
+    const mem=allOcMembres.find(m=>m.id===steamId||m.nom===rapport.nomMembre);
+    if(mem){
+      await updateDoc(doc(db,'occulte_membres',mem.id),{
+        manipulation:(mem.manipulation||0)+(inc.manip||0),
+        puissance:(mem.puissance||0)+(inc.puis||0)
+      });
+    }
+    toast(`Rapport validé — points ajoutés.`,'success');
+  }catch(e){toast('Erreur : '+e.message,'error');}
+};
+
+/* ═══ ADMIN — WHITELIST ═══ */
+const roleLabels={veilleur:'Veilleur',accesplus:'Accès+',sphere:'Sphère Secrète',adminsphere:'Admin Sphère',admin:'Admin',superadmin:'Superadmin',occulte:'Occulte'};
+
+function wlUserGroup(roles){
+  if(roles.some(r=>['superadmin','admin','adminsphere'].includes(r))) return 'admin';
+  if(roles.includes('occulte')) return 'occulte';
+  if(roles.includes('sphere')) return 'sphere';
+  return 'veilleur';
+}
+
+const _wlGroupMeta={
+  admin:  {label:'⚔ Administration',         color:'rgba(201,162,39,.6)',  bg:'rgba(201,162,39,.04)'},
+  occulte:{label:'⚗ Sphère Occulte',         color:'rgba(123,47,255,.7)',  bg:'rgba(40,10,80,.15)'},
+  sphere: {label:'⚫ Sphère Secrète',          color:'rgba(160,60,255,.55)', bg:'rgba(60,0,100,.08)'},
+  veilleur:{label:'🌀 Veilleurs',              color:'rgba(0,162,255,.5)',   bg:'rgba(0,60,120,.06)'},
+};
+
+let _allWlItems=[];
+onSnapshot(collection(db,'whitelist'),snap=>{
+  _allWlItems=snap.docs.map(d=>({id:d.id,...d.data()}));
+  renderWhitelist();
+  renderAdminOcculte();
+  refreshOcRapportMemberSelect();
+});
+
+function renderWhitelist(){
+  const c=document.getElementById('whitelistContainer');if(!c)return;
+  if(!_allWlItems.length){c.innerHTML='<div style="font-size:.7rem;color:var(--text-muted)">Aucun membre autorisé.</div>';return;}
+  const isAdmin=currentUser&&hasAnyRole('admin','superadmin');
+  const isSA=currentUser&&hasRole('superadmin');
+  // Grouper
+  const groups={admin:[],occulte:[],sphere:[],veilleur:[]};
+  _allWlItems.forEach(u=>{
+    const roles=toRolesArray(u.roles||u.role);
+    groups[wlUserGroup(roles)].push({...u,_roles:roles});
+  });
+  let html='';
+  for(const gKey of ['admin','occulte','sphere','veilleur']){
+    const list=groups[gKey];
+    if(!list.length) continue;
+    const meta=_wlGroupMeta[gKey];
+    html+=`<div style="margin-bottom:18px">
+      <div style="font-family:'Cinzel',serif;font-size:.52rem;letter-spacing:4px;color:${meta.color};text-transform:uppercase;padding:6px 10px;background:${meta.bg};border-radius:6px;margin-bottom:6px;border-left:2px solid ${meta.color}">${meta.label} <span style="opacity:.5">(${list.length})</span></div>`;
+    list.forEach(u=>{
+      const roles=u._roles;
+      const badges=roles.map(r=>`<span class="wl-role role-${r}">${roleLabels[r]||r}</span>`).join('');
+      const escapedName=(u.name||u.id).replace(/'/g,"\\'");
+      html+=`<div class="wl-item">
+        <div>
+          <div class="wl-name">${u.name||u.id}</div>
+          <div class="wl-steam">${u.id}</div>
+          <div class="wl-code-status ${u.codeHash?'wl-code-set':'wl-code-pending'}">${u.codeHash?'✓ Code défini':'⏳ En attente (1ère connexion)'}</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap;justify-content:flex-end">
+          <div style="display:flex;gap:4px;flex-wrap:wrap">${badges}</div>
+          ${isAdmin?`<button class="btn btn-ghost btn-sm" onclick="openChangeRole('${u.id}','${escapedName}','${roles.join(',')}')" title="Changer les rôles">✎ Rôles</button><button class="btn btn-ghost btn-sm" onclick="resetCode('${u.id}','${escapedName}')">↺ Code</button><button class="btn btn-danger btn-sm" onclick="removeFromWhitelist('${u.id}','${escapedName}')">✕</button>`:''}
+        </div>
+      </div>`;
+    });
+    html+='</div>';
+  }
+  c.innerHTML=html;
+}
+
+function renderAdminOcculte(){
+  const card=document.getElementById('adminOcculteCard');
+  const c=document.getElementById('adminOcculteContainer');
+  if(!c||!card)return;
+  const canSee=currentUser&&hasAnyRole('admin','superadmin');
+  if(!canSee){card.style.display='none';return;}
+  const isSA=currentUser&&hasRole('superadmin');
+  // Filtrer les users occulte
+  const ocUsers=_allWlItems.filter(u=>{const r=toRolesArray(u.roles||u.role);return r.includes('occulte');});
+  if(!ocUsers.length){card.style.display='none';return;}
+  card.style.display='block';
+  c.innerHTML=ocUsers.map(u=>{
+    // Chercher leur fiche dans occulte_membres (par steamId ou par nom)
+    const mem=allOcMembres.find(m=>m.steamId===u.id||m.nom===(u.name||u.id));
+    const manip=mem?mem.manipulation||0:'—';
+    const puis=mem?mem.puissance||0:'—';
+    const rank=mem?calcOcRank(mem.manipulation||0,mem.puissance||0):null;
+    const memId=mem?.id||null;
+    return `<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid rgba(123,47,255,.08);flex-wrap:wrap">
+      <div style="flex:1;min-width:130px">
+        <div style="font-family:'Cinzel',serif;font-size:.68rem;color:var(--oc-text)">${u.name||u.id}</div>
+        <div style="font-size:.54rem;color:rgba(150,100,200,.4)">${u.id}</div>
+        ${rank?`<div style="font-size:.52rem;color:${rank.color};margin-top:2px">${rank.label}</div>`:'<div style="font-size:.52rem;color:rgba(150,100,200,.3);margin-top:2px">Pas de fiche Occulte</div>'}
+      </div>
+      ${mem?`<div style="display:flex;gap:8px;align-items:center;flex-shrink:0">
+        <div style="text-align:center">
+          <div style="font-size:.8rem;font-weight:bold;color:#88bbff">${manip}</div>
+          <div style="font-size:.48rem;color:rgba(100,150,220,.5)">Manip</div>
+        </div>
+        <div style="text-align:center">
+          <div style="font-size:.8rem;font-weight:bold;color:#ff9999">${puis}</div>
+          <div style="font-size:.48rem;color:rgba(220,100,100,.5)">Puis</div>
+        </div>
+        <input type="number" placeholder="Δ Manip" id="aom-m-${memId}" style="width:65px;font-size:.6rem;background:rgba(10,0,25,.8);border:1px solid rgba(123,47,255,.3);color:#88bbff;border-radius:4px;padding:3px 6px" title="Variation +/-">
+        <input type="number" placeholder="Δ Puis" id="aom-p-${memId}" style="width:65px;font-size:.6rem;background:rgba(10,0,25,.8);border:1px solid rgba(123,47,255,.3);color:#ff9999;border-radius:4px;padding:3px 6px" title="Variation +/-">
+        <button class="btn btn-ghost btn-sm" onclick="adjustOcPts('${memId}',false)" title="Appliquer variation ±">±</button>
+        ${isSA?`<button class="btn btn-sm" style="background:rgba(201,162,39,.15);border:1px solid rgba(201,162,39,.4);color:#c9a227;font-size:.55rem;padding:3px 7px" onclick="adjustOcPts('${memId}',true)" title="Définir valeur absolue">=</button>`:''}
+      </div>`:`<div style="font-size:.58rem;color:rgba(150,100,200,.4)">Aucune fiche — ajouter depuis Sphère Occulte</div>`}
     </div>`;
   }).join('');
-});
+}
+
+function refreshOcRapportMemberSelect(){
+  const sel=document.getElementById('ocRapportForMembre');if(!sel)return;
+  const isAdmin=currentUser&&hasAnyRole('admin','superadmin','adminsphere');
+  const wrap=document.getElementById('ocRapportForWrap');
+  if(wrap) wrap.style.display=isAdmin?'block':'none';
+  if(!isAdmin)return;
+  const prev=sel.value;
+  sel.innerHTML='<option value="">— Soi-même —</option>';
+  _allWlItems.filter(u=>{const r=toRolesArray(u.roles||u.role);return r.includes('occulte');}).forEach(u=>{
+    const o=document.createElement('option');
+    o.value=u.id+'|'+(u.name||u.id);
+    o.textContent=u.name||u.id;
+    sel.appendChild(o);
+  });
+  if(prev) sel.value=prev;
+}
 
 const roleDescriptions={
   veilleur:'Peut modifier les fiches, mais pas ajouter de cibles, missions ou opérations Sphère.',
