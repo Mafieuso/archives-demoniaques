@@ -285,10 +285,25 @@ input,select,textarea{font-family:inherit;}
 .pf-label{font-size:.48rem;letter-spacing:3px;color:var(--text-muted);text-transform:uppercase;font-family:'Cinzel',serif;margin-bottom:4px;}
 .pf-val{font-size:.82rem;color:var(--text);}
 .profile-obs-block{background:rgba(255,255,255,.02);border-left:3px solid var(--pbc,#c9a227);padding:13px 16px;font-size:.8rem;line-height:1.8;color:rgba(200,190,180,.75);white-space:pre-wrap;margin-bottom:16px;border-radius:0 6px 6px 0;}
-.profile-hist-title{font-family:'Cinzel',serif;font-size:.52rem;letter-spacing:4px;color:var(--text-muted);text-transform:uppercase;margin-bottom:8px;display:flex;align-items:center;gap:8px;}
-.profile-hist-title::after{content:'';flex:1;height:1px;background:var(--border);}
-.profile-hist-row{font-size:.67rem;color:var(--text-muted);padding:7px 0;border-bottom:1px solid rgba(255,255,255,.04);display:flex;justify-content:space-between;gap:8px;}
-.profile-hist-row:last-child{border-bottom:none;}
+/* Info rows redesignés */
+.pf-rows{display:flex;flex-direction:column;gap:0;margin-bottom:18px;border:1px solid rgba(255,255,255,.06);border-radius:8px;overflow:hidden;}
+.pf-row{display:flex;align-items:center;gap:0;border-bottom:1px solid rgba(255,255,255,.04);}
+.pf-row:last-child{border-bottom:none;}
+.pf-row-icon{width:32px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:.9rem;opacity:.5;padding:11px 0;}
+.pf-row-label{font-family:'Cinzel',serif;font-size:.46rem;letter-spacing:3px;color:var(--text-muted);text-transform:uppercase;min-width:100px;padding:11px 0 11px 4px;flex-shrink:0;}
+.pf-row-val{font-size:.78rem;color:var(--text);padding:11px 14px 11px 0;flex:1;font-weight:500;}
+.pf-row-val.accent{color:var(--pbc,#c9a227);}
+/* Rapport de terrain */
+.pf-rapport-wrap{position:relative;margin-bottom:18px;}
+.pf-rapport-label{font-family:'Cinzel',serif;font-size:.48rem;letter-spacing:4px;color:var(--text-muted);text-transform:uppercase;display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.pf-rapport-label::after{content:'';flex:1;height:1px;background:linear-gradient(to right,var(--pbc,#c9a227),transparent);opacity:.3;}
+.pf-rapport-body{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.05);border-top:2px solid var(--pbc,#c9a227);border-radius:0 0 8px 8px;padding:14px 16px;font-size:.78rem;line-height:1.9;color:rgba(210,200,190,.7);white-space:pre-wrap;font-style:italic;}
+/* Sceau bas de page */
+.pf-footer{margin-top:auto;padding-top:14px;display:flex;align-items:center;justify-content:space-between;gap:10px;}
+.pf-seal{font-family:'Cinzel',serif;font-size:.48rem;letter-spacing:3px;color:rgba(200,0,0,.35);display:flex;align-items:center;gap:6px;}
+.pf-seal::before{content:'⚔';font-size:.8rem;opacity:.5;}
+/* Barre progression carrousel */
+.profile-carousel-progress{position:absolute;bottom:0;left:0;height:2px;background:var(--pbc,#c9a227);opacity:.55;transition:width linear;z-index:11;border-radius:0 1px 1px 0;}
 @media(max-width:600px){.profile-dossier{flex-direction:column;}.profile-col-img{width:100%;height:260px;}.profile-col-info::before{display:none;}}
 
 /* MUSIC PLAYER (topbar) */
@@ -411,6 +426,30 @@ input[type=range].pos-slider::-moz-range-thumb{width:14px;height:14px;border-rad
 .photo-preview{width:54px;height:54px;border:1px solid var(--border);border-radius:4px;object-fit:cover;display:none;}
 .photo-preview.visible{display:block;}
 .photo-sep{font-size:.58rem;color:var(--text-muted);font-family:'Cinzel',serif;letter-spacing:1px;}
+/* GALERIE MULTI-PHOTOS */
+.gallery-slot{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);border-radius:8px;padding:12px;margin-bottom:8px;}
+.gallery-slot-header{font-family:'Cinzel',serif;font-size:.52rem;letter-spacing:3px;color:var(--text-muted);text-transform:uppercase;margin-bottom:9px;display:flex;justify-content:space-between;align-items:center;}
+.gallery-slot-label{color:rgba(201,162,39,.7);}
+.gallery-slot-remove{background:none;border:none;color:rgba(200,80,80,.55);cursor:pointer;font-size:.75rem;padding:2px 7px;border-radius:3px;font-family:'Cinzel',serif;letter-spacing:1px;transition:.2s;}
+.gallery-slot-remove:hover{color:rgba(255,100,100,.9);background:rgba(200,0,0,.1);}
+.gallery-slot-move{background:none;border:1px solid rgba(255,255,255,.08);color:rgba(255,255,255,.35);cursor:pointer;font-size:.75rem;width:24px;height:24px;border-radius:3px;display:flex;align-items:center;justify-content:center;transition:.2s;line-height:1;}
+.gallery-slot-move:hover:not(:disabled){background:rgba(201,162,39,.12);border-color:rgba(201,162,39,.3);color:var(--gold);}
+.gallery-slot-move:disabled{opacity:.18;cursor:default;}
+.gallery-slot-actions{display:flex;gap:4px;align-items:center;}
+.gallery-add-btn{width:100%;padding:9px;background:rgba(201,162,39,.03);border:1px dashed rgba(201,162,39,.18);color:rgba(201,162,39,.45);font-family:'Cinzel',serif;font-size:.52rem;letter-spacing:3px;cursor:pointer;border-radius:6px;transition:.2s;text-align:center;margin-top:2px;}
+.gallery-add-btn:hover{background:rgba(201,162,39,.09);border-color:rgba(201,162,39,.4);color:var(--gold);}
+/* CARROUSEL PROFIL */
+.profile-carousel-wrap{position:relative;width:100%;height:100%;min-height:520px;overflow:hidden;}
+.profile-carousel-img{width:100%;height:100%;object-fit:contain;display:block;transition:opacity .22s ease;min-height:520px;}
+.profile-carousel-btn{position:absolute;top:50%;transform:translateY(-50%);background:rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.7);font-size:1.3rem;width:34px;height:34px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:10;transition:.2s;backdrop-filter:blur(4px);line-height:1;}
+.profile-carousel-btn:hover{background:rgba(201,162,39,.3);border-color:rgba(201,162,39,.45);color:var(--gold);}
+.profile-carousel-prev{left:9px;}
+.profile-carousel-next{right:9px;}
+.profile-carousel-dots{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);display:flex;gap:6px;z-index:10;}
+.profile-carousel-dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.2);cursor:pointer;transition:.2s;}
+.profile-carousel-dot.active{background:var(--gold);box-shadow:0 0 7px rgba(201,162,39,.65);}
+.profile-carousel-counter{position:absolute;top:9px;right:9px;background:rgba(0,0,0,.65);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.55);font-size:.52rem;font-family:'Cinzel',serif;letter-spacing:1px;padding:3px 8px;border-radius:3px;z-index:10;}
+@media(max-width:600px){.profile-carousel-wrap{min-height:260px;}.profile-carousel-img{min-height:260px;}}
 
 .bg-fx{position:fixed;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(ellipse at 20% 20%,#200505 0%,#02020a 55%,#00000f 100%);}
 .bg-fx::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.03) 2px,rgba(0,0,0,.03) 4px);}
@@ -560,6 +599,11 @@ body::after{content:'';position:fixed;left:0;width:100%;height:2px;background:li
   #content{padding:18px 12px 80px;}
   .wanted-grid,.missions-board{grid-template-columns:1fr;}
 }
+/* ═══ CURSEUR PERSONNALISÉ ═══ */
+*{cursor:none !important;}
+#codex-cursor{position:fixed;top:0;left:0;pointer-events:none;z-index:999999;will-change:transform;transition:filter .15s;}
+#codex-cursor.is-hover{filter:drop-shadow(0 0 4px rgba(201,162,39,.9));}
+@media(pointer:coarse){#codex-cursor{display:none;}*{cursor:auto !important;}}
 </style>
 </head>
 <body>
@@ -1102,7 +1146,6 @@ body::after{content:'';position:fixed;left:0;width:100%;height:2px;background:li
     <button class="modal-close" onclick="closeModal('modalMembre')">✕</button>
     <div class="modal-title" id="membreFormTitle">Nouvelle Fiche de Service</div>
     <input type="hidden" id="membreEditId">
-    <input type="hidden" id="membreExistingPhoto">
     <div class="form-grid">
       <div class="form-group full"><label class="form-label">Nom du Pourfendeur</label><input class="form-input" id="fNom" placeholder="Nom complet"></div>
       <div class="form-group">
@@ -1139,26 +1182,9 @@ body::after{content:'';position:fixed;left:0;width:100%;height:2px;background:li
       <div class="form-group"><label class="form-label">Kinoé Référent</label><input class="form-input" id="fKinoeRef" placeholder="Nom du Kinoé"></div>
       <div class="form-group"><label class="form-label">Brigade / Unité</label><input class="form-input" id="fBrigade" placeholder="Unité d'affectation"></div>
       <div class="form-group full">
-        <label class="form-label">Photo (optionnel)</label>
-        <div class="photo-picker">
-          <div class="photo-picker-row">
-            <label class="photo-file-btn">📁 Choisir depuis l'ordinateur<input type="file" id="fPhotoFile" accept="image/*" style="display:none" onchange="handlePhotoFile(this,'fPhoto','fPhotoPreview')"></label>
-            <img id="fPhotoPreview" class="photo-preview" src="" alt="aperçu">
-          </div>
-          <div class="photo-picker-row">
-            <span class="photo-sep">— ou coller une URL —</span>
-          </div>
-          <input class="form-input" id="fPhoto" placeholder="https://..." oninput="previewFromUrl(this.value,'fPhotoPreview');updatePosPreview('fPhotoPosPreview','fPhotoPos',this.value)">
-          <div class="photo-pos-wrap" id="fPhotoPosWrap">
-            <div class="photo-pos-label"><span>Position verticale</span><span id="fPhotoPosVal">Centre</span></div>
-            <div class="photo-pos-track">
-              <span>Haut</span>
-              <input type="range" class="pos-slider" id="fPhotoPos" min="0" max="100" value="50" oninput="onPosSlider(this,'fPhotoPosVal','fPhotoPosPreview')">
-              <span>Bas</span>
-            </div>
-            <div class="photo-preview-box" id="fPhotoPosPreview"><img id="fPhotoPosImg" src="" alt=""></div>
-          </div>
-        </div>
+        <label class="form-label">Photos <span style="opacity:.45;font-size:.55rem;letter-spacing:1px">— max 5</span></label>
+        <div id="gallerySlots"></div>
+        <button type="button" class="gallery-add-btn" id="galleryAddBtn" onclick="galleryAddSlot()">+ Ajouter une photo</button>
       </div>
       <div class="form-group full"><label class="form-label">Observations</label><textarea class="form-textarea" id="fInfo" placeholder="Rapport détaillé..."></textarea></div>
       <button class="form-submit" onclick="saveMembre()">Sceller la Fiche</button>
@@ -1269,24 +1295,25 @@ function toRolesArray(r){ return Array.isArray(r)?r:(r?[r]:['veilleur']); }
 function topRole(roles){ for(const r of _rolePriority) if(roles.includes(r)) return r; return roles[0]||'veilleur'; }
 function hasRole(r){ return !!(currentUser?.roles?.includes(r)); }
 function hasAnyRole(...rs){ return rs.some(r=>hasRole(r)); }
-let pendingPhotoMembre = null;
 let pendingPhotoWanted = null;
+/* galerie multi-photos */
+let _gallerySlots = []; // [{url,position,file,objUrl}]
+const _GALLERY_MAX = 5;
 let pendingUser = null; // données whitelist en attente de vérification code
 let allPourfendeurs = [], allWanted = [], allMissions = [], allLogs = [];
 let registreFilter = 'all', logFilter = 'all', searchQuery = '';
 
 /* ═══ PHOTO UPLOAD ═══ */
 window.handlePhotoFile = (input, urlId, previewId) => {
+  // Uniquement pour le formulaire Wanted (la galerie membres a ses propres handlers)
   const file = input.files[0];
   if (!file) return;
-  if (urlId === 'fPhoto') pendingPhotoMembre = file;
-  else pendingPhotoWanted = file;
+  pendingPhotoWanted = file;
   document.getElementById(urlId).value = '';
   const objectUrl = URL.createObjectURL(file);
   const preview = document.getElementById(previewId);
   preview.src = objectUrl;
   preview.classList.add('visible');
-  if (urlId === 'fPhoto') updatePosPreview('fPhotoPosPreview', 'fPhotoPos', objectUrl);
 };
 
 window.onPosSlider = (slider, labelId, previewBoxId) => {
@@ -1355,6 +1382,134 @@ function resetPhotoField(fileId, urlId, previewId) {
   document.getElementById(urlId).value = '';
   const p = document.getElementById(previewId);
   p.src = ''; p.classList.remove('visible');
+}
+
+/* ═══ GALERIE MULTI-PHOTOS ═══ */
+function _posLabel(v){v=parseInt(v);if(v<=5)return'Haut';if(v>=95)return'Bas';if(v===50)return'Centre';return v<50?'Haut-Centre':'Bas-Centre';}
+function _escAttr(s){return(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;');}
+
+function galleryRender(){
+  const c=document.getElementById('gallerySlots');if(!c)return;
+  if(!_gallerySlots.length){_gallerySlots=[{url:'',position:50,file:null,objUrl:''}];}
+  c.innerHTML=_gallerySlots.map((slot,i)=>{
+    const preview=slot.objUrl||slot.url;
+    return`<div class="gallery-slot">
+      <div class="gallery-slot-header">
+        <span class="gallery-slot-label">${i===0?'📸 Portrait principal':'📷 Photo '+(i+1)}</span>
+        <div class="gallery-slot-actions">
+          ${_gallerySlots.length>1?`
+            <button type="button" class="gallery-slot-move" onclick="galleryMove(${i},-1)" ${i===0?'disabled':''} title="Monter">▲</button>
+            <button type="button" class="gallery-slot-move" onclick="galleryMove(${i},1)" ${i===_gallerySlots.length-1?'disabled':''} title="Descendre">▼</button>
+            <button type="button" class="gallery-slot-remove" onclick="galleryRemoveSlot(${i})">✕ Retirer</button>
+          `:''}
+        </div>
+      </div>
+      <div class="photo-picker-row" style="margin-bottom:6px">
+        <label class="photo-file-btn">📁 Fichier<input type="file" accept="image/*" style="display:none" onchange="galleryHandleFile(this,${i})"></label>
+        <img src="${_escAttr(preview)}" class="photo-preview${preview?' visible':''}" alt="">
+      </div>
+      <input class="form-input" placeholder="— ou coller une URL —" value="${_escAttr(slot.url)}" oninput="galleryUrlInput(this,${i})" style="margin-bottom:8px">
+      <div class="photo-pos-wrap">
+        <div class="photo-pos-label"><span>Position verticale</span><span id="gPosLbl${i}">${_posLabel(slot.position)}</span></div>
+        <div class="photo-pos-track">
+          <span style="font-size:.58rem;color:var(--text-muted)">Haut</span>
+          <input type="range" class="pos-slider" id="gPosSlider${i}" min="0" max="100" value="${slot.position}" style="--pct:${slot.position}%" oninput="galleryPosInput(this,${i})">
+          <span style="font-size:.58rem;color:var(--text-muted)">Bas</span>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+  const btn=document.getElementById('galleryAddBtn');
+  if(btn)btn.style.display=_gallerySlots.length>=_GALLERY_MAX?'none':'';
+}
+
+window.galleryAddSlot=()=>{
+  if(_gallerySlots.length>=_GALLERY_MAX)return;
+  _gallerySlots.push({url:'',position:50,file:null,objUrl:''});
+  galleryRender();
+};
+
+window.galleryRemoveSlot=(i)=>{
+  _gallerySlots.splice(i,1);
+  if(!_gallerySlots.length)_gallerySlots=[{url:'',position:50,file:null,objUrl:''}];
+  galleryRender();
+};
+
+window.galleryMove=(i,dir)=>{
+  const j=i+dir;
+  if(j<0||j>=_gallerySlots.length)return;
+  [_gallerySlots[i],_gallerySlots[j]]=[_gallerySlots[j],_gallerySlots[i]];
+  galleryRender();
+};
+
+window.galleryHandleFile=(input,i)=>{
+  const file=input.files[0];if(!file)return;
+  _gallerySlots[i].file=file;
+  _gallerySlots[i].url='';
+  _gallerySlots[i].objUrl=URL.createObjectURL(file);
+  galleryRender();
+};
+
+window.galleryUrlInput=(input,i)=>{
+  _gallerySlots[i].url=input.value.trim();
+  _gallerySlots[i].file=null;
+  _gallerySlots[i].objUrl='';
+  const slot=input.closest('.gallery-slot');
+  if(!slot)return;
+  const prev=slot.querySelector('.photo-preview');
+  if(prev){const u=_gallerySlots[i].url;prev.src=u;prev.classList.toggle('visible',!!u);}
+};
+
+window.galleryPosInput=(input,i)=>{
+  _gallerySlots[i].position=parseInt(input.value);
+  input.style.setProperty('--pct',input.value+'%');
+  const lbl=document.getElementById('gPosLbl'+i);
+  if(lbl)lbl.textContent=_posLabel(input.value);
+};
+
+/* ═══ CARROUSEL PROFIL (auto-avance 10 s) ═══ */
+let _carouselPhotos=[];
+let _carouselIdx=0;
+let _carouselTimer=null;
+let _carouselProgressAnim=null;
+const _CAROUSEL_DELAY=10000;
+
+function _carouselApply(){
+  const img=document.querySelector('.profile-carousel-img');
+  const counter=document.querySelector('.profile-carousel-counter');
+  const dots=document.querySelectorAll('.profile-carousel-dot');
+  const bar=document.querySelector('.profile-carousel-progress');
+  if(!img)return;
+  img.style.opacity='0';
+  setTimeout(()=>{
+    const p=_carouselPhotos[_carouselIdx];
+    img.src=p.url;
+    img.style.objectPosition=`center ${p.position??50}%`;
+    img.style.opacity='1';
+  },180);
+  if(counter)counter.textContent=`${_carouselIdx+1} / ${_carouselPhotos.length}`;
+  dots.forEach((d,i)=>d.classList.toggle('active',i===_carouselIdx));
+  // Barre de progression
+  if(bar){
+    bar.style.transition='none';bar.style.width='0%';
+    requestAnimationFrame(()=>requestAnimationFrame(()=>{
+      bar.style.transition=`width ${_CAROUSEL_DELAY}ms linear`;
+      bar.style.width='100%';
+    }));
+  }
+}
+
+function _carouselStartAuto(){
+  _carouselStopAuto();
+  if(_carouselPhotos.length<=1)return;
+  _carouselTimer=setInterval(()=>{
+    _carouselIdx=(_carouselIdx+1)%_carouselPhotos.length;
+    _carouselApply();
+  },_CAROUSEL_DELAY);
+}
+
+function _carouselStopAuto(){
+  if(_carouselTimer){clearInterval(_carouselTimer);_carouselTimer=null;}
 }
 
 /* ═══ HASH ═══ */
@@ -1545,8 +1700,8 @@ window.showSection = (name) => {
 
 /* ═══ MODALS ═══ */
 window.openModal = (id) => document.getElementById(id).classList.add('open');
-window.closeModal = (id) => document.getElementById(id).classList.remove('open');
-document.querySelectorAll('.modal-overlay').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open');}));
+window.closeModal = (id) => { document.getElementById(id).classList.remove('open'); if(id==='modalProfile')_carouselStopAuto(); };
+document.querySelectorAll('.modal-overlay').forEach(m=>m.addEventListener('click',e=>{ if(e.target===m){m.classList.remove('open');if(m.id==='modalProfile')_carouselStopAuto();} }));
 
 /* ═══ TOAST ═══ */
 window.toast = (msg, type='info') => {
@@ -1637,13 +1792,30 @@ window.filterRegistre=(f,el)=>{registreFilter=f;document.querySelectorAll('#regi
 window.openFormMembre=(id=null)=>{
   document.getElementById('membreEditId').value=id||'';
   document.getElementById('membreFormTitle').textContent=id?'Modifier la Fiche':'Nouvelle Fiche de Service';
-  pendingPhotoMembre=null; resetPhotoField('fPhotoFile','fPhoto','fPhotoPreview');
-  document.getElementById('membreExistingPhoto').value='';
-  document.getElementById('fPhotoPos').value=50; document.getElementById('fPhotoPos').style.setProperty('--pct','50%'); document.getElementById('fPhotoPosVal').textContent='Centre'; document.getElementById('fPhotoPosPreview').style.display='none';
-  if(id){const m=allPourfendeurs.find(x=>x.id===id);if(m){document.getElementById('fNom').value=m.nom||'';document.getElementById('fRang').value=m.rang||'Kinoe';document.getElementById('fSouffle').value=m.souffle||"Souffle de l'Eau";document.getElementById('fStatut').value=m.statut||'Vivant';document.getElementById('fJours').value=m.jours||0;document.getElementById('fPilierRef').value=m.pilier_ref||'';document.getElementById('fKinoeRef').value=m.kinoe_ref||'';document.getElementById('fBrigade').value=m.brigade||'';document.getElementById('fInfo').value=m.info||'';
-    document.getElementById('membreExistingPhoto').value=m.photo||'';
-    const pos=m.photoPosition??50;document.getElementById('fPhotoPos').value=pos;document.getElementById('fPhotoPos').style.setProperty('--pct',pos+'%');onPosSlider(document.getElementById('fPhotoPos'),'fPhotoPosVal','fPhotoPosPreview');if(m.photo)updatePosPreview('fPhotoPosPreview','fPhotoPos',m.photo);}}
-  else{['fNom','fPilierRef','fKinoeRef','fBrigade','fInfo'].forEach(i=>document.getElementById(i).value='');document.getElementById('fJours').value=0;document.getElementById('fRang').value='Kinoe';document.getElementById('fStatut').value='Vivant';}
+  if(id){
+    const m=allPourfendeurs.find(x=>x.id===id);
+    if(m){
+      document.getElementById('fNom').value=m.nom||'';
+      document.getElementById('fRang').value=m.rang||'Kinoe';
+      document.getElementById('fSouffle').value=m.souffle||"Souffle de l'Eau";
+      document.getElementById('fStatut').value=m.statut||'Vivant';
+      document.getElementById('fJours').value=m.jours||0;
+      document.getElementById('fPilierRef').value=m.pilier_ref||'';
+      document.getElementById('fKinoeRef').value=m.kinoe_ref||'';
+      document.getElementById('fBrigade').value=m.brigade||'';
+      document.getElementById('fInfo').value=m.info||'';
+      // Charger la galerie depuis le champ photos[] ou le photo legacy
+      const existingPhotos=m.photos&&m.photos.length?m.photos:(m.photo?[{url:m.photo,position:m.photoPosition??50}]:[]);
+      _gallerySlots=existingPhotos.map(p=>({url:p.url||'',position:p.position??50,file:null,objUrl:''}));
+    }
+  } else {
+    ['fNom','fPilierRef','fKinoeRef','fBrigade','fInfo'].forEach(i=>document.getElementById(i).value='');
+    document.getElementById('fJours').value=0;
+    document.getElementById('fRang').value='Kinoe';
+    document.getElementById('fStatut').value='Vivant';
+    _gallerySlots=[{url:'',position:50,file:null,objUrl:''}];
+  }
+  galleryRender();
   openModal('modalMembre');
 };
 
@@ -1652,9 +1824,16 @@ window.saveMembre=async()=>{
   const nom=document.getElementById('fNom').value.trim();
   if(!nom){toast('Le nom est requis.','warn');return;}
   const rang=document.getElementById('fRang').value;
-  let photoUrl=document.getElementById('fPhoto').value.trim()||document.getElementById('membreExistingPhoto').value;
-  if(pendingPhotoMembre){toast('Compression de l\'image...','info');try{photoUrl=await uploadPhoto(pendingPhotoMembre);}catch(e){toast('Erreur image : '+e.message,'error');return;}}
-  const data={nom,rang,rang_idx:hierarchyIdx[rang]||99,souffle:document.getElementById('fSouffle').value,statut:document.getElementById('fStatut').value,jours:parseInt(document.getElementById('fJours').value)||0,pilier_ref:document.getElementById('fPilierRef').value.trim(),kinoe_ref:document.getElementById('fKinoeRef').value.trim(),brigade:document.getElementById('fBrigade').value.trim(),photo:photoUrl,photoPosition:parseInt(document.getElementById('fPhotoPos').value)||50,info:document.getElementById('fInfo').value.trim(),updatedAt:serverTimestamp(),updatedBy:currentUser.steamId};
+  // Compiler la galerie : compresser les fichiers en attente
+  const photosData=[];
+  for(let i=0;i<_gallerySlots.length;i++){
+    const s=_gallerySlots[i];
+    let url=s.url||'';
+    if(s.file){toast('Compression des images...','info');try{url=await uploadPhoto(s.file);}catch(e){toast('Erreur image '+(i+1)+': '+e.message,'error');return;}}
+    if(url)photosData.push({url,position:s.position??50});
+  }
+  const mainPhoto=photosData[0]||null;
+  const data={nom,rang,rang_idx:hierarchyIdx[rang]||99,souffle:document.getElementById('fSouffle').value,statut:document.getElementById('fStatut').value,jours:parseInt(document.getElementById('fJours').value)||0,pilier_ref:document.getElementById('fPilierRef').value.trim(),kinoe_ref:document.getElementById('fKinoeRef').value.trim(),brigade:document.getElementById('fBrigade').value.trim(),photos:photosData,photo:mainPhoto?.url||'',photoPosition:mainPhoto?.position??50,info:document.getElementById('fInfo').value.trim(),updatedAt:serverTimestamp(),updatedBy:currentUser.steamId};
   const editId=document.getElementById('membreEditId').value;
   try{
     if(editId){const old=allPourfendeurs.find(x=>x.id===editId);await updateDoc(doc(db,'pourfendeurs',editId),data);await logAction('MODIFICATION',nom,old,'pourfendeurs');toast(`${nom} mis à jour.`,'success');}
@@ -1676,25 +1855,28 @@ window.deleteMembre=async(id,nom)=>{
 window.openProfile=async(id)=>{
   const m=allPourfendeurs.find(x=>x.id===id);if(!m)return;
   const color=souffleColors[m.souffle]||'#888';
-  const photo=m.photo
-    ?`<img src="${m.photo}" alt="${m.nom}" onerror="this.parentElement.innerHTML='<span class=profile-avatar-ph>⚔</span>'">`
-    :'<span class="profile-avatar-ph">⚔</span>';
   const statutColor={'Vivant':'#00cc88','Mort':'#666','Retraité':'#c9a227'}[m.statut]||'#888';
   const statutDot=`<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${statutColor};box-shadow:0 0 6px ${statutColor};margin-right:5px;vertical-align:middle"></span>`;
-  const logSnap=await getDocs(query(collection(db,'logs'),orderBy('date','desc'),limit(60)));
-  const hist=logSnap.docs.map(d=>({...d.data(),id:d.id})).filter(l=>l.target===m.nom).slice(0,6);
-  const histHtml=hist.length
-    ?hist.map(l=>{const d=l.date?.toDate?l.date.toDate().toLocaleDateString('fr-FR'):'—';return`<div class="profile-hist-row"><span style="color:${color}">${l.action}</span><span>${l.userName||l.steamId||'—'}</span><span>${d}</span></div>`;}).join('')
-    :'<div style="font-size:.65rem;color:var(--text-muted);text-align:center;padding:8px 0">Aucun historique.</div>';
   const extras=[
     m.brigade?['Brigade',m.brigade]:null,
     m.pilier_ref?['Pilier Référent',m.pilier_ref]:null,
     m.kinoe_ref?['Kinoé Référent',m.kinoe_ref]:null,
   ].filter(Boolean);
-  const pos = m.photoPosition ?? 50;
-  const portraitCol = m.photo
-    ? `<img src="${m.photo}" alt="${m.nom}" style="object-position:center ${pos}%;min-height:100%" onerror="this.parentElement.innerHTML='<div class=profile-portrait-ph>⚔</div>'">`
-    : `<div class="profile-portrait-ph">⚔</div>`;
+  // Galerie : utilise photos[] si dispo, sinon fallback sur l'ancien champ photo
+  const photos=m.photos&&m.photos.length?m.photos:(m.photo?[{url:m.photo,position:m.photoPosition??50}]:[]);
+  _carouselIdx=0; _carouselPhotos=photos;
+  const isMulti=photos.length>1;
+  const mainP=photos[0];
+  const portraitCol=photos.length>0
+    ?`<div class="profile-carousel-wrap">
+        <img class="profile-carousel-img" src="${mainP.url}" style="object-position:center ${mainP.position??50}%" alt="${m.nom}" onerror="this.style.display='none'">
+        ${isMulti?`
+          <div class="profile-carousel-counter">1 / ${photos.length}</div>
+          <div class="profile-carousel-dots">${photos.map((_,i)=>`<div class="profile-carousel-dot${i===0?' active':''}"></div>`).join('')}</div>
+          <div class="profile-carousel-progress" style="width:0%"></div>
+        `:''}
+      </div>`
+    :`<div class="profile-portrait-ph">⚔</div>`;
   document.getElementById('profileContent').innerHTML=`
     <div class="profile-dossier" style="--pbc:${color}">
       <div class="profile-col-img">
@@ -1720,17 +1902,15 @@ window.openProfile=async(id)=>{
         <div class="profile-stats-grid">
           <div class="pf-stat"><div class="pf-stat-val">${statutDot}${m.statut||'—'}</div><div class="pf-stat-label">Statut</div></div>
           <div class="pf-stat"><div class="pf-stat-val">${m.jours||0}</div><div class="pf-stat-label">Jours de service</div></div>
-          <div class="pf-stat"><div class="pf-stat-val">${hist.length}</div><div class="pf-stat-label">Journal</div></div>
+          <div class="pf-stat"><div class="pf-stat-val">${photos.length||'—'}</div><div class="pf-stat-label">Photos</div></div>
         </div>
         ${extras.length?`<div class="profile-info-grid">${extras.map(([l,v])=>`<div class="pf-info-item"><div class="pf-label">${l}</div><div class="pf-val">${v}</div></div>`).join('')}</div>`:''}
         ${m.info?`<div class="profile-obs-block">${m.info}</div>`:''}
-        <div class="profile-ornament-line" style="margin:10px 0 12px"><span>⚔</span></div>
-        <div class="profile-hist-title">Journal des modifications</div>
-        ${histHtml}
         ${currentUser?`<div class="modal-footer" style="margin-top:auto;padding-top:16px;display:flex;gap:8px;align-items:center"><button class="btn btn-gold btn-sm" onclick="closeModal('modalProfile');openFormMembre('${m.id}')">✎ Modifier la fiche</button><span style="font-size:.5rem;letter-spacing:3px;color:rgba(200,0,0,.4);font-family:'Cinzel',serif">CONFIDENTIEL</span></div>`:''}
       </div>
     </div>`;
   openModal('modalProfile');
+  if(isMulti){_carouselApply();_carouselStartAuto();}
 };
 
 /* ═══ SPHÈRE SECRÈTE ═══ */
@@ -2439,6 +2619,37 @@ window.setMusicVol = (v) => {
   _audio.volume = v/100;
   document.getElementById('music-vol').style.setProperty('--vp', v+'%');
 };
+
+/* ═══ CURSEUR PERSONNALISÉ ═══ */
+(function initCursor(){
+  const cur=document.createElement('div');
+  cur.id='codex-cursor';
+  // Forme identique au curseur système, couleurs Codex
+  // hotspot = pointe en haut-gauche → translate direct sur clientX/Y
+  cur.innerHTML=`<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+    <!-- ombre pour lisibilité sur fond clair -->
+    <path d="M2 2 L2 19 L6 15 L9.5 21.5 L12 20.5 L8.5 14 L15 14 Z"
+      fill="rgba(0,0,0,.45)" transform="translate(1,1)"/>
+    <!-- corps sombre -->
+    <path d="M2 2 L2 19 L6 15 L9.5 21.5 L12 20.5 L8.5 14 L15 14 Z"
+      fill="#120808"/>
+    <!-- contour doré -->
+    <path d="M2 2 L2 19 L6 15 L9.5 21.5 L12 20.5 L8.5 14 L15 14 Z"
+      fill="none" stroke="#c9a227" stroke-width="0.9" stroke-linejoin="round"/>
+  </svg>`;
+  document.body.appendChild(cur);
+
+  document.addEventListener('mousemove',e=>{
+    cur.style.transform=`translate(${e.clientX}px,${e.clientY}px)`;
+  });
+
+  // Hover sur éléments interactifs → contour cramois
+  const HOVER_SEL='button,a,input,select,textarea,label,[onclick],[role=button],.btn,.modal-close,.pilier-card,.wanted-card,.sphere-result-card,.filter-chip,.wl-item,.nav-item,.gallery-slot-move,.gallery-slot-remove,.gallery-add-btn';
+  document.addEventListener('mouseover',e=>{
+    cur.classList.toggle('is-hover',!!e.target.closest(HOVER_SEL));
+  });
+  document.addEventListener('mouseleave',()=>cur.classList.remove('is-hover'));
+})();
 
 /* ═══ PARTICULES FLOTTANTES ═══ */
 (function spawnParticles(){
