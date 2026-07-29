@@ -316,20 +316,40 @@ input,select,textarea{font-family:inherit;}
 #music-vol{-webkit-appearance:none;width:60px;height:2px;border-radius:1px;background:linear-gradient(to right,var(--gold) var(--vp,70%),rgba(255,255,255,.12) var(--vp,70%));outline:none;cursor:pointer;}
 #music-vol::-webkit-slider-thumb{-webkit-appearance:none;width:9px;height:9px;border-radius:50%;background:var(--gold);cursor:pointer;}
 #music-vol::-moz-range-thumb{width:9px;height:9px;border-radius:50%;background:var(--gold);border:none;cursor:pointer;}
-/* SPLASH SCREEN */
-#splash{position:fixed;inset:0;z-index:99999;background:#020100;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:opacity .8s ease,visibility .8s ease;}
+/* SPLASH SCREEN — v3 */
+#splash{position:fixed;inset:0;z-index:99999;background:#020100;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;overflow:hidden;transition:opacity .9s ease,visibility .9s ease;}
 #splash.hidden{opacity:0;visibility:hidden;pointer-events:none;}
 @keyframes splashFadeIn{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:translateY(0);}}
 @keyframes splashGlow{0%,100%{opacity:.4;}50%{opacity:.9;}}
-@keyframes splashFlicker{0%,100%{opacity:1;}92%{opacity:1;}93%{opacity:.7;}94%{opacity:1;}97%{opacity:.85;}98%{opacity:1;}}
-.splash-bg{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 60%,rgba(80,0,0,.35) 0%,transparent 65%),radial-gradient(ellipse at 50% 40%,rgba(201,162,39,.06) 0%,transparent 55%);}
+.splash-bg{position:absolute;inset:-6%;pointer-events:none;
+  background:
+    radial-gradient(ellipse 60% 45% at 50% 108%,rgba(120,10,0,.42) 0%,transparent 62%),
+    radial-gradient(ellipse 65% 55% at 50% -8%,rgba(201,162,39,.13) 0%,transparent 58%),
+    radial-gradient(ellipse 100% 100% at 50% 50%,#0a0503 0%,#020100 72%);
+  animation:cxBgBreathe 11s ease-in-out infinite;}
+@keyframes cxBgBreathe{0%,100%{transform:scale(1)}50%{transform:scale(1.03)}}
 .splash-particles{position:absolute;inset:0;overflow:hidden;pointer-events:none;}
-.splash-ornament{font-size:2.2rem;color:rgba(201,162,39,.5);animation:splashGlow 3s ease-in-out infinite,splashFadeIn .8s ease-out both;letter-spacing:8px;margin-bottom:28px;}
-.splash-title{font-family:'Cinzel Decorative',serif;font-size:clamp(2.2rem,6vw,4.2rem);font-weight:700;letter-spacing:8px;background:linear-gradient(135deg,#8a6a10,#f5d870,#c9a227,#f0e890,#a07820);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-size:300% auto;animation:shimmer 5s linear infinite,splashFadeIn .9s .1s ease-out both,splashFlicker 8s 2s infinite;text-align:center;line-height:1.1;text-shadow:none;}
-.splash-sub{font-family:'Cinzel',serif;font-size:clamp(.7rem,2vw,.9rem);letter-spacing:6px;color:rgba(201,162,39,.45);text-transform:uppercase;margin-top:16px;animation:splashFadeIn .9s .3s ease-out both;text-align:center;}
-.splash-divider{width:180px;height:1px;background:linear-gradient(to right,transparent,rgba(201,162,39,.4),transparent);margin:32px 0;animation:splashFadeIn .9s .5s ease-out both;}
-.splash-enter{font-family:'Cinzel',serif;font-size:.72rem;letter-spacing:6px;color:rgba(201,162,39,.55);text-transform:uppercase;animation:splashFadeIn .9s .7s ease-out both,splashGlow 2.5s 1s ease-in-out infinite;}
-.splash-scroll-hint{position:absolute;bottom:36px;font-family:'Cinzel',serif;font-size:.55rem;letter-spacing:4px;color:rgba(201,162,39,.3);text-transform:uppercase;animation:splashFadeIn 1s 1.2s ease-out both;}
+.splash-content{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;padding:0 24px;text-align:center;}
+.splash-crest{font-size:1.5rem;color:rgba(201,162,39,.65);margin-bottom:20px;letter-spacing:2px;
+  animation:cxFadeUp .9s ease-out both,cxCrestGlow 3s ease-in-out infinite;filter:drop-shadow(0 0 10px rgba(201,162,39,.5));}
+@keyframes cxCrestGlow{0%,100%{opacity:.55}50%{opacity:1}}
+.splash-title{font-family:'Cinzel Decorative',serif;font-weight:700;letter-spacing:9px;line-height:1.15;text-align:center;margin:0;text-shadow:0 0 60px rgba(201,162,39,.25);}
+.splash-title .word{display:block;font-size:clamp(2.3rem,6.6vw,4.4rem);
+  background:linear-gradient(135deg,#8a6a10,#f5d870,#c9a227,#f0e890,#a07820);-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-size:300% auto;animation:shimmer 5s linear infinite,cxWordRise .9s cubic-bezier(.16,1,.3,1) both;
+  filter:drop-shadow(0 0 40px rgba(201,162,39,.28));}
+.splash-title .word:nth-child(2){animation-delay:.15s,.15s;}
+@keyframes cxWordRise{from{opacity:0;transform:translateY(28px) scale(.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+.splash-sub{font-family:'Cinzel',serif;font-size:clamp(.7rem,2vw,.9rem);letter-spacing:6px;color:rgba(201,162,39,.5);text-transform:uppercase;margin-top:18px;animation:cxFadeUp .9s .35s ease-out both;text-align:center;}
+.splash-cta{display:flex;align-items:center;gap:16px;margin-top:46px;padding:14px 30px;border:1px solid rgba(201,162,39,.3);
+  border-radius:30px;background:rgba(201,162,39,.04);animation:cxFadeUp .9s .55s ease-out both,cxCtaGlow 2.6s ease-in-out infinite;transition:.3s ease;}
+#splash:hover .splash-cta{background:rgba(201,162,39,.11);border-color:rgba(201,162,39,.55);transform:scale(1.045);}
+@keyframes cxCtaGlow{0%,100%{box-shadow:0 0 14px rgba(201,162,39,.08)}50%{box-shadow:0 0 26px rgba(201,162,39,.22)}}
+.splash-cta-line{width:26px;height:1px;background:linear-gradient(to right,transparent,rgba(201,162,39,.65));}
+.splash-cta-line:last-child{background:linear-gradient(to left,transparent,rgba(201,162,39,.65));}
+.splash-cta-text{font-family:'Cinzel',serif;font-size:.72rem;letter-spacing:5px;color:rgba(230,195,110,.92);text-transform:uppercase;white-space:nowrap;}
+.splash-scroll-hint{position:absolute;bottom:34px;font-family:'Cinzel',serif;font-size:.55rem;letter-spacing:4px;color:rgba(201,162,39,.3);text-transform:uppercase;animation:cxFadeUp 1s 1.05s ease-out both;}
+@keyframes cxFadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
 /* TOAST */
 #toast-container{position:fixed;bottom:26px;right:22px;display:flex;flex-direction:column;gap:7px;z-index:9999;}
 .toast{display:flex;align-items:center;gap:11px;padding:11px 16px;background:#0d0d1a;border:1px solid var(--border);border-left:3px solid var(--tc,#c9a227);border-radius:6px;font-size:.72rem;min-width:230px;box-shadow:0 8px 24px rgba(0,0,0,.6);animation:toast-in .3s ease-out;}
@@ -604,20 +624,231 @@ body::after{content:'';position:fixed;left:0;width:100%;height:2px;background:li
 #codex-cursor{position:fixed;top:0;left:0;pointer-events:none;z-index:999999;will-change:transform;transition:filter .15s;}
 #codex-cursor.is-hover{filter:drop-shadow(0 0 4px rgba(201,162,39,.9));}
 @media(pointer:coarse){#codex-cursor{display:none;}*{cursor:auto !important;}}
+
+/* ══════════════════════════════════════════════════════
+   ═══════════  UPGRADE VISUEL — COUCHE ATMOSPHÉRIQUE  ═══════════
+   ══════════════════════════════════════════════════════ */
+
+/* Canvas de braises / fumée en fond */
+#cx-embers{position:fixed;inset:0;z-index:-2;pointer-events:none;opacity:.9;mix-blend-mode:screen;}
+
+/* Grain de film subtil */
+#cx-grain{position:fixed;inset:0;z-index:9998;pointer-events:none;opacity:.045;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  animation:cxGrainShift .5s steps(4) infinite;}
+@keyframes cxGrainShift{0%{transform:translate(0,0)}25%{transform:translate(-1%,1%)}50%{transform:translate(1%,-1%)}75%{transform:translate(-1%,-1%)}100%{transform:translate(0,0)}}
+
+/* Vignette respirante */
+#cx-vignette{position:fixed;inset:0;z-index:9997;pointer-events:none;background:radial-gradient(ellipse at 50% 50%,transparent 42%,rgba(0,0,0,.6) 100%);animation:cxVignettePulse 9s ease-in-out infinite;}
+@keyframes cxVignettePulse{0%,100%{opacity:.7}50%{opacity:1}}
+
+/* Entrée orchestrée de l'interface */
+#sidebar{animation:cxSlideIn .7s cubic-bezier(.16,1,.3,1) both;}
+#topbar{animation:cxFadeDown .7s .15s cubic-bezier(.16,1,.3,1) both;}
+@keyframes cxSlideIn{from{transform:translateX(-100%);opacity:0}to{transform:translateX(0);opacity:1}}
+@keyframes cxFadeDown{from{transform:translateY(-16px);opacity:0}to{transform:translateY(0);opacity:1}}
+
+/* Anneau runique derrière l'écran d'accueil */
+@keyframes cxSigilSpin{to{transform:rotate(360deg)}}
+.splash-rune-ring{position:absolute;top:50%;left:50%;width:min(60vw,600px);height:min(60vw,600px);
+  transform:translate(-50%,-50%);opacity:.14;pointer-events:none;animation:cxSigilSpin 100s linear infinite;z-index:1;}
+.splash-rune-ring svg{width:100%;height:100%;}
+.splash-rune-ring.outer{width:min(80vw,760px);height:min(80vw,760px);opacity:.07;animation-duration:150s;animation-direction:reverse;}
+
+/* Traînée de braises du curseur */
+.cx-trail{position:fixed;top:0;left:0;width:4px;height:4px;border-radius:50%;pointer-events:none;z-index:999998;background:radial-gradient(circle,rgba(245,205,120,.95),rgba(200,40,0,0) 70%);will-change:transform,opacity;}
+
+/* Reflet holographique au survol des cartes (tilt 3D) */
+.stat-card,.wanted-card,.sphere-card,.pilier-card,.conseiller-card,.maitre-card,.breath-group,.mission-card{will-change:transform;}
+.cx-sheen{position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at var(--mx,50%) var(--my,50%),rgba(255,255,255,.15),transparent 45%);opacity:0;transition:opacity .25s;z-index:2;border-radius:inherit;}
+.cx-tilt-active>.cx-sheen{opacity:1;}
+
+/* Boutons — balayage lumineux */
+.btn,.nav-btn,.form-submit{position:relative;overflow:hidden;}
+.btn::before,.form-submit::before{content:'';position:absolute;top:0;left:-60%;width:35%;height:100%;background:linear-gradient(115deg,transparent,rgba(255,255,255,.18),transparent);transform:skewX(-20deg);transition:left .65s ease;pointer-events:none;}
+.btn:hover::before,.form-submit:hover::before{left:130%;}
+
+/* Modales — bordure animée */
+.modal-box{position:relative;}
+@property --cxma{syntax:'<angle>';inherits:false;initial-value:0deg;}
+.modal-box::before{content:'';position:absolute;inset:-1px;border-radius:inherit;padding:1px;pointer-events:none;
+  background:conic-gradient(from var(--cxma,0deg),transparent 0%,rgba(201,162,39,.55) 8%,transparent 18%,transparent 100%);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;
+  animation:cxBorderSpin 4s linear infinite;}
+@keyframes cxBorderSpin{to{--cxma:360deg}}
+
+/* Égaliseur décoratif du lecteur musique */
+.cx-eq{display:none;align-items:flex-end;gap:2px;height:13px;margin:0 2px;}
+.cx-eq.playing{display:flex;}
+.cx-eq span{width:2px;background:var(--gold);border-radius:1px;box-shadow:0 0 4px rgba(201,162,39,.6);animation:cxEqBounce .9s ease-in-out infinite;}
+.cx-eq span:nth-child(1){animation-delay:-.6s;}
+.cx-eq span:nth-child(2){animation-delay:-.3s;}
+.cx-eq span:nth-child(3){animation-delay:-.9s;}
+.cx-eq span:nth-child(4){animation-delay:-.15s;}
+@keyframes cxEqBounce{0%,100%{height:3px;}50%{height:13px;}}
+
+/* Étincelles au clic (splash) */
+.cx-spark{position:fixed;border-radius:50%;pointer-events:none;z-index:99998;background:radial-gradient(circle,#ffdca0,#ff5500 60%,transparent);animation:cxSparkFly 900ms cubic-bezier(.2,.7,.3,1) forwards;}
+@keyframes cxSparkFly{to{transform:translate(var(--dx),var(--dy)) scale(0);opacity:0;}}
+
+/* Décodage des titres de section */
+.section-title{display:inline-block;}
+
+@media(pointer:coarse){.cx-trail{display:none;}}
+@media(prefers-reduced-motion:reduce){
+  #cx-embers,#cx-grain,#cx-vignette,.splash-rune-ring,.cx-trail,.modal-box::before,.splash-bg{animation:none!important;}
+}
+
+/* ══════════════════════════════════════════════════════
+   ═══════════  REDÉCORATION COMPLÈTE — TOUTES SECTIONS  ═══════════
+   ══════════════════════════════════════════════════════ */
+
+/* ── Titres de section : soulignement lumineux universel ── */
+.section-title{position:relative;padding-bottom:15px;}
+.section-title::before{content:'';position:absolute;left:0;bottom:0;width:70px;height:2px;
+  background:linear-gradient(to right,currentColor,transparent);box-shadow:0 0 12px currentColor;
+  animation:cxUnderlineBreathe 3.4s ease-in-out infinite;}
+@keyframes cxUnderlineBreathe{0%,100%{width:70px;opacity:.75}50%{width:90px;opacity:1}}
+
+/* Icônes flottantes (stats, souffles, sphère) */
+.stat-icon,.breath-icon,.sphere-type,.pilier-photo-ph,.conseiller-photo-ph,.maitre-photo-ph{animation:cxIconFloat 3.4s ease-in-out infinite;}
+.stat-icon{display:inline-block;}
+@keyframes cxIconFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+
+/* ── Filtres / chips : pulsation active ── */
+.filter-chip{position:relative;overflow:hidden;}
+.filter-chip.active{animation:cxChipGlow 2.6s ease-in-out infinite;}
+@keyframes cxChipGlow{0%,100%{box-shadow:0 0 8px rgba(201,162,39,.12)}50%{box-shadow:0 0 18px rgba(201,162,39,.32)}}
+
+/* ── Registre : lignes de tableau vivantes ── */
+.member-table tr{position:relative;}
+.member-table tr::before{content:'';position:absolute;left:0;top:0;bottom:0;width:0;
+  background:linear-gradient(180deg,var(--bc,#c9a227),transparent 85%);box-shadow:0 0 10px var(--bc,#c9a227);
+  transition:width .25s ease;}
+.member-table tr:hover::before{width:3px;}
+
+/* ── Badges : reflet balayant ── */
+.badge{position:relative;overflow:hidden;}
+.badge::after{content:'';position:absolute;top:0;left:-75%;width:45%;height:100%;
+  background:linear-gradient(115deg,transparent,rgba(255,255,255,.4),transparent);transform:skewX(-20deg);
+  animation:cxBadgeSweep 3.6s ease-in-out infinite;}
+@keyframes cxBadgeSweep{0%{left:-75%}35%{left:135%}100%{left:135%}}
+
+/* ── Cibles prioritaires : rivets d'affiche ── */
+.wanted-card{position:relative;}
+.wanted-card::before{content:'';position:absolute;inset:0;pointer-events:none;z-index:2;
+  background:
+    radial-gradient(circle 3.2px at 15px 13px,#c8c8c8 35%,#333 70%,transparent 72%),
+    radial-gradient(circle 3.2px at calc(100% - 15px) 13px,#c8c8c8 35%,#333 70%,transparent 72%);
+  box-shadow:inset 0 0 40px rgba(0,0,0,.35);}
+.wanted-photo{transition:filter .3s;}
+.wanted-card:hover .wanted-photo{filter:sepia(.05) contrast(1.1) brightness(1.08);}
+
+/* ── Missions : accroche au survol + liseré animé ── */
+.mission-card{transition:transform .2s ease,box-shadow .2s ease;}
+.mission-card:hover{transform:translateX(4px);box-shadow:0 8px 22px rgba(0,0,0,.5),0 0 14px rgba(201,162,39,.16);}
+.mission-col{transition:.25s;}
+.mission-col:hover{border-color:rgba(201,162,39,.22);}
+.mission-col-title{position:relative;}
+
+/* ── Historique : lignes qui glissent au survol ── */
+.log-entry{transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease;}
+.log-entry:hover{transform:translateX(4px);box-shadow:0 6px 20px rgba(0,0,0,.45);border-color:var(--border-h);}
+
+/* ── Sphère : médaillons de règles numérotés ── */
+.sphere-rule-num{display:flex;align-items:center;justify-content:center;width:30px;height:30px;min-width:30px;
+  border:1px solid rgba(180,0,0,.35);border-radius:50%;background:rgba(120,0,0,.08);
+  box-shadow:0 0 12px rgba(150,0,0,.14);padding-top:0!important;}
+.sphere-rule-critical .sphere-rule-num{border-color:rgba(255,20,20,.6);box-shadow:0 0 18px rgba(255,0,0,.32);animation:redPulse 2.4s ease-in-out infinite;}
+.sphere-result-card,.sf-result{transition:transform .2s ease,box-shadow .2s ease,background .2s ease;}
+
+/* ── Codex : accordéon plus vivant ── */
+.acc-icon{display:inline-block;filter:drop-shadow(0 0 0 transparent);transition:filter .3s ease,transform .35s cubic-bezier(.34,1.56,.64,1);}
+.acc-item.open .acc-icon{filter:drop-shadow(0 0 9px rgba(201,162,39,.65));}
+.acc-header{position:relative;}
+.acc-item.open .acc-header::after{content:'';position:absolute;left:22px;right:22px;bottom:0;height:1px;
+  background:linear-gradient(to right,transparent,var(--gold),transparent);opacity:.5;}
+.acc-item{transition:box-shadow .3s,transform .2s;}
+.acc-item:hover{transform:translateX(2px);}
+
+/* ── Administration : cartes à liseré animé ── */
+.admin-card{position:relative;overflow:hidden;transition:box-shadow .25s,transform .2s;}
+.admin-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,rgba(201,162,39,.55),transparent);background-size:220% 100%;
+  animation:borderFlow 3.6s linear infinite;}
+.admin-card:hover{box-shadow:0 12px 32px rgba(0,0,0,.55);}
+.wl-item{transition:background .2s,padding-left .2s;border-radius:6px;}
+.wl-item:hover{background:rgba(201,162,39,.05);padding-left:8px;}
+.role-check-item:has(input:checked){border-color:rgba(201,162,39,.35);background:rgba(201,162,39,.07);}
+
+/* ── Formulaires : halo au focus ── */
+.form-input:focus,.form-select:focus,.form-textarea:focus{box-shadow:0 0 0 3px rgba(201,162,39,.08),0 0 18px rgba(201,162,39,.16);}
+
+/* ── Portraits (Maître / Conseillers) : anneaux respirants ── */
+@keyframes cxRingGold{0%,100%{box-shadow:0 0 0 6px rgba(240,208,96,.08),0 0 40px rgba(240,208,96,.3);}50%{box-shadow:0 0 0 9px rgba(240,208,96,.16),0 0 56px rgba(240,208,96,.48);}}
+.maitre-photo{animation:cxRingGold 4s ease-in-out infinite;}
+@keyframes cxRingPurple{0%,100%{box-shadow:0 0 0 4px rgba(200,128,240,.08),0 0 20px rgba(200,128,240,.25);}50%{box-shadow:0 0 0 7px rgba(200,128,240,.16),0 0 32px rgba(200,128,240,.4);}}
+.conseiller-photo{animation:cxRingPurple 4s ease-in-out infinite;}
+
+/* ── Connexion : progression stylée ── */
+.login-welcome{position:relative;padding-bottom:10px;}
+.login-welcome::after{content:'';position:absolute;left:0;bottom:0;width:42px;height:2px;background:linear-gradient(to right,var(--gold),transparent);box-shadow:0 0 8px var(--gold);}
+.code-display{animation:cxCodeGlow 2.8s ease-in-out infinite;}
+@keyframes cxCodeGlow{0%,100%{box-shadow:0 0 0 rgba(201,162,39,0)}50%{box-shadow:0 0 20px rgba(201,162,39,.18)}}
+
+/* ── Profil : coins qui respirent ── */
+.profile-corner{animation:cxCornerPulse 3.2s ease-in-out infinite;}
+@keyframes cxCornerPulse{0%,100%{opacity:.35}50%{opacity:.75}}
+
+/* ── Loader ── */
+.loader{box-shadow:0 0 22px rgba(201,162,39,.16);}
+
+@media(prefers-reduced-motion:reduce){
+  .section-title::before,.stat-icon,.breath-icon,.filter-chip.active,.badge::after,.mission-col-title,
+  .sphere-rule-critical .sphere-rule-num,.admin-card::before,.maitre-photo,.conseiller-photo,.code-display,.profile-corner{animation:none!important;}
+}
 </style>
 </head>
 <body>
+<canvas id="cx-embers"></canvas>
+<div id="cx-grain"></div>
+<div id="cx-vignette"></div>
 <div class="particles" style="position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden"></div>
 
 <!-- ═══ SPLASH SCREEN ═══ -->
 <div id="splash" onclick="enterCodex()">
   <div class="splash-bg"></div>
+  <div class="splash-rune-ring">
+    <svg viewBox="0 0 200 200"><g fill="none" stroke="#c9a227" stroke-width="0.5">
+      <circle cx="100" cy="100" r="94"/><circle cx="100" cy="100" r="86"/>
+      <g opacity=".8">
+        <circle cx="100" cy="6" r="2" fill="#c9a227" stroke="none"/>
+        <circle cx="194" cy="100" r="2" fill="#c9a227" stroke="none"/>
+        <circle cx="100" cy="194" r="2" fill="#c9a227" stroke="none"/>
+        <circle cx="6" cy="100" r="2" fill="#c9a227" stroke="none"/>
+      </g>
+    </g></svg>
+  </div>
+  <div class="splash-rune-ring outer">
+    <svg viewBox="0 0 200 200"><g fill="none" stroke="#8b0000" stroke-width="0.45">
+      <circle cx="100" cy="100" r="96"/>
+      <circle cx="100" cy="100" r="4" fill="#8b0000" stroke="none"/>
+    </g></svg>
+  </div>
   <div class="splash-particles" id="splashParticles"></div>
-  <div class="splash-ornament">⚔ ✦ ⚔</div>
-  <div class="splash-title">CODEX<br>OBSCURA</div>
-  <div class="splash-sub">Archives de l'Ordre Démoniaque</div>
-  <div class="splash-divider"></div>
-  <div class="splash-enter">— Cliquer pour entrer —</div>
+  <div class="splash-content">
+    <div class="splash-crest">✦</div>
+    <div class="splash-title">
+      <span class="word">CODEX</span>
+      <span class="word">OBSCURA</span>
+    </div>
+    <div class="splash-sub">Archives de l'Ordre Démoniaque</div>
+    <div class="splash-cta">
+      <span class="splash-cta-line"></span>
+      <span class="splash-cta-text">Entrer dans les Archives</span>
+      <span class="splash-cta-line"></span>
+    </div>
+  </div>
   <div class="splash-scroll-hint">Que les ténèbres vous accueillent</div>
 </div>
 <audio id="music-audio"></audio>
@@ -663,6 +894,7 @@ body::after{content:'';position:fixed;left:0;width:100%;height:2px;background:li
     <div class="topbar-right">
       <div class="music-controls" id="music-controls">
         <button id="music-btn" onclick="toggleMusic()" title="Play / Pause">♪</button>
+        <span class="cx-eq" id="cxEq"><span></span><span></span><span></span><span></span></span>
         <button id="music-skip" onclick="skipTrack()" title="Piste suivante" style="display:none">⏭</button>
         <span id="music-track" style="display:none"></span>
         <input type="range" id="music-vol" min="0" max="100" value="70" oninput="setMusicVol(this.value)" title="Volume" style="display:none">
@@ -2509,7 +2741,7 @@ window.toggleAcc=(header)=>{
 const sectionObserver=new IntersectionObserver((entries)=>{
   entries.forEach(entry=>{
     if(entry.isIntersecting){
-      entry.target.querySelectorAll('.stat-card,.breath-group,.wanted-card,.mission-card,.acc-item,.hier-section').forEach((el,i)=>{
+      entry.target.querySelectorAll('.stat-card,.breath-group,.wanted-card,.mission-card,.acc-item,.hier-section,.conseiller-card,.pilier-card,.sphere-card,.log-entry,.admin-card,.wl-item,.sf-result,.sphere-result-card,.maitre-card').forEach((el,i)=>{
         el.style.animationDelay=`${i*0.06}s`;
         el.classList.add('animate-in');
       });
@@ -2668,6 +2900,167 @@ window.setMusicVol = (v) => {
     p.style.cssText=`left:${x}%;width:${size}px;height:${size}px;background:${hue};border-radius:50%;box-shadow:0 0 ${size*3}px ${hue};animation:float-up ${dur}s ${delay}s infinite linear;`;
     container.appendChild(p);
   }
+})();
+
+/* ══════════════════════════════════════════════════
+   ═══════════  UPGRADE VISUEL — SCRIPTS ADDITIFS  ═══════════
+   ══════════════════════════════════════════════════ */
+
+/* ═══ CANVAS BRAISES / FUMÉE ═══ */
+(function cxEmbers(){
+  const cv=document.getElementById('cx-embers');
+  if(!cv)return;
+  const ctx=cv.getContext('2d');
+  let w,h,embers=[],smoke=[];
+  function resize(){w=cv.width=innerWidth;h=cv.height=innerHeight;}
+  resize();window.addEventListener('resize',resize);
+
+  function spawnEmber(){
+    return{x:Math.random()*w,y:h+20,r:Math.random()*2+.6,vy:-(Math.random()*.5+.25),vx:(Math.random()-.5)*.4,
+      life:0,maxLife:Math.random()*500+400,hue:Math.random()<.7?18:45,alpha:Math.random()*.5+.3};
+  }
+  function spawnSmoke(){
+    return{x:Math.random()*w,y:h+40,r:Math.random()*60+40,vy:-(Math.random()*.15+.06),vx:(Math.random()-.5)*.15,
+      life:0,maxLife:Math.random()*800+600,alpha:Math.random()*.035+.015};
+  }
+  for(let i=0;i<45;i++){const e=spawnEmber();e.y=Math.random()*h;embers.push(e);}
+  for(let i=0;i<10;i++){const s=spawnSmoke();s.y=Math.random()*h;smoke.push(s);}
+
+  let last=performance.now();
+  function frame(now){
+    const dt=Math.min(now-last,50);last=now;
+    ctx.clearRect(0,0,w,h);
+    smoke.forEach((s,i)=>{
+      s.life+=dt;s.x+=s.vx;s.y+=s.vy;
+      const t=s.life/s.maxLife,fade=t<.15?t/.15:t>.8?(1-t)/.2:1;
+      ctx.beginPath();
+      const grad=ctx.createRadialGradient(s.x,s.y,0,s.x,s.y,s.r);
+      grad.addColorStop(0,`rgba(60,20,10,${s.alpha*fade})`);
+      grad.addColorStop(1,'rgba(0,0,0,0)');
+      ctx.fillStyle=grad;ctx.arc(s.x,s.y,s.r,0,7);ctx.fill();
+      if(s.life>=s.maxLife||s.y< -s.r){smoke[i]=spawnSmoke();}
+    });
+    embers.forEach((e,i)=>{
+      e.life+=dt;e.x+=e.vx;e.y+=e.vy;e.vx+=(Math.random()-.5)*.02;
+      const t=e.life/e.maxLife,fade=t<.1?t/.1:t>.75?(1-t)/.25:1;
+      const col=e.hue===18?`rgba(255,110,20,${e.alpha*fade})`:`rgba(255,200,90,${e.alpha*fade})`;
+      ctx.beginPath();ctx.fillStyle=col;ctx.shadowColor=col;ctx.shadowBlur=e.r*4;
+      ctx.arc(e.x,e.y,e.r,0,7);ctx.fill();ctx.shadowBlur=0;
+      if(e.life>=e.maxLife||e.y< -10){embers[i]=spawnEmber();}
+    });
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+})();
+
+/* ═══ TRAÎNÉE DE BRAISES DU CURSEUR ═══ */
+(function cxCursorTrail(){
+  if(matchMedia('(pointer:coarse)').matches)return;
+  let last=0;
+  document.addEventListener('mousemove',e=>{
+    const now=performance.now();
+    if(now-last<28)return; last=now;
+    const t=document.createElement('div');
+    t.className='cx-trail';
+    const jitter=(Math.random()-.5)*6;
+    t.style.transform=`translate(${e.clientX+jitter}px,${e.clientY+jitter}px)`;
+    document.body.appendChild(t);
+    requestAnimationFrame(()=>{
+      t.style.transition='transform .6s ease-out,opacity .6s ease-out';
+      t.style.transform+=' translateY(-14px) scale(.2)';
+      t.style.opacity='0';
+    });
+    setTimeout(()=>t.remove(),650);
+  });
+})();
+
+/* ═══ TILT 3D + REFLET SUR LES CARTES ═══ */
+(function cxTilt(){
+  const SEL='.stat-card,.wanted-card,.sphere-card,.pilier-card,.conseiller-card,.maitre-card,.breath-group,.mission-card';
+  let current=null;
+  document.addEventListener('mousemove',e=>{
+    const card=e.target.closest(SEL);
+    if(card!==current){
+      if(current){current.style.transform='';current.classList.remove('cx-tilt-active');}
+      if(card){
+        if(getComputedStyle(card).position==='static')card.style.position='relative';
+        if(!card.querySelector(':scope > .cx-sheen')){
+          const sh=document.createElement('div');sh.className='cx-sheen';card.appendChild(sh);
+        }
+      }
+      current=card;
+    }
+    if(!card)return;
+    const r=card.getBoundingClientRect();
+    const px=(e.clientX-r.left)/r.width, py=(e.clientY-r.top)/r.height;
+    const rx=(py-.5)*-6, ry=(px-.5)*6;
+    card.style.transform=`perspective(900px) rotateX(${rx}deg) rotateY(${ry}deg) translateY(-3px)`;
+    card.classList.add('cx-tilt-active');
+    card.style.setProperty('--mx',(px*100)+'%');
+    card.style.setProperty('--my',(py*100)+'%');
+  });
+  document.addEventListener('mouseleave',()=>{
+    if(current){current.style.transform='';current.classList.remove('cx-tilt-active');current=null;}
+  },true);
+})();
+
+/* ═══ ÉTINCELLES AU CLIC DU SPLASH ═══ */
+(function cxSplashSparks(){
+  const splash=document.getElementById('splash');
+  if(!splash)return;
+  splash.addEventListener('click',e=>{
+    const n=24;
+    for(let i=0;i<n;i++){
+      const s=document.createElement('div');
+      s.className='cx-spark';
+      const size=Math.random()*4+2;
+      const angle=Math.random()*Math.PI*2,dist=Math.random()*180+60;
+      s.style.cssText=`width:${size}px;height:${size}px;left:${e.clientX}px;top:${e.clientY}px;--dx:${Math.cos(angle)*dist}px;--dy:${Math.sin(angle)*dist}px;`;
+      document.body.appendChild(s);
+      setTimeout(()=>s.remove(),950);
+    }
+  },{once:true});
+})();
+
+/* ═══ ÉGALISEUR DÉCORATIF DU LECTEUR ═══ */
+(function cxEqualizer(){
+  const eq=document.getElementById('cxEq');
+  const audio=document.getElementById('music-audio');
+  if(!eq||!audio)return;
+  audio.addEventListener('play',()=>eq.classList.add('playing'));
+  audio.addEventListener('pause',()=>eq.classList.remove('playing'));
+  audio.addEventListener('ended',()=>eq.classList.remove('playing'));
+})();
+
+/* ═══ DÉCODAGE DES TITRES DE SECTION ═══ */
+(function cxTitleDecode(){
+  const GLYPHS='ᚠᚢᚦᚨᚱᚲᚷᛁᛃᛇᛈᛉᛋᛏᛒᛖᛗᛚᛜᛞᛟ✦⚔◆';
+  const done=new WeakSet();
+  function decode(el){
+    if(!el||done.has(el))return;
+    const final=el.textContent;
+    if(!final||!final.trim())return;
+    done.add(el);
+    let frame=0; const totalFrames=Math.min(final.length*2,26);
+    const timer=setInterval(()=>{
+      frame++;
+      const revealCount=Math.floor((frame/totalFrames)*final.length);
+      let out='';
+      for(let i=0;i<final.length;i++){
+        if(final[i]===' '){out+=' ';continue;}
+        out+= i<revealCount ? final[i] : GLYPHS[Math.floor(Math.random()*GLYPHS.length)];
+      }
+      el.textContent=out;
+      if(frame>=totalFrames){el.textContent=final;clearInterval(timer);}
+    },26);
+  }
+  const _origShowSection=window.showSection;
+  window.showSection=(name)=>{
+    if(_origShowSection)_origShowSection(name);
+    const sec=document.getElementById('section-'+name);
+    if(sec)decode(sec.querySelector('.section-title'));
+  };
+  decode(document.querySelector('#section-dashboard .section-title'));
 })();
 </script>
 </body>
