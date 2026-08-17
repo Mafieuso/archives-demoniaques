@@ -12,12 +12,22 @@ function beforeSave(doc, old){
   return doc;
 }
 
+/* Même traitement que pourfendeurs.js : une photo uploadée (data URI) ne
+   part plus dans la diffusion, seulement sa présence ; une URL externe
+   collée reste telle quelle (déjà légère). */
+function sanitizeForBroadcast(doc){
+  const { photo, ...rest } = doc;
+  const isData = photo?.startsWith("data:");
+  return { ...rest, hasPhoto: !!photo, photo: isData ? undefined : photo };
+}
+
 const handlers = makeEntityHandlers({
   collectionName: "wanted",
   socketName: "wanted",
   nameField: (doc) => `${doc.prenom || ""} ${doc.nom || ""}`.trim() || "?",
   createRequiresRole: isAdminOrSphereAdmin,
-  beforeSave
+  beforeSave,
+  sanitizeForBroadcast
 });
 
 export const initWanted = handlers.init;

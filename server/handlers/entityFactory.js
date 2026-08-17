@@ -9,12 +9,13 @@ import { isEditor } from "../auth.js";
 import { logAction } from "./logs.js";
 import { registerBroadcaster } from "./entityRegistry.js";
 
-export function makeEntityHandlers({ collectionName, socketName, nameField, createRequiresRole, requireRoleForAll, beforeSave }){
+export function makeEntityHandlers({ collectionName, socketName, nameField, createRequiresRole, requireRoleForAll, beforeSave, sanitizeForBroadcast }){
   let ioRef = null;
   const room = `room:${socketName}`;
 
   async function activeItems(db){
-    return db.collection(collectionName).find({ deleted: { $ne: true } }).toArray();
+    const docs = await db.collection(collectionName).find({ deleted: { $ne: true } }).toArray();
+    return sanitizeForBroadcast ? docs.map(sanitizeForBroadcast) : docs;
   }
   async function broadcastState(){
     if(!ioRef) return;
@@ -33,6 +34,16 @@ export function makeEntityHandlers({ collectionName, socketName, nameField, crea
       cb?.({ ok: true, items: await activeItems(db) });
     });
     socket.on(`${socketName}:leave`, () => { socket.leave(room); });
+
+    /* Fiche complète (avec champs lourds éventuels type photos en base64) —
+       utilisé uniquement à l'ouverture d'un formulaire d'édition, jamais
+       diffusé à tout le monde. */
+    socket.on(`${socketName}:get`, async (id, cb) => {
+      const db = await getDb();
+      const doc = await db.collection(collectionName).findOne({ _id: id, deleted: { $ne: true } });
+      if(!doc) return cb?.({ ok: false, error: "Fiche introuvable." });
+      cb?.({ ok: true, item: doc });
+    });
 
     socket.on(`${socketName}:save`, async (payload, cb) => {
       try{

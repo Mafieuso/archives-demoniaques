@@ -930,7 +930,7 @@ body::after{content:'';position:fixed;left:0;width:100%;height:2px;background:li
   </div>
   <div class="splash-scroll-hint">Que les ténèbres vous accueillent</div>
 </div>
-<audio id="music-audio"></audio>
+<audio id="music-audio" preload="none"></audio>
 <div class="bg-fx"></div>
 
 <div id="sidebarOverlay" onclick="closeSidebar()"></div>
@@ -1588,6 +1588,20 @@ body::after{content:'';position:fixed;left:0;width:100%;height:2px;background:li
 <script type="module">
 const socket = io();
 
+/* Construit l'URL d'une photo à partir de la version allégée reçue dans
+   les diffusions (les uploads n'y voyagent plus qu'en tant que position —
+   la vraie image se sert à la demande via /photo/...). */
+function photoSrc(col, id, photoObj, idx=0){
+  if(!photoObj) return '';
+  return photoObj.url || `/photo/${col}/${id}/${idx}`;
+}
+function wantedPhotoSrc(w){
+  if(!w) return '';
+  if(w.photo) return w.photo; // URL externe, déjà légère
+  if(w.hasPhoto) return `/photo/wanted/${w._id}`;
+  return '';
+}
+
 /* ═══ ÉTAT ═══ */
 let currentUser = null;
 // ─── Helpers rôles ───
@@ -1770,6 +1784,8 @@ window.galleryPosInput=(input,i)=>{
 
 /* ═══ CARROUSEL PROFIL (auto-avance 10 s) ═══ */
 let _carouselPhotos=[];
+let _carouselCol='pourfendeurs';
+let _carouselId=null;
 let _carouselIdx=0;
 let _carouselTimer=null;
 let _carouselProgressAnim=null;
@@ -1784,7 +1800,7 @@ function _carouselApply(){
   img.style.opacity='0';
   setTimeout(()=>{
     const p=_carouselPhotos[_carouselIdx];
-    img.src=p.url;
+    img.src=photoSrc(_carouselCol,_carouselId,p,_carouselIdx);
     img.style.objectPosition=`center ${p.position??50}%`;
     img.style.opacity='1';
   },180);
@@ -2256,17 +2272,28 @@ window.openFormMembre=(id=null)=>{
       document.getElementById('fKinoeRef').value=m.kinoe_ref||'';
       document.getElementById('fBrigade').value=m.brigade||'';
       document.getElementById('fInfo').value=m.info||'';
-      // Charger la galerie depuis le champ photos[] ou le photo legacy
-      const existingPhotos=m.photos&&m.photos.length?m.photos:(m.photo?[{url:m.photo,position:m.photoPosition??50}]:[]);
-      _gallerySlots=existingPhotos.map(p=>({url:p.url||'',position:p.position??50,file:null,objUrl:''}));
+      // Les diffusions n'incluent plus les images en clair (voir photoSrc) —
+      // on va chercher la fiche complète pour ne pas écraser les photos
+      // existantes par la référence allégée si l'utilisateur enregistre
+      // sans y toucher.
+      _gallerySlots=[{url:'',position:50,file:null,objUrl:''}];
+      galleryRender();
+      openModal('modalMembre');
+      socket.emit('pourfendeurs:get', id, (res)=>{
+        if(!res?.ok||document.getElementById('membreEditId').value!==id)return;
+        const full=res.item;
+        const existingPhotos=full.photos&&full.photos.length?full.photos:(full.photo?[{url:full.photo,position:full.photoPosition??50}]:[]);
+        _gallerySlots=existingPhotos.length?existingPhotos.map(p=>({url:p.url||'',position:p.position??50,file:null,objUrl:''})):[{url:'',position:50,file:null,objUrl:''}];
+        galleryRender();
+      });
+      return;
     }
-  } else {
-    ['fNom','fPilierRef','fKinoeRef','fBrigade','fInfo'].forEach(i=>document.getElementById(i).value='');
-    document.getElementById('fJours').value=0;
-    document.getElementById('fRang').value='Kinoe';
-    document.getElementById('fStatut').value='Vivant';
-    _gallerySlots=[{url:'',position:50,file:null,objUrl:''}];
   }
+  ['fNom','fPilierRef','fKinoeRef','fBrigade','fInfo'].forEach(i=>document.getElementById(i).value='');
+  document.getElementById('fJours').value=0;
+  document.getElementById('fRang').value='Kinoe';
+  document.getElementById('fStatut').value='Vivant';
+  _gallerySlots=[{url:'',position:50,file:null,objUrl:''}];
   galleryRender();
   openModal('modalMembre');
 };
@@ -2320,14 +2347,14 @@ window.openProfile=async(id)=>{
     m.pilier_ref?['Pilier Référent',m.pilier_ref]:null,
     m.kinoe_ref?['Kinoé Référent',m.kinoe_ref]:null,
   ].filter(Boolean);
-  // Galerie : utilise photos[] si dispo, sinon fallback sur l'ancien champ photo
-  const photos=m.photos&&m.photos.length?m.photos:(m.photo?[{url:m.photo,position:m.photoPosition??50}]:[]);
-  _carouselIdx=0; _carouselPhotos=photos;
+  // Galerie allégée (voir photoSrc) — les images se chargent à la demande.
+  const photos=m.photos||[];
+  _carouselIdx=0; _carouselPhotos=photos; _carouselCol='pourfendeurs'; _carouselId=m._id;
   const isMulti=photos.length>1;
   const mainP=photos[0];
   const portraitCol=photos.length>0
     ?`<div class="profile-carousel-wrap">
-        <img class="profile-carousel-img" src="${mainP.url}" style="object-position:center ${mainP.position??50}%" alt="${m.nom}" onerror="this.style.display='none'">
+        <img class="profile-carousel-img" src="${photoSrc('pourfendeurs',m._id,mainP,0)}" style="object-position:center ${mainP.position??50}%" alt="${m.nom}" onerror="this.style.display='none'">
         ${isMulti?`
           <div class="profile-carousel-counter">1 / ${photos.length}</div>
           <div class="profile-carousel-dots">${photos.map((_,i)=>`<div class="profile-carousel-dot${i===0?' active':''}"></div>`).join('')}</div>
@@ -2438,13 +2465,13 @@ window.sphereGlobalSearch=(val)=>{
   // 1. Registre Pourfendeurs
   allPourfendeurs.filter(p=>!p.deleted).forEach(p=>{
     const fields=[p.nom,p.rang,p.souffle,p.brigade,p.statut,p.info,p.pilier_ref,p.kinoe_ref].filter(Boolean).join(' ').toLowerCase();
-    if(fields.includes(q)) results.push({source:'registre',name:p.nom||'—',sub:p.rang||'',extra:p.souffle||'',photo:p.photo||'',info:p.info||'',id:p._id,data:p});
+    if(fields.includes(q)) results.push({source:'registre',name:p.nom||'—',sub:p.rang||'',extra:p.souffle||'',photo:photoSrc('pourfendeurs',p._id,p.photos?.[0],0),info:p.info||'',id:p._id,data:p});
   });
   // 2. Cibles (Wanted)
   allWanted.filter(w=>!w.deleted).forEach(w=>{
     const nom=`${w.prenom||''} ${w.nom||''}`.trim();
     const fields=[nom,w.grade,w.raison,w.description].filter(Boolean).join(' ').toLowerCase();
-    if(fields.includes(q)) results.push({source:'cible',name:nom||'—',sub:w.grade||'',extra:w.raison||'',photo:w.photo||'',info:w.description||w.raison||'',id:w._id,data:w});
+    if(fields.includes(q)) results.push({source:'cible',name:nom||'—',sub:w.grade||'',extra:w.raison||'',photo:wantedPhotoSrc(w),info:w.description||w.raison||'',id:w._id,data:w});
   });
   // 3. Opérations Sphère
   allSphere.forEach(s=>{
@@ -2497,10 +2524,10 @@ window.searchSphereTarget=(val)=>{
   if(!q){resultsEl.style.display='none';return;}
   const pResults=allPourfendeurs
     .filter(p=>(p.nom||'').toLowerCase().includes(q)||(p.souffle||'').toLowerCase().includes(q))
-    .slice(0,5).map(p=>({uid:'p_'+p._id,name:p.nom||'',grade:p.rang||'',photo:p.photo||'',raison:p.souffle||'',source:'registre'}));
+    .slice(0,5).map(p=>({uid:'p_'+p._id,name:p.nom||'',grade:p.rang||'',photo:photoSrc('pourfendeurs',p._id,p.photos?.[0],0),raison:p.souffle||'',source:'registre'}));
   const wResults=allWanted
     .filter(w=>(`${w.prenom||''} ${w.nom||''}`).toLowerCase().includes(q)||(w.grade||'').toLowerCase().includes(q))
-    .slice(0,5).map(w=>({uid:'w_'+w._id,name:`${w.prenom||''} ${w.nom||''}`.trim(),grade:w.grade||'',photo:w.photo||'',raison:w.raison||'',source:'cible'}));
+    .slice(0,5).map(w=>({uid:'w_'+w._id,name:`${w.prenom||''} ${w.nom||''}`.trim(),grade:w.grade||'',photo:wantedPhotoSrc(w),raison:w.raison||'',source:'cible'}));
   const all=[...pResults,...wResults].slice(0,8);
   if(!all.length){resultsEl.style.display='none';return;}
   resultsEl.innerHTML=all.map(r=>`<div class="sf-result" onclick="selectSphereTarget('${r.uid}','${r.name.replace(/'/g,"\\'")}','${r.grade.replace(/'/g,"\\'")}','${r.photo.replace(/'/g,"\\'")}','${r.raison.replace(/'/g,"\\'").replace(/\n/g,' ')}')" >
@@ -2615,7 +2642,8 @@ function renderWanted(){
   c.innerHTML=`<div class="wanted-grid">${sorted.map((w,i)=>{
     const s=w.dangerScore||rankScore[w.grade]||50;
     const{tier,label}=getDangerTier(s);
-    const photo=w.photo?`<img src="${w.photo}" alt="${w.prenom}" onerror="this.parentElement.innerHTML='<span class=wanted-photo-ph>🎯</span>'">`:'<span class="wanted-photo-ph">🎯</span>';
+    const wPhotoSrc=wantedPhotoSrc(w);
+    const photo=wPhotoSrc?`<img src="${wPhotoSrc}" alt="${w.prenom}" onerror="this.parentElement.innerHTML='<span class=wanted-photo-ph>🎯</span>'">`:'<span class="wanted-photo-ph">🎯</span>';
     const drips=[15,40,65,85].map(l=>`<div class="wanted-drip" style="left:${l}%;--dh:${12+Math.random()*18}px;animation-delay:${Math.random()*.8}s"></div>`).join('');
     const fullName=`${w.prenom||''} ${w.nom||''}`.trim();
     const nameEsc=fullName.replace(/'/g,"\\'");
@@ -2655,8 +2683,25 @@ window.openFormWanted=(id=null)=>{
   document.getElementById('wantedEditId').value=id||'';
   document.getElementById('wantedFormTitle').textContent=id?'Modifier la Cible':'Nouvel Avis de Recherche';
   document.getElementById('wfDupWarning').style.display='none';
-  if(id){const w=allWanted.find(x=>x._id===id);if(w){document.getElementById('wfPrenom').value=w.prenom||'';document.getElementById('wfNom').value=w.nom||'';document.getElementById('wfGrade').value=w.grade||'';document.getElementById('wfDanger').value=w.dangerScore||0;document.getElementById('wfRaison').value=w.raison||'';document.getElementById('wfPhoto').value=w.photo||'';document.getElementById('wfReliab').value=w.verifStatus||'confirme';document.getElementById('wfSource').value=w.source||'';previewDanger();}}
-  else{['wfPrenom','wfNom','wfRaison','wfSource'].forEach(i=>document.getElementById(i).value='');document.getElementById('wfDanger').value=50;document.getElementById('wfReliab').value='confirme';document.getElementById('dangerPreview').textContent='Danger : —';}
+  if(id){
+    const w=allWanted.find(x=>x._id===id);
+    if(w){
+      document.getElementById('wfPrenom').value=w.prenom||'';document.getElementById('wfNom').value=w.nom||'';document.getElementById('wfGrade').value=w.grade||'';document.getElementById('wfDanger').value=w.dangerScore||0;document.getElementById('wfRaison').value=w.raison||'';document.getElementById('wfReliab').value=w.verifStatus||'confirme';document.getElementById('wfSource').value=w.source||'';previewDanger();
+      // Les diffusions n'incluent plus les images uploadées en clair — on va
+      // chercher la fiche complète pour ne pas écraser la photo existante
+      // si l'utilisateur enregistre sans y toucher.
+      document.getElementById('wfPhoto').value=w.photo||'';
+      pendingPhotoWanted=null; resetPhotoField('wfPhotoFile','wfPhoto','wfPhotoPreview');
+      openModal('modalWanted');
+      socket.emit('wanted:get', id, (res)=>{
+        if(!res?.ok||document.getElementById('wantedEditId').value!==id)return;
+        document.getElementById('wfPhoto').value=res.item.photo||'';
+        if(res.item.photo){const prev=document.getElementById('wfPhotoPreview');if(prev){prev.src=res.item.photo;prev.classList.add('visible');}}
+      });
+      return;
+    }
+  }
+  ['wfPrenom','wfNom','wfRaison','wfSource'].forEach(i=>document.getElementById(i).value='');document.getElementById('wfDanger').value=50;document.getElementById('wfReliab').value='confirme';document.getElementById('dangerPreview').textContent='Danger : —';
   pendingPhotoWanted=null; resetPhotoField('wfPhotoFile','wfPhoto','wfPhotoPreview');
   openModal('modalWanted');
 };
@@ -2916,7 +2961,7 @@ function renderDashPreview(){
     <div class="hier-label">✦ Maître des Pourfendeurs ✦</div>`;
   if(maitre){
     html+=`<div class="maitre-card" onclick="showSection('registre');openProfile('${maitre._id}')" style="cursor:pointer">
-      <div class="maitre-photo">${maitre.photo?`<img src="${maitre.photo}" alt="${maitre.nom}">`:`<span class="maitre-photo-ph">⚔</span>`}</div>
+      <div class="maitre-photo">${maitre.photoCount?`<img src="${photoSrc('pourfendeurs',maitre._id,maitre.photos?.[0],0)}" alt="${maitre.nom}">`:`<span class="maitre-photo-ph">⚔</span>`}</div>
       <div>
         <div class="maitre-name">${maitre.nom}</div>
         <div class="maitre-title">Maître des Pourfendeurs</div>
@@ -2935,7 +2980,7 @@ function renderDashPreview(){
       <div class="conseiller-grid">
         ${conseillers.map(m=>`
           <div class="conseiller-card" onclick="showSection('registre');openProfile('${m._id}')">
-            <div class="conseiller-photo">${m.photo?`<img src="${m.photo}" alt="${m.nom}">`:`<span class="conseiller-photo-ph">⚔</span>`}</div>
+            <div class="conseiller-photo">${m.photoCount?`<img src="${photoSrc('pourfendeurs',m._id,m.photos?.[0],0)}" alt="${m.nom}">`:`<span class="conseiller-photo-ph">⚔</span>`}</div>
             <div>
               <div class="conseiller-name">${m.nom}</div>
               ${m.souffle?`<div class="conseiller-souffle">${m.souffle}</div>`:''}
@@ -2952,7 +2997,7 @@ function renderDashPreview(){
       <div class="pilier-grid">
         ${piliers.map(m=>`
           <div class="pilier-card" onclick="showSection('registre');openProfile('${m._id}')">
-            <div class="pilier-photo">${m.photo?`<img src="${m.photo}" alt="${m.nom}">`:`<span class="pilier-photo-ph">⚔</span>`}</div>
+            <div class="pilier-photo">${m.photoCount?`<img src="${photoSrc('pourfendeurs',m._id,m.photos?.[0],0)}" alt="${m.nom}">`:`<span class="pilier-photo-ph">⚔</span>`}</div>
             <div class="pilier-info">
               <div class="pilier-name">${m.nom}</div>
               ${m.souffle?`<div class="pilier-souffle">${m.souffle}</div>`:''}

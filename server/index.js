@@ -10,6 +10,7 @@ import { registerPourfendeursHandlers, initPourfendeurs } from "./handlers/pourf
 import { registerWantedHandlers, initWanted } from "./handlers/wanted.js";
 import { registerSphereHandlers, initSphere } from "./handlers/sphere.js";
 import { registerSignalementsHandlers, initSignalements } from "./handlers/signalements.js";
+import { registerPhotoRoutes } from "./handlers/photos.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, "..");
@@ -19,6 +20,7 @@ app.set("trust proxy", 1);
 const server = http.createServer(app);
 const io = new Server(server);
 
+registerPhotoRoutes(app);
 app.use(express.static(ROOT, { extensions: ["html"] }));
 
 initLogs(io);
