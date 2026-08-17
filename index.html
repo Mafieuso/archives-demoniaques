@@ -807,6 +807,91 @@ body::after{content:'';position:fixed;left:0;width:100%;height:2px;background:li
   .section-title::before,.stat-icon,.breath-icon,.filter-chip.active,.badge::after,.mission-col-title,
   .sphere-rule-critical .sphere-rule-num,.admin-card::before,.maitre-photo,.conseiller-photo,.code-display,.profile-corner{animation:none!important;}
 }
+
+/* ══════════════════════ AJOUTS — FRAÎCHEUR / FIABILITÉ / SIGNALEMENTS ══════════════════════ */
+
+/* ── Badge de fraîcheur (vérification) ── */
+.fresh-badge{display:inline-flex;align-items:center;gap:5px;font-family:'Cinzel',serif;font-size:.54rem;letter-spacing:1.5px;text-transform:uppercase;padding:3px 9px;border-radius:20px;border:1px solid;white-space:nowrap;}
+.fresh-ok{color:#00cc88;border-color:rgba(0,204,136,.35);background:rgba(0,204,136,.06);}
+.fresh-warn{color:#e8a800;border-color:rgba(232,168,0,.4);background:rgba(232,168,0,.07);}
+.fresh-stale{color:#ff5544;border-color:rgba(255,85,68,.45);background:rgba(255,85,68,.08);animation:freshStalePulse 2.6s ease-in-out infinite;}
+@keyframes freshStalePulse{0%,100%{box-shadow:0 0 0 rgba(255,68,50,0)}50%{box-shadow:0 0 10px rgba(255,68,50,.35)}}
+.fresh-dot{width:6px;height:6px;border-radius:50%;background:currentColor;flex-shrink:0;}
+.btn-reverify{border-color:rgba(0,204,136,.35);color:#00cc88;}
+.btn-reverify:hover{background:rgba(0,204,136,.1);}
+
+/* ── Widget "À vérifier" (dashboard) ── */
+.verify-widget{background:var(--card-bg);border:1px solid var(--border);border-top:3px solid #e8a800;border-radius:10px;padding:20px 22px;margin-bottom:32px;animation:fadeUp .5s ease-out both;}
+.verify-widget-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.verify-widget-title{font-family:'Cinzel',serif;font-size:.85rem;letter-spacing:3px;text-transform:uppercase;color:#e8a800;display:flex;align-items:center;gap:8px;}
+.verify-widget-count{font-family:'Cinzel',serif;font-size:.6rem;color:var(--text-muted);letter-spacing:1px;}
+.verify-list{display:flex;flex-direction:column;gap:6px;}
+.verify-row{display:grid;grid-template-columns:auto 1fr auto auto;align-items:center;gap:12px;padding:9px 12px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.05);border-radius:6px;font-size:.75rem;}
+.verify-row-name{font-weight:600;color:var(--text);cursor:pointer;}
+.verify-row-name:hover{color:var(--gold);}
+.verify-row-meta{font-size:.62rem;color:var(--text-muted);}
+.verify-empty{color:var(--text-muted);text-align:center;padding:18px;font-family:'Cinzel',serif;font-size:.65rem;letter-spacing:2px;}
+
+/* ── Fiabilité (Confirmé / Non confirmé / Contesté) ── */
+.reliab-pill{display:inline-flex;align-items:center;gap:5px;font-family:'Cinzel',serif;font-size:.5rem;letter-spacing:1.5px;text-transform:uppercase;padding:3px 10px;border-radius:20px;border:1px solid;}
+.reliab-confirme{color:#00cc88;border-color:rgba(0,204,136,.4);background:rgba(0,204,136,.08);}
+.reliab-douteux{color:#e8a800;border-color:rgba(232,168,0,.4);background:rgba(232,168,0,.08);}
+.reliab-conteste{color:#ff4444;border-color:rgba(255,68,68,.5);background:rgba(255,68,68,.1);animation:freshStalePulse 2s ease-in-out infinite;}
+
+/* ── Bouton signalement ── */
+.btn-report{border-color:rgba(255,140,0,.35);color:#ffaa44;}
+.btn-report:hover{background:rgba(255,140,0,.1);}
+
+/* ── Historique de fiche (mini-timeline) ── */
+.fiche-history{margin-top:16px;padding-top:14px;border-top:1px solid rgba(255,255,255,.06);}
+.fiche-history-toggle{font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);cursor:pointer;display:flex;align-items:center;gap:6px;user-select:none;}
+.fiche-history-toggle:hover{color:var(--gold);}
+.fiche-history-body{display:none;margin-top:10px;}
+.fiche-history-body.open{display:block;}
+.fiche-history-item{display:flex;gap:10px;padding:7px 0;font-size:.68rem;border-bottom:1px dashed rgba(255,255,255,.05);}
+.fiche-history-item:last-child{border-bottom:none;}
+.fiche-history-date{color:var(--text-muted);font-size:.6rem;white-space:nowrap;flex-shrink:0;}
+.fiche-history-diff{color:var(--text);}
+.fiche-history-diff b{color:var(--gold);}
+.fiche-sparkline{margin-top:8px;}
+
+/* ── Signalements (liste admin) ── */
+.report-entry{display:grid;grid-template-columns:1fr auto;gap:14px;padding:12px 16px;background:var(--card-bg);border:1px solid var(--border);border-left:3px solid #ff8c00;border-radius:6px;margin-bottom:8px;}
+.report-entry.resolved{opacity:.5;border-left-color:#00cc88;}
+.report-target{font-family:'Cinzel',serif;font-size:.62rem;letter-spacing:1.5px;color:#ffaa44;text-transform:uppercase;}
+.report-reason{font-size:.78rem;color:var(--text);margin-top:3px;}
+.report-meta{font-size:.6rem;color:var(--text-muted);margin-top:5px;}
+
+/* ── Duplicatas ── */
+.dup-warning{grid-column:1/-1;background:rgba(232,168,0,.08);border:1px solid rgba(232,168,0,.3);border-radius:6px;padding:9px 13px;font-size:.68rem;color:#e8a800;display:none;}
+
+/* ── Hamburger mobile ── */
+#navToggle{display:none;background:transparent;border:1px solid rgba(255,255,255,.1);color:var(--text-muted);width:34px;height:34px;border-radius:5px;font-size:1rem;align-items:center;justify-content:center;}
+#sidebarOverlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:99;}
+
+@media(max-width:768px){
+  :root{--sidebar-w:230px;}
+  #sidebar{animation:none!important;transform:translateX(-100%)!important;transition:transform .25s ease;z-index:200;}
+  #sidebar.open{transform:translateX(0)!important;}
+  #main{margin-left:0;}
+  #navToggle{display:flex;}
+  #sidebarOverlay.open{display:block;}
+  .topbar-search{display:none;}
+  #globalSearch{width:150px;}
+  .stats-grid{grid-template-columns:repeat(2,1fr);}
+  .verify-row{grid-template-columns:1fr;text-align:left;}
+  .form-grid{grid-template-columns:1fr!important;}
+}
+
+/* ── Impression fiche ── */
+@media print{
+  #sidebar,#topbar,.modal-close,.fiche-history-toggle,.auth-only,#toast-container,#sidebarOverlay,.btn{display:none!important;}
+  body{background:#fff;color:#000;overflow:visible;}
+  #main{margin-left:0;}
+  .modal-overlay{position:static!important;background:none!important;display:block!important;}
+  .modal-box{box-shadow:none!important;border:1px solid #000!important;color:#000!important;background:#fff!important;}
+  .modal-overlay:not(.print-target){display:none!important;}
+}
 </style>
 </head>
 <body>
@@ -854,6 +939,7 @@ body::after{content:'';position:fixed;left:0;width:100%;height:2px;background:li
 <audio id="music-audio"></audio>
 <div class="bg-fx"></div>
 
+<div id="sidebarOverlay" onclick="closeSidebar()"></div>
 <!-- SIDEBAR -->
 <nav id="sidebar">
   <div class="sidebar-logo">
@@ -869,6 +955,7 @@ body::after{content:'';position:fixed;left:0;width:100%;height:2px;background:li
     <li class="nav-item"><button class="nav-btn" onclick="showSection('codex')" data-s="codex"><span class="nav-icon">📖</span><span>Codex</span></button></li>
     <div class="nav-divider"></div>
     <li class="nav-item" id="nav-historique" style="display:none"><button class="nav-btn" onclick="showSection('historique')" data-s="historique"><span class="nav-icon">🕰</span><span>Historique</span></button></li>
+    <li class="nav-item" id="nav-signalements" style="display:none"><button class="nav-btn" onclick="showSection('signalements')" data-s="signalements"><span class="nav-icon">🚩</span><span>Signalements</span><span class="nav-badge" id="badge-signalements" style="background:#ff8c00">0</span></button></li>
     <li class="nav-item" id="nav-admin" style="display:none"><button class="nav-btn" onclick="showSection('admin')" data-s="admin"><span class="nav-icon">🛡</span><span>Administration</span></button></li>
     <div class="nav-divider-secret" id="nav-divider-sphere" style="display:none"><span>⚫ Accès Restreint</span></div>
     <li class="nav-item" id="nav-sphere" style="display:none"><button class="nav-btn" onclick="showSection('sphere')" data-s="sphere"><span class="nav-icon">⚫</span><span>Sphère Secrète</span></button></li>
@@ -887,6 +974,7 @@ body::after{content:'';position:fixed;left:0;width:100%;height:2px;background:li
 <!-- MAIN -->
 <div id="main">
   <header id="topbar">
+    <button id="navToggle" onclick="toggleSidebar()" title="Menu">☰</button>
     <div class="topbar-search">
       <span class="search-icon">🔍</span>
       <input type="text" id="globalSearch" placeholder="Rechercher un Pourfendeur..." oninput="handleSearch(this.value)">
@@ -918,6 +1006,7 @@ body::after{content:'';position:fixed;left:0;width:100%;height:2px;background:li
         <div class="stat-card" style="--sc:#00a2ff"><div class="stat-icon">📜</div><div class="stat-val" id="stat-missions">0</div><div class="stat-label">Missions Actives</div></div>
         <div class="stat-card" style="--sc:#555"><div class="stat-icon">✝</div><div class="stat-val" id="stat-morts">0</div><div class="stat-label">Tombés au Combat</div></div>
       </div>
+      <div id="verify-widget-container"></div>
       <div id="dash-preview"></div>
     </section>
 
@@ -932,6 +1021,7 @@ body::after{content:'';position:fixed;left:0;width:100%;height:2px;background:li
         <span class="filter-chip" onclick="filterRegistre('Vivant',this)">● En service</span>
         <span class="filter-chip" onclick="filterRegistre('Mort',this)">✝ Décédés</span>
         <span class="filter-chip" onclick="filterRegistre('Retraité',this)">◈ Retraités</span>
+        <span class="filter-chip" onclick="filterRegistre('stale',this)" style="color:#e8a800">⚠ À revérifier</span>
       </div>
       <div id="registreContainer"><div class="loader"></div></div>
     </section>
@@ -971,6 +1061,18 @@ body::after{content:'';position:fixed;left:0;width:100%;height:2px;background:li
         </div>
       </div>
       <div id="logsContainer"><div class="loader"></div></div>
+    </section>
+
+    <!-- SIGNALEMENTS -->
+    <section id="section-signalements" class="section">
+      <div class="section-header">
+        <div><div class="section-title" style="color:#ff8c00">Signalements</div><div class="section-sub">Incohérences rapportées par les membres — à vérifier</div></div>
+        <div class="filter-bar">
+          <span class="filter-chip active" onclick="filterReports('ouvert',this)">Ouverts</span>
+          <span class="filter-chip" onclick="filterReports('all',this)">Tous</span>
+        </div>
+      </div>
+      <div id="reportsContainer"><div class="loader"></div></div>
     </section>
 
     <!-- SPHÈRE SECRÈTE -->
@@ -1380,6 +1482,7 @@ body::after{content:'';position:fixed;left:0;width:100%;height:2px;background:li
     <input type="hidden" id="membreEditId">
     <div class="form-grid">
       <div class="form-group full"><label class="form-label">Nom du Pourfendeur</label><input class="form-input" id="fNom" placeholder="Nom complet"></div>
+      <div class="dup-warning" id="fDupWarning"></div>
       <div class="form-group">
         <label class="form-label">Rang</label>
         <select class="form-select" id="fRang">
@@ -1453,6 +1556,16 @@ body::after{content:'';position:fixed;left:0;width:100%;height:2px;background:li
       </div>
       <div class="form-group"><label class="form-label">Niveau de Priorité (auto)</label><div id="dangerPreview" style="background:rgba(139,0,0,.07);border:1px solid rgba(139,0,0,.2);border-radius:5px;padding:10px 13px;font-family:'Cinzel',serif;font-size:.72rem;color:rgba(200,100,100,.8);">Sélectionnez un rang</div><input type="hidden" id="wfDanger" value="50"></div>
       <div class="form-group full"><label class="form-label">Motif de Recherche</label><input class="form-input" id="wfRaison" placeholder="Raison de la désignation..."></div>
+      <div class="form-group">
+        <label class="form-label">Fiabilité de l'information</label>
+        <select class="form-select" id="wfReliab">
+          <option value="confirme">✓ Confirmé</option>
+          <option value="douteux">? Non confirmé</option>
+          <option value="conteste">⚠ Contesté</option>
+        </select>
+      </div>
+      <div class="form-group"><label class="form-label">Source / rapporté par</label><input class="form-input" id="wfSource" placeholder="Ex : témoignage de Kin Tendo, mission du 12/08..."></div>
+      <div class="dup-warning" id="wfDupWarning"></div>
       <div class="form-group full">
         <label class="form-label">Photo (optionnel)</label>
         <div class="photo-picker">
@@ -1496,6 +1609,21 @@ body::after{content:'';position:fixed;left:0;width:100%;height:2px;background:li
 <!-- ═══ MODAL MISSION DETAIL ═══ -->
 <div class="modal-overlay" id="modalMissionDetail">
   <div class="modal-box"><button class="modal-close" onclick="closeModal('modalMissionDetail')">✕</button><div id="missionDetailContent"></div></div>
+</div>
+
+<!-- ═══ MODAL SIGNALEMENT ═══ -->
+<div class="modal-overlay" id="modalReport">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal('modalReport')">✕</button>
+    <div class="modal-title" style="color:#ffaa44">🚩 Signaler une incohérence</div>
+    <input type="hidden" id="reportCol">
+    <input type="hidden" id="reportTargetId">
+    <div class="form-grid">
+      <div class="form-group full"><label class="form-label">Fiche concernée</label><div id="reportTargetName" style="font-family:'Cinzel',serif;color:var(--gold);font-size:.85rem;padding:8px 0;"></div></div>
+      <div class="form-group full"><label class="form-label">Quelle est l'incohérence ?</label><textarea class="form-textarea" id="reportReason" placeholder="Ex : information périmée, doublon, photo incorrecte, rang erroné..."></textarea></div>
+      <button class="form-submit" style="border-color:#ff8c00;color:#ffaa44;" onclick="submitReport()">Envoyer le signalement</button>
+    </div>
+  </div>
 </div>
 
 
@@ -1864,6 +1992,7 @@ function onUserLogin() {
     document.getElementById('nav-sphere').style.display = 'block';
     document.getElementById('nav-divider-sphere').style.display = 'flex';
     document.getElementById('nav-historique').style.display = 'block';
+    document.getElementById('nav-signalements').style.display = 'block';
   }
   if (hasAnyRole('sphere','accesplus')) {
     document.getElementById('nav-sphere').style.display = 'block';
@@ -1872,6 +2001,7 @@ function onUserLogin() {
   if (hasRole('adminsphere')) {
     document.getElementById('nav-admin').style.display = 'block';
     document.getElementById('nav-historique').style.display = 'block';
+    document.getElementById('nav-signalements').style.display = 'block';
   }
   document.querySelectorAll('.auth-only').forEach(b => b.style.display = 'inline-flex');
   // Masquer les boutons d'ajout si pas les droits
@@ -1907,6 +2037,7 @@ function onUserLogout() {
   document.getElementById('nav-sphere').style.display = 'none';
   document.getElementById('nav-divider-sphere').style.display = 'none';
   document.getElementById('nav-historique').style.display = 'none';
+  document.getElementById('nav-signalements').style.display = 'none';
   document.querySelectorAll('.auth-only').forEach(b => b.style.display = 'none');
 }
 
@@ -1928,6 +2059,7 @@ window.showSection = (name) => {
   document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
   document.getElementById('section-'+name).classList.add('active');
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.s===name));
+  if(typeof closeSidebar==='function') closeSidebar();
 };
 
 /* ═══ MODALS ═══ */
@@ -1959,7 +2091,12 @@ const souffleEmoji = {"Souffle de l'Eau":'🌊',"Souffle de la Flamme":'🔥',"S
 const hierarchyIdx={"Maître des Pourfendeurs":0,"Conseiller":1,"Pilier":2,"Kinoe":3,"Kinoto":4,"Hinoe":5,"Hinoto":6,"Tsuchinoe":7,"Tsuchinoto":8,"Kanoe":9,"Kanoto":10,"Mizunoe":11,"Mizunoto":12};
 const rankScore={"Maître des Pourfendeurs":100,"Conseiller":95,"Pilier":88,"Kinoe":75,"Kinoto":62,"Hinoe":50,"Hinoto":40,"Tsuchinoe":32,"Tsuchinoto":24,"Kanoe":18,"Kanoto":13,"Mizunoe":9,"Mizunoto":5};
 const missionColors={attente:'#888',encours:'#00a2ff',terminee:'#00cc88',echec:'#cc2200'};
-const logColors={'INSCRIPTION':'#00cc88','MODIFICATION':'#00a2ff','SUPPRESSION':'#ff3300','DÉSIGNATION':'#8b0000','MISSION_CRÉÉE':'#c9a227','CONNEXION':'#666','RESTAURATION':'#00ffaa'};
+const logColors={'INSCRIPTION':'#00cc88','MODIFICATION':'#00a2ff','SUPPRESSION':'#ff3300','DÉSIGNATION':'#8b0000','MISSION_CRÉÉE':'#c9a227','CONNEXION':'#666','RESTAURATION':'#00ffaa','VÉRIFICATION':'#00cc88','SIGNALEMENT':'#ff8c00'};
+
+/* ── Seuils de fraîcheur (en jours) — à ajuster selon votre rythme de mise à jour ── */
+const FRESH_WARN_DAYS=7;   // au-delà : orange
+const FRESH_STALE_DAYS=21; // au-delà : rouge, "à revérifier"
+const RELIAB_LABELS={confirme:'✓ Confirmé',douteux:'? Non confirmé',conteste:'⚠ Contesté'};
 
 function getDangerTier(s){if(s>=90)return{tier:'S',label:'NEUTRALISATION IMMÉDIATE'};if(s>=75)return{tier:'A',label:'EXTRÊMEMENT DANGEREUX'};if(s>=55)return{tier:'B',label:'TRÈS DANGEREUX'};if(s>=35)return{tier:'C',label:'DANGEREUX'};return{tier:'D',label:'PRIORITÉ SECONDAIRE'};}
 window.previewDanger=()=>{
@@ -1972,11 +2109,170 @@ window.previewDanger=()=>{
   el.style.color=tier==='S'?'#ff4444':tier==='A'?'#ff7700':tier==='B'?'#ffaa00':tier==='C'?'#d4af37':'#888';
 };
 
+/* ═══ FRAÎCHEUR / VÉRIFICATION ═══ */
+function tsToDate(ts){ return ts?.toDate ? ts.toDate() : (ts instanceof Date ? ts : null); }
+function daysSince(ts){
+  const d=tsToDate(ts); if(!d) return null;
+  return Math.floor((Date.now()-d.getTime())/86400000);
+}
+function freshnessState(updatedAt){
+  const days=daysSince(updatedAt);
+  if(days===null) return {cls:'fresh-warn',label:'Jamais vérifié',days:null};
+  if(days<=FRESH_WARN_DAYS) return {cls:'fresh-ok',label:`Vérifié il y a ${days}j`,days};
+  if(days<=FRESH_STALE_DAYS) return {cls:'fresh-warn',label:`À revérifier — ${days}j`,days};
+  return {cls:'fresh-stale',label:`Périmé — ${days}j`,days};
+}
+function freshnessBadge(updatedAt){
+  const f=freshnessState(updatedAt);
+  return `<span class="fresh-badge ${f.cls}"><span class="fresh-dot"></span>${f.label}</span>`;
+}
+window.reverify=async(col,id,name)=>{
+  if(!currentUser){toast('Connexion requise.','warn');return;}
+  try{
+    await updateDoc(doc(db,col,id),{updatedAt:serverTimestamp(),updatedBy:currentUser.steamId});
+    await logAction('VÉRIFICATION',name,null,col);
+    toast(`${name} — information reconfirmée.`,'success');
+  }catch(e){toast('Erreur : '+e.message,'error');}
+};
+
+/* ═══ FIABILITÉ ═══ */
+function reliabPill(status){
+  const s=status||'confirme';
+  return `<span class="reliab-pill reliab-${s}">${RELIAB_LABELS[s]||RELIAB_LABELS.confirme}</span>`;
+}
+
+/* ═══ DÉTECTION DE DOUBLONS ═══ */
+function normName(s){ return (s||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9 ]/g,'').trim(); }
+function levenshtein(a,b){
+  const m=a.length,n=b.length; if(!m)return n; if(!n)return m;
+  const dp=Array.from({length:m+1},(_,i)=>[i,...Array(n).fill(0)]);
+  for(let j=0;j<=n;j++)dp[0][j]=j;
+  for(let i=1;i<=m;i++)for(let j=1;j<=n;j++)
+    dp[i][j]=a[i-1]===b[j-1]?dp[i-1][j-1]:1+Math.min(dp[i-1][j],dp[i][j-1],dp[i-1][j-1]);
+  return dp[m][n];
+}
+function findSimilar(names,candidate,excludeIdx){
+  const c=normName(candidate); if(!c) return null;
+  for(let i=0;i<names.length;i++){
+    if(i===excludeIdx) continue;
+    const n=normName(names[i]); if(!n) continue;
+    if(n===c) return names[i];
+    if(Math.max(n.length,c.length)>=4 && levenshtein(n,c)<=2) return names[i];
+  }
+  return null;
+}
+
+/* ═══ HISTORIQUE PAR FICHE (à partir des snapshots déjà loggués) ═══ */
+function getEntityLogs(col,name){
+  return allLogs.filter(l=>l.collection===col && l.target===name && l.action==='MODIFICATION' && l.snapshot)
+    .slice().sort((a,b)=>(tsToDate(a.date)?.getTime()||0)-(tsToDate(b.date)?.getTime()||0));
+}
+function diffFields(before,after,fields){
+  const out=[];
+  fields.forEach(([key,label])=>{
+    const bv=before?.[key], av=after?.[key];
+    if(bv!==undefined && av!==undefined && String(bv)!==String(av)){
+      out.push(`<b>${label}</b> : ${bv||'—'} → ${av||'—'}`);
+    }
+  });
+  return out;
+}
+function buildHistoryHTML(col,name,current,fields){
+  const logs=getEntityLogs(col,name);
+  if(!logs.length) return '<div style="color:var(--text-muted);font-size:.65rem;padding:6px 0">Aucune modification tracée pour l\'instant — l\'historique se construira au fil des prochaines éditions.</div>';
+  const states=[...logs.map(l=>l.snapshot),current];
+  let html='';
+  for(let i=0;i<logs.length;i++){
+    const diffs=diffFields(states[i],states[i+1],fields);
+    const date=tsToDate(logs[i].date);
+    html+=`<div class="fiche-history-item"><span class="fiche-history-date">${date?date.toLocaleDateString('fr-FR'):'—'}</span><span class="fiche-history-diff">${diffs.length?diffs.join(' · '):'Modification (détails non trackés)'} <span style="color:var(--text-muted)">— par ${logs[i].userName||'?'}</span></span></div>`;
+  }
+  return html;
+}
+function sparklineSVG(values,color){
+  const v=values.filter(x=>typeof x==='number');
+  if(v.length<2) return '';
+  const w=180,h=32,max=Math.max(...v,100),min=Math.min(...v,0);
+  const range=(max-min)||1;
+  const pts=v.map((val,i)=>`${(i/(v.length-1)*w).toFixed(1)},${(h-((val-min)/range)*h).toFixed(1)}`).join(' ');
+  return `<svg class="fiche-sparkline" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}"><polyline points="${pts}" fill="none" stroke="${color||'#cc3300'}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity=".85"/></svg>`;
+}
+window.toggleFicheHistory=(btn)=>{
+  const body=btn.nextElementSibling;
+  body.classList.toggle('open');
+  btn.querySelector('.fh-arrow').textContent=body.classList.contains('open')?'▾':'▸';
+};
+
+/* ═══ SIGNALEMENTS ═══ */
+let allReports=[]; let reportFilter='ouvert';
+onSnapshot(collection(db,'signalements'),snap=>{
+  allReports=snap.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(tsToDate(b.date)?.getTime()||0)-(tsToDate(a.date)?.getTime()||0));
+  document.getElementById('badge-signalements').textContent=allReports.filter(r=>r.status!=='resolu').length;
+  renderReports();
+},()=>{ /* collection absente tant qu'aucun signalement n'a été créé : ignoré silencieusement */ });
+
+window.openReport=(col,id,name)=>{
+  if(!currentUser){toast('Connexion requise pour signaler.','warn');return;}
+  document.getElementById('reportCol').value=col;
+  document.getElementById('reportTargetId').value=id;
+  document.getElementById('reportTargetName').textContent=name;
+  document.getElementById('reportReason').value='';
+  openModal('modalReport');
+};
+window.submitReport=async()=>{
+  const reason=document.getElementById('reportReason').value.trim();
+  if(!reason){toast('Décrivez l\'incohérence.','warn');return;}
+  const col=document.getElementById('reportCol').value;
+  const targetId=document.getElementById('reportTargetId').value;
+  const targetName=document.getElementById('reportTargetName').textContent;
+  try{
+    await addDoc(collection(db,'signalements'),{collection:col,targetId,targetName,reason,status:'ouvert',reportedBy:currentUser.steamId,reportedByName:currentUser.name,date:serverTimestamp()});
+    await logAction('SIGNALEMENT',targetName,null,col);
+    toast('Signalement envoyé — un admin va vérifier.','success');
+    closeModal('modalReport');
+  }catch(e){toast('Erreur : '+e.message+' (la collection Firestore "signalements" doit être autorisée en écriture)','error');}
+};
+function renderReports(){
+  const c=document.getElementById('reportsContainer'); if(!c)return;
+  let data=reportFilter==='all'?allReports:allReports.filter(r=>r.status!=='resolu');
+  if(!data.length){c.innerHTML='<div class="empty-state"><div class="empty-icon">🚩</div><p>Aucun signalement'+(reportFilter==='ouvert'?' ouvert':'')+'</p></div>';return;}
+  c.innerHTML=data.map(r=>{
+    const date=tsToDate(r.date);
+    const resolved=r.status==='resolu';
+    return `<div class="report-entry ${resolved?'resolved':''}">
+      <div>
+        <div class="report-target">${r.collection==='pourfendeurs'?'⚔ Registre':'🎯 Cible'} · ${r.targetName||'—'}</div>
+        <div class="report-reason">${r.reason||''}</div>
+        <div class="report-meta">Signalé par ${r.reportedByName||'?'} · ${date?date.toLocaleString('fr-FR'):'—'}${resolved?' · ✓ Résolu':''}</div>
+      </div>
+      ${!resolved&&currentUser&&hasAnyRole('admin','superadmin','adminsphere')?`<div style="display:flex;flex-direction:column;gap:6px"><button class="btn btn-success btn-sm" onclick="resolveReport('${r.id}')">✓ Résolu</button><button class="btn btn-ghost btn-sm" onclick="dismissReport('${r.id}')">Ignorer</button></div>`:''}
+    </div>`;
+  }).join('');
+}
+window.filterReports=(f,el)=>{reportFilter=f;el.parentElement.querySelectorAll('.filter-chip').forEach(c=>c.classList.remove('active'));el.classList.add('active');renderReports();};
+window.resolveReport=async(id)=>{
+  try{await updateDoc(doc(db,'signalements',id),{status:'resolu',resolvedAt:serverTimestamp(),resolvedBy:currentUser.steamId});toast('Signalement marqué résolu.','success');}catch(e){toast('Erreur : '+e.message,'error');}
+};
+window.dismissReport=async(id)=>{
+  try{await updateDoc(doc(db,'signalements',id),{status:'ignore',resolvedAt:serverTimestamp(),resolvedBy:currentUser.steamId});toast('Signalement ignoré.','info');}catch(e){toast('Erreur : '+e.message,'error');}
+};
+
+/* ═══ IMPRESSION FICHE ═══ */
+window.printFiche=()=>{
+  document.querySelectorAll('.modal-overlay.open').forEach(m=>m.classList.add('print-target'));
+  window.print();
+  setTimeout(()=>document.querySelectorAll('.print-target').forEach(m=>m.classList.remove('print-target')),500);
+};
+
+/* ═══ SIDEBAR MOBILE ═══ */
+window.toggleSidebar=()=>{document.getElementById('sidebar').classList.toggle('open');document.getElementById('sidebarOverlay').classList.toggle('open');};
+window.closeSidebar=()=>{document.getElementById('sidebar').classList.remove('open');document.getElementById('sidebarOverlay').classList.remove('open');};
+
 /* ═══ POURFENDEURS ═══ */
 onSnapshot(collection(db,'pourfendeurs'),snap=>{
   allPourfendeurs=snap.docs.map(d=>({id:d.id,...d.data()})).filter(d=>!d.deleted)
     .sort((a,b)=>(hierarchyIdx[a.rang]||99)-(hierarchyIdx[b.rang]||99));
-  renderRegistre(); updateStats(); renderDashPreview();
+  renderRegistre(); updateStats(); renderDashPreview(); renderVerifyWidget();
 });
 
 function buildMemberRow(m){
@@ -1984,7 +2280,7 @@ function buildMemberRow(m){
   const rang=m.rang||'';
   const bc=['Maître des Pourfendeurs','Conseiller','Pilier','Kinoe','Kinoto'].includes(rang)
     ?`badge-${rang==='Maître des Pourfendeurs'?'Maitre':rang==='Conseiller'?'Conseiller':rang}`:'badge-default';
-  return `<tr><td><span class="member-name ${nc}" onclick="openProfile('${m.id}')">${m.nom||'—'}</span>${m.brigade?`<br><span class="member-brigade">${m.brigade}</span>`:''}</td><td><span class="badge ${bc}">${rang||'—'}</span></td><td><span class="status-dot status-${m.statut}"></span>${m.statut||'—'}</td><td style="font-size:.72rem;color:var(--text-muted)">${m.jours||0} j</td><td class="td-actions"><button class="btn btn-ghost btn-sm" onclick="openProfile('${m.id}')">Fiche</button>${currentUser?`<button class="btn btn-ghost btn-sm" onclick="openFormMembre('${m.id}')">✎</button><button class="btn btn-danger btn-sm" onclick="deleteMembre('${m.id}','${(m.nom||'').replace(/'/g,"\\'")}')">✕</button>`:''}</td></tr>`;
+  return `<tr><td><span class="member-name ${nc}" onclick="openProfile('${m.id}')">${m.nom||'—'}</span>${m.brigade?`<br><span class="member-brigade">${m.brigade}</span>`:''}</td><td><span class="badge ${bc}">${rang||'—'}</span></td><td><span class="status-dot status-${m.statut}"></span>${m.statut||'—'}</td><td style="font-size:.72rem;color:var(--text-muted)">${m.jours||0} j</td><td>${freshnessBadge(m.updatedAt)}</td><td class="td-actions"><button class="btn btn-ghost btn-sm" onclick="openProfile('${m.id}')">Fiche</button>${currentUser?`<button class="btn btn-ghost btn-sm" onclick="openFormMembre('${m.id}')">✎</button><button class="btn btn-danger btn-sm" onclick="deleteMembre('${m.id}','${(m.nom||'').replace(/'/g,"\\'")}')">✕</button>`:''}</td></tr>`;
 }
 
 function renderRegistre(){
@@ -1993,6 +2289,13 @@ function renderRegistre(){
   if(searchQuery){const q=searchQuery.toLowerCase();data=data.filter(m=>m.nom?.toLowerCase().includes(q)||m.souffle?.toLowerCase().includes(q)||m.rang?.toLowerCase().includes(q)||m.brigade?.toLowerCase().includes(q));}
 
   let html='';
+
+  if(registreFilter==='stale'){
+    const stale=data.filter(m=>m.statut!=='Mort'&&freshnessState(m.updatedAt).cls!=='fresh-ok');
+    c.innerHTML=stale.length?`<table class="member-table"><tbody>${stale.map(buildMemberRow).join('')}</tbody></table>`:'<div class="empty-state"><div class="empty-icon">✓</div><p>Tout est à jour !</p></div>';
+    document.getElementById('badge-registre').textContent=allPourfendeurs.length;
+    return;
+  }
 
   if(registreFilter==='all'||registreFilter==='Vivant'){
     const actifs=data.filter(m=>m.statut==='Vivant');
@@ -2055,6 +2358,11 @@ window.saveMembre=async()=>{
   if(!currentUser){toast('Connexion requise.','warn');return;}
   const nom=document.getElementById('fNom').value.trim();
   if(!nom){toast('Le nom est requis.','warn');return;}
+  const membreEditId=document.getElementById('membreEditId').value;
+  if(!membreEditId){
+    const similar=findSimilar(allPourfendeurs.map(x=>x.nom||''),nom,-1);
+    if(similar && !confirm(`Un Pourfendeur nommé "${similar}" existe déjà. Créer quand même une nouvelle fiche ?`)) return;
+  }
   const rang=document.getElementById('fRang').value;
   // Compiler la galerie : compresser les fichiers en attente
   const photosData=[];
@@ -2136,9 +2444,18 @@ window.openProfile=async(id)=>{
           <div class="pf-stat"><div class="pf-stat-val">${m.jours||0}</div><div class="pf-stat-label">Jours de service</div></div>
           <div class="pf-stat"><div class="pf-stat-val">${photos.length||'—'}</div><div class="pf-stat-label">Photos</div></div>
         </div>
+        <div style="margin:10px 0">${freshnessBadge(m.updatedAt)}</div>
         ${extras.length?`<div class="profile-info-grid">${extras.map(([l,v])=>`<div class="pf-info-item"><div class="pf-label">${l}</div><div class="pf-val">${v}</div></div>`).join('')}</div>`:''}
         ${m.info?`<div class="profile-obs-block">${m.info}</div>`:''}
-        ${currentUser?`<div class="modal-footer" style="margin-top:auto;padding-top:16px;display:flex;gap:8px;align-items:center"><button class="btn btn-gold btn-sm" onclick="closeModal('modalProfile');openFormMembre('${m.id}')">✎ Modifier la fiche</button><span style="font-size:.5rem;letter-spacing:3px;color:rgba(200,0,0,.4);font-family:'Cinzel',serif">CONFIDENTIEL</span></div>`:''}
+        <div class="fiche-history">
+          <div class="fiche-history-toggle" onclick="toggleFicheHistory(this)"><span class="fh-arrow">▸</span> Historique des modifications</div>
+          <div class="fiche-history-body">${buildHistoryHTML('pourfendeurs',m.nom,m,[['rang','Rang'],['souffle','Souffle'],['statut','Statut'],['brigade','Brigade'],['jours','Jours de service']])}</div>
+        </div>
+        <div class="modal-footer" style="margin-top:auto;padding-top:16px;display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+          ${currentUser?`<button class="btn btn-gold btn-sm" onclick="closeModal('modalProfile');openFormMembre('${m.id}')">✎ Modifier la fiche</button><button class="btn btn-reverify btn-sm" onclick="reverify('pourfendeurs','${m.id}','${(m.nom||'').replace(/'/g,"\\'")}')">✓ Revérifié</button><button class="btn btn-report btn-sm" onclick="openReport('pourfendeurs','${m.id}','${(m.nom||'').replace(/'/g,"\\'")}')">🚩 Signaler</button>`:''}
+          <button class="btn btn-ghost btn-sm" onclick="printFiche()">🖨 Imprimer</button>
+          <span style="font-size:.5rem;letter-spacing:3px;color:rgba(200,0,0,.4);font-family:'Cinzel',serif;margin-left:auto">CONFIDENTIEL</span>
+        </div>
       </div>
     </div>`;
   openModal('modalProfile');
@@ -2365,7 +2682,7 @@ window.deleteSphere=async(id)=>{
 };
 
 /* ═══ WANTED ═══ */
-onSnapshot(collection(db,'wanted'),snap=>{allWanted=snap.docs.map(d=>({id:d.id,...d.data()})).filter(d=>!d.deleted);renderWanted();updateStats();});
+onSnapshot(collection(db,'wanted'),snap=>{allWanted=snap.docs.map(d=>({id:d.id,...d.data()})).filter(d=>!d.deleted);renderWanted();updateStats();renderVerifyWidget();});
 
 function renderWanted(){
   const c=document.getElementById('wantedContainer');
@@ -2378,6 +2695,11 @@ function renderWanted(){
     const{tier,label}=getDangerTier(s);
     const photo=w.photo?`<img src="${w.photo}" alt="${w.prenom}" onerror="this.parentElement.innerHTML='<span class=wanted-photo-ph>🎯</span>'">`:'<span class="wanted-photo-ph">🎯</span>';
     const drips=[15,40,65,85].map(l=>`<div class="wanted-drip" style="left:${l}%;--dh:${12+Math.random()*18}px;animation-delay:${Math.random()*.8}s"></div>`).join('');
+    const fullName=`${w.prenom||''} ${w.nom||''}`.trim();
+    const nameEsc=fullName.replace(/'/g,"\\'");
+    const wHist=buildHistoryHTML('wanted',fullName,w,[['grade','Rang'],['dangerScore','Danger'],['raison','Motif'],['verifStatus','Fiabilité']]);
+    const sparkVals=[...getEntityLogs('wanted',fullName).map(l=>l.snapshot?.dangerScore).filter(v=>typeof v==='number'),s];
+    const spark=sparklineSVG(sparkVals,'#ff5544');
     return `<div class="wanted-card">${drips}<div class="wanted-inner">
       <div class="wanted-number">#${String(i+1).padStart(2,'0')}</div>
       <div style="text-align:center"><div class="wanted-seal">CIBLE DÉSIGNÉE</div></div>
@@ -2385,15 +2707,23 @@ function renderWanted(){
       <div class="wanted-name">${w.prenom||''} ${w.nom||''}</div>
       <div class="wanted-grade">${w.grade||'—'}</div>
       <div class="wanted-raison">${w.raison||''}</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-top:8px">${freshnessBadge(w.updatedAt)}${reliabPill(w.verifStatus)}</div>
+      ${w.source?`<div style="font-size:.56rem;color:var(--text-muted);text-align:center;margin-top:5px">Source : ${w.source}</div>`:''}
       <div class="danger-section d${tier}">
         <div class="danger-label">Priorité de Neutralisation</div>
         <div class="danger-score">Priorité ${tier}</div>
         <div class="danger-bar-track"><div class="danger-bar-fill" style="--w:${s}%"></div></div>
         <div style="font-family:'Cinzel',serif;font-size:.52rem;text-align:center;margin-top:4px;opacity:.7;letter-spacing:2px">${label}</div>
       </div>
+      <div class="fiche-history">
+        <div class="fiche-history-toggle" onclick="toggleFicheHistory(this)"><span class="fh-arrow">▸</span> Historique &amp; évolution</div>
+        <div class="fiche-history-body">${wHist}${spark?`<div style="font-size:.55rem;color:var(--text-muted);margin-top:6px">Évolution du danger</div>${spark}`:''}</div>
+      </div>
       ${currentUser?`<div style="display:flex;gap:6px;margin-top:10px">
+        <button class="btn btn-reverify btn-sm" style="flex:1" onclick="reverify('wanted','${w.id}','${nameEsc}')" title="Reconfirmer l'info">✓</button>
+        <button class="btn btn-report btn-sm" style="flex:1" onclick="openReport('wanted','${w.id}','${nameEsc}')" title="Signaler une incohérence">🚩</button>
         <button class="btn btn-ghost btn-sm" style="flex:1" onclick="openFormWanted('${w.id}')">✎</button>
-        <button class="btn btn-danger btn-sm" style="flex:1" onclick="deleteWanted('${w.id}','${((w.prenom||'')+' '+(w.nom||'')).trim().replace(/'/g,"\\'")}')">✕</button>
+        <button class="btn btn-danger btn-sm" style="flex:1" onclick="deleteWanted('${w.id}','${nameEsc}')">✕</button>
       </div>`:''}
     </div></div>`;
   }).join('')}</div>`;
@@ -2402,8 +2732,9 @@ function renderWanted(){
 window.openFormWanted=(id=null)=>{
   document.getElementById('wantedEditId').value=id||'';
   document.getElementById('wantedFormTitle').textContent=id?'Modifier la Cible':'Nouvel Avis de Recherche';
-  if(id){const w=allWanted.find(x=>x.id===id);if(w){document.getElementById('wfPrenom').value=w.prenom||'';document.getElementById('wfNom').value=w.nom||'';document.getElementById('wfGrade').value=w.grade||'';document.getElementById('wfDanger').value=w.dangerScore||0;document.getElementById('wfRaison').value=w.raison||'';document.getElementById('wfPhoto').value=w.photo||'';previewDanger();}}
-  else{['wfPrenom','wfNom','wfRaison'].forEach(i=>document.getElementById(i).value='');document.getElementById('wfDanger').value=50;document.getElementById('dangerPreview').textContent='Danger : —';}
+  document.getElementById('wfDupWarning').style.display='none';
+  if(id){const w=allWanted.find(x=>x.id===id);if(w){document.getElementById('wfPrenom').value=w.prenom||'';document.getElementById('wfNom').value=w.nom||'';document.getElementById('wfGrade').value=w.grade||'';document.getElementById('wfDanger').value=w.dangerScore||0;document.getElementById('wfRaison').value=w.raison||'';document.getElementById('wfPhoto').value=w.photo||'';document.getElementById('wfReliab').value=w.verifStatus||'confirme';document.getElementById('wfSource').value=w.source||'';previewDanger();}}
+  else{['wfPrenom','wfNom','wfRaison','wfSource'].forEach(i=>document.getElementById(i).value='');document.getElementById('wfDanger').value=50;document.getElementById('wfReliab').value='confirme';document.getElementById('dangerPreview').textContent='Danger : —';}
   pendingPhotoWanted=null; resetPhotoField('wfPhotoFile','wfPhoto','wfPhotoPreview');
   openModal('modalWanted');
 };
@@ -2412,13 +2743,39 @@ window.saveWanted=async()=>{
   if(!currentUser){toast('Connexion requise.','warn');return;}
   const prenom=document.getElementById('wfPrenom').value.trim();const nom=document.getElementById('wfNom').value.trim();
   if(!prenom&&!nom){toast('Saisissez au moins un nom.','warn');return;}
+  const editId=document.getElementById('wantedEditId').value;
+  const fullName=`${prenom} ${nom}`.trim();
+  // Détection de doublon (uniquement à la création)
+  if(!editId){
+    const similar=findSimilar(allWanted.map(x=>`${x.prenom||''} ${x.nom||''}`.trim()),fullName,-1);
+    if(similar && !confirm(`Une cible nommée "${similar}" existe déjà. Créer quand même une nouvelle fiche ?`)) return;
+  }
   const s=parseInt(document.getElementById('wfDanger').value)||0;const{tier}=getDangerTier(s);
   let wPhotoUrl=document.getElementById('wfPhoto').value.trim();
   if(pendingPhotoWanted){toast('Compression de l\'image...','info');try{wPhotoUrl=await uploadPhoto(pendingPhotoWanted);}catch(e){toast('Erreur image : '+e.message,'error');return;}}
-  const data={prenom,nom,grade:document.getElementById('wfGrade').value,raison:document.getElementById('wfRaison').value.trim(),photo:wPhotoUrl,dangerScore:s,dangerTier:tier,updatedAt:serverTimestamp(),updatedBy:currentUser.steamId};
-  const editId=document.getElementById('wantedEditId').value;
-  try{if(editId){await updateDoc(doc(db,'wanted',editId),data);await logAction('MODIFICATION',`${prenom} ${nom}`,null,'wanted');toast('Mis à jour.','success');}else{data.createdAt=serverTimestamp();data.createdBy=currentUser.steamId;await addDoc(collection(db,'wanted'),data);await logAction('DÉSIGNATION',`${prenom} ${nom}`,null,'wanted');toast('Avis émis.','success');}closeModal('modalWanted');}
-  catch(e){toast('Erreur : '+e.message,'error');}
+  let verifStatus=document.getElementById('wfReliab').value;
+  const grade=document.getElementById('wfGrade').value;
+  const old=editId?allWanted.find(x=>x.id===editId):null;
+  // Écart important vs la dernière valeur connue → on force le statut "Contesté" pour qu'un admin revérifie
+  let autoContested=false;
+  if(old){
+    const oldScore=old.dangerScore||rankScore[old.grade]||50;
+    if(Math.abs(oldScore-s)>=25 || (old.grade&&old.grade!==grade)){ verifStatus='conteste'; autoContested=true; }
+  }
+  const data={prenom,nom,grade,raison:document.getElementById('wfRaison').value.trim(),photo:wPhotoUrl,dangerScore:s,dangerTier:tier,verifStatus,source:document.getElementById('wfSource').value.trim(),updatedAt:serverTimestamp(),updatedBy:currentUser.steamId};
+  try{
+    if(editId){
+      await updateDoc(doc(db,'wanted',editId),data);
+      await logAction('MODIFICATION',fullName,old||null,'wanted');
+      toast(autoContested?`Mis à jour — écart important détecté, fiche marquée "Contestée".`:'Mis à jour.',autoContested?'warn':'success');
+    }else{
+      data.createdAt=serverTimestamp();data.createdBy=currentUser.steamId;
+      await addDoc(collection(db,'wanted'),data);
+      await logAction('DÉSIGNATION',fullName,null,'wanted');
+      toast('Avis émis.','success');
+    }
+    closeModal('modalWanted');
+  }catch(e){toast('Erreur : '+e.message,'error');}
 };
 
 window.deleteWanted=async(id,nom)=>{
@@ -2659,6 +3016,37 @@ function updateStats(){
   document.getElementById('stat-piliers').textContent=allPourfendeurs.filter(m=>m.rang==='Pilier'&&m.statut==='Vivant').length;
   document.getElementById('stat-vivants').textContent=allPourfendeurs.filter(m=>m.statut==='Vivant').length;
   document.getElementById('stat-morts').textContent=allPourfendeurs.filter(m=>m.statut==='Mort').length;
+}
+
+function renderVerifyWidget(){
+  const c=document.getElementById('verify-widget-container'); if(!c)return;
+  const items=[];
+  allPourfendeurs.filter(m=>m.statut!=='Mort').forEach(m=>{
+    const f=freshnessState(m.updatedAt);
+    if(f.cls!=='fresh-ok') items.push({type:'pourfendeur',id:m.id,name:m.nom||'—',days:f.days??999,weight:f.days??999,meta:m.rang||''});
+  });
+  allWanted.forEach(w=>{
+    const f=freshnessState(w.updatedAt);
+    const name=`${w.prenom||''} ${w.nom||''}`.trim();
+    if(f.cls!=='fresh-ok') items.push({type:'wanted',id:w.id,name,days:f.days??999,weight:(f.days??999)*((w.dangerScore||50)/50),meta:`Priorité ${getDangerTier(w.dangerScore||rankScore[w.grade]||50).tier}`});
+  });
+  items.sort((a,b)=>b.weight-a.weight);
+  const top=items.slice(0,8);
+  if(!top.length){c.innerHTML='';return;}
+  c.innerHTML=`<div class="verify-widget">
+    <div class="verify-widget-header">
+      <div class="verify-widget-title">⚠ Fiches à vérifier</div>
+      <div class="verify-widget-count">${items.length} au total — priorité aux plus anciennes / plus dangereuses</div>
+    </div>
+    <div class="verify-list">${top.map(it=>`
+      <div class="verify-row">
+        <span class="fresh-dot" style="color:${it.days>FRESH_STALE_DAYS?'#ff5544':'#e8a800'}"></span>
+        <span class="verify-row-name" onclick="showSection('${it.type==='pourfendeur'?'registre':'wanted'}');${it.type==='pourfendeur'?`openProfile('${it.id}')`:''}">${it.name}<br><span class="verify-row-meta">${it.meta} · ${it.days===999?'jamais vérifié':it.days+'j sans vérification'}</span></span>
+        ${currentUser?`<button class="btn btn-reverify btn-sm" onclick="reverify('${it.type==='pourfendeur'?'pourfendeurs':'wanted'}','${it.id}','${it.name.replace(/'/g,"\\'")}')">✓ Revérifié</button>`:''}
+        <button class="btn btn-ghost btn-sm" onclick="showSection('${it.type==='pourfendeur'?'registre':'wanted'}')">Voir</button>
+      </div>`).join('')}
+    </div>
+  </div>`;
 }
 
 function renderDashPreview(){
