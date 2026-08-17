@@ -8,7 +8,6 @@ import { registerAuditHandlers, initLogs } from "./handlers/logs.js";
 import { registerWhitelistHandlers, initWhitelist } from "./handlers/whitelist.js";
 import { registerPourfendeursHandlers, initPourfendeurs } from "./handlers/pourfendeurs.js";
 import { registerWantedHandlers, initWanted } from "./handlers/wanted.js";
-import { registerMissionsHandlers, initMissions } from "./handlers/missions.js";
 import { registerSphereHandlers, initSphere } from "./handlers/sphere.js";
 import { registerSignalementsHandlers, initSignalements } from "./handlers/signalements.js";
 
@@ -26,7 +25,6 @@ initLogs(io);
 initWhitelist(io);
 initPourfendeurs(io);
 initWanted(io);
-initMissions(io);
 initSphere(io);
 initSignalements(io);
 
@@ -37,7 +35,6 @@ io.on("connection", (socket) => {
   registerAuditHandlers(io, socket);
   registerPourfendeursHandlers(io, socket);
   registerWantedHandlers(io, socket);
-  registerMissionsHandlers(io, socket);
   registerSphereHandlers(io, socket);
   registerSignalementsHandlers(io, socket);
 });

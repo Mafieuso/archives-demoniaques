@@ -176,24 +176,6 @@ input,select,textarea{font-family:inherit;}
 .dC{color:#d4af37;} .dC .danger-bar-fill{background:linear-gradient(90deg,#6a5500,#d4af37);}
 .dD{color:#888;} .dD .danger-bar-fill{background:linear-gradient(90deg,#333,#888);}
 
-/* MISSIONS */
-.missions-board{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:18px;}
-.mission-col{background:rgba(6,6,15,.6);border:1px solid var(--border);border-radius:8px;padding:14px;min-height:280px;}
-.mission-col-title{font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:3px;text-transform:uppercase;padding-bottom:10px;border-bottom:1px solid var(--border);margin-bottom:12px;display:flex;align-items:center;gap:7px;}
-.col-attente .mission-col-title{color:#888;}
-.col-encours .mission-col-title{color:var(--eau);}
-.col-terminee .mission-col-title{color:var(--retraite);}
-.col-echec .mission-col-title{color:var(--crimson2);}
-.mission-card{background:var(--card-bg);border:1px solid var(--border);border-left:3px solid var(--mc,#c9a227);border-radius:6px;padding:12px 14px;margin-bottom:8px;cursor:pointer;transition:.2s;}
-.mission-card:hover{border-color:var(--border-h);}
-.mission-title{font-family:'Cinzel',serif;font-size:.72rem;font-weight:700;letter-spacing:1px;margin-bottom:5px;}
-.mission-desc{font-size:.65rem;color:var(--text-muted);line-height:1.5;margin-bottom:7px;}
-.mission-meta{display:flex;align-items:center;justify-content:space-between;gap:6px;}
-.mission-assignes{font-size:.56rem;color:var(--text-muted);}
-.mission-priority{font-family:'Cinzel',serif;font-size:.48rem;letter-spacing:2px;padding:2px 7px;border-radius:3px;text-transform:uppercase;}
-.prio-haute{background:rgba(255,50,0,.12);border:1px solid rgba(255,50,0,.28);color:#ff6644;}
-.prio-normale{background:rgba(201,162,39,.08);border:1px solid rgba(201,162,39,.22);color:var(--gold);}
-.prio-basse{background:rgba(100,100,120,.08);border:1px solid rgba(100,100,120,.18);color:var(--text-muted);}
 
 /* LOGS */
 .log-list{display:flex;flex-direction:column;gap:7px;}
@@ -350,6 +332,25 @@ input,select,textarea{font-family:inherit;}
 .splash-cta-text{font-family:'Cinzel',serif;font-size:.72rem;letter-spacing:5px;color:rgba(230,195,110,.92);text-transform:uppercase;white-space:nowrap;}
 .splash-scroll-hint{position:absolute;bottom:34px;font-family:'Cinzel',serif;font-size:.55rem;letter-spacing:4px;color:rgba(201,162,39,.3);text-transform:uppercase;animation:cxFadeUp 1s 1.05s ease-out both;}
 @keyframes cxFadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── Rupture du sceau à l'entrée ── */
+.splash-flash{position:absolute;inset:0;z-index:3;pointer-events:none;
+  background:radial-gradient(circle at 50% 50%,rgba(255,240,210,0) 0%,rgba(255,240,210,0) 100%);opacity:0;}
+#splash.breaking .splash-flash{animation:cxSealFlash .6s cubic-bezier(.2,.8,.3,1) forwards;}
+@keyframes cxSealFlash{
+  0%{opacity:0;background:radial-gradient(circle at 50% 50%,rgba(255,240,210,0) 0%,rgba(201,162,39,0) 30%,transparent 60%);}
+  35%{opacity:1;background:radial-gradient(circle at 50% 50%,rgba(255,248,225,.95) 0%,rgba(255,200,110,.55) 22%,rgba(139,0,0,.18) 48%,transparent 72%);}
+  100%{opacity:0;background:radial-gradient(circle at 50% 50%,rgba(255,248,225,0) 0%,rgba(255,200,110,0) 30%,transparent 60%);}
+}
+#splash.breaking .splash-content{animation:cxSealPunch .55s cubic-bezier(.3,0,.2,1) forwards;}
+@keyframes cxSealPunch{0%{transform:scale(1);filter:brightness(1);}30%{transform:scale(1.06);filter:brightness(1.6);}100%{transform:scale(1.02);filter:brightness(1);opacity:0;}}
+#splash.breaking .splash-rune-ring{animation:cxRingBurst .65s cubic-bezier(.3,0,.2,1) forwards!important;}
+#splash.breaking .splash-rune-ring.outer{animation:cxRingBurstOuter .65s cubic-bezier(.3,0,.2,1) forwards!important;}
+@keyframes cxRingBurst{0%{transform:translate(-50%,-50%) rotate(0) scale(1);opacity:.14;}100%{transform:translate(-50%,-50%) rotate(70deg) scale(1.35);opacity:0;}}
+@keyframes cxRingBurstOuter{0%{transform:translate(-50%,-50%) rotate(0) scale(1);opacity:.07;}100%{transform:translate(-50%,-50%) rotate(-50deg) scale(1.5);opacity:0;}}
+@media(prefers-reduced-motion:reduce){
+  #splash.breaking .splash-flash,#splash.breaking .splash-content,#splash.breaking .splash-rune-ring,#splash.breaking .splash-rune-ring.outer{animation:none!important;}
+}
 /* TOAST */
 #toast-container{position:fixed;bottom:26px;right:22px;display:flex;flex-direction:column;gap:7px;z-index:9999;}
 .toast{display:flex;align-items:center;gap:11px;padding:11px 16px;background:#0d0d1a;border:1px solid var(--border);border-left:3px solid var(--tc,#c9a227);border-radius:6px;font-size:.72rem;min-width:230px;box-shadow:0 8px 24px rgba(0,0,0,.6);animation:toast-in .3s ease-out;}
@@ -375,7 +376,6 @@ input,select,textarea{font-family:inherit;}
 .sphere-result-source{display:inline-block;font-family:'Cinzel',serif;font-size:.44rem;letter-spacing:3px;padding:2px 8px;border-radius:20px;text-transform:uppercase;margin-bottom:6px;}
 .src-registre{background:rgba(0,100,200,.1);border:1px solid rgba(0,150,255,.2);color:#88ccff;}
 .src-cible{background:rgba(180,0,0,.12);border:1px solid rgba(220,50,50,.25);color:#ff9999;}
-.src-mission{background:rgba(180,120,0,.1);border:1px solid rgba(200,160,0,.2);color:#e8c060;}
 .src-sphere{background:rgba(100,0,0,.15);border:1px solid rgba(180,0,0,.3);color:#ff6666;}
 .sphere-result-meta{font-size:.7rem;color:rgba(180,160,160,.65);line-height:1.6;}
 .sphere-result-meta strong{color:rgba(220,180,180,.85);}
@@ -617,7 +617,7 @@ body::after{content:'';position:fixed;left:0;width:100%;height:2px;background:li
 }
 @media(max-width:600px){
   #content{padding:18px 12px 80px;}
-  .wanted-grid,.missions-board{grid-template-columns:1fr;}
+  .wanted-grid{grid-template-columns:1fr;}
 }
 /* ═══ CURSEUR PERSONNALISÉ ═══ */
 *{cursor:none !important;}
@@ -659,7 +659,7 @@ body::after{content:'';position:fixed;left:0;width:100%;height:2px;background:li
 .cx-trail{position:fixed;top:0;left:0;width:4px;height:4px;border-radius:50%;pointer-events:none;z-index:999998;background:radial-gradient(circle,rgba(245,205,120,.95),rgba(200,40,0,0) 70%);will-change:transform,opacity;}
 
 /* Reflet holographique au survol des cartes (tilt 3D) */
-.stat-card,.wanted-card,.sphere-card,.pilier-card,.conseiller-card,.maitre-card,.breath-group,.mission-card{will-change:transform;}
+.stat-card,.wanted-card,.sphere-card,.pilier-card,.conseiller-card,.maitre-card,.breath-group{will-change:transform;}
 .cx-sheen{position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at var(--mx,50%) var(--my,50%),rgba(255,255,255,.15),transparent 45%);opacity:0;transition:opacity .25s;z-index:2;border-radius:inherit;}
 .cx-tilt-active>.cx-sheen{opacity:1;}
 
@@ -744,13 +744,6 @@ body::after{content:'';position:fixed;left:0;width:100%;height:2px;background:li
 .wanted-photo{transition:filter .3s;}
 .wanted-card:hover .wanted-photo{filter:sepia(.05) contrast(1.1) brightness(1.08);}
 
-/* ── Missions : accroche au survol + liseré animé ── */
-.mission-card{transition:transform .2s ease,box-shadow .2s ease;}
-.mission-card:hover{transform:translateX(4px);box-shadow:0 8px 22px rgba(0,0,0,.5),0 0 14px rgba(201,162,39,.16);}
-.mission-col{transition:.25s;}
-.mission-col:hover{border-color:rgba(201,162,39,.22);}
-.mission-col-title{position:relative;}
-
 /* ── Historique : lignes qui glissent au survol ── */
 .log-entry{transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease;}
 .log-entry:hover{transform:translateX(4px);box-shadow:0 6px 20px rgba(0,0,0,.45);border-color:var(--border-h);}
@@ -804,7 +797,7 @@ body::after{content:'';position:fixed;left:0;width:100%;height:2px;background:li
 .loader{box-shadow:0 0 22px rgba(201,162,39,.16);}
 
 @media(prefers-reduced-motion:reduce){
-  .section-title::before,.stat-icon,.breath-icon,.filter-chip.active,.badge::after,.mission-col-title,
+  .section-title::before,.stat-icon,.breath-icon,.filter-chip.active,.badge::after,
   .sphere-rule-critical .sphere-rule-num,.admin-card::before,.maitre-photo,.conseiller-photo,.code-display,.profile-corner{animation:none!important;}
 }
 
@@ -903,6 +896,7 @@ body::after{content:'';position:fixed;left:0;width:100%;height:2px;background:li
 <!-- ═══ SPLASH SCREEN ═══ -->
 <div id="splash" onclick="enterCodex()">
   <div class="splash-bg"></div>
+  <div class="splash-flash"></div>
   <div class="splash-rune-ring">
     <svg viewBox="0 0 200 200"><g fill="none" stroke="#c9a227" stroke-width="0.5">
       <circle cx="100" cy="100" r="94"/><circle cx="100" cy="100" r="86"/>
@@ -951,7 +945,6 @@ body::after{content:'';position:fixed;left:0;width:100%;height:2px;background:li
     <li class="nav-item"><button class="nav-btn active" onclick="showSection('dashboard')" data-s="dashboard"><span class="nav-icon">🏛</span><span>Tableau de Bord</span></button></li>
     <li class="nav-item"><button class="nav-btn" onclick="showSection('registre')" data-s="registre"><span class="nav-icon">⚔</span><span>Registre</span><span class="nav-badge" id="badge-registre">0</span></button></li>
     <li class="nav-item"><button class="nav-btn" onclick="showSection('wanted')" data-s="wanted"><span class="nav-icon">🎯</span><span>Cibles Prioritaires</span><span class="nav-badge" id="badge-wanted" style="background:#8b0000">0</span></button></li>
-    <li class="nav-item"><button class="nav-btn" onclick="showSection('missions')" data-s="missions"><span class="nav-icon">📜</span><span>Missions</span><span class="nav-badge" id="badge-missions" style="background:#1a5a2a">0</span></button></li>
     <li class="nav-item"><button class="nav-btn" onclick="showSection('codex')" data-s="codex"><span class="nav-icon">📖</span><span>Codex</span></button></li>
     <div class="nav-divider"></div>
     <li class="nav-item" id="nav-historique" style="display:none"><button class="nav-btn" onclick="showSection('historique')" data-s="historique"><span class="nav-icon">🕰</span><span>Historique</span></button></li>
@@ -1003,7 +996,6 @@ body::after{content:'';position:fixed;left:0;width:100%;height:2px;background:li
         <div class="stat-card" style="--sc:#ff4040"><div class="stat-icon">👑</div><div class="stat-val" id="stat-piliers">0</div><div class="stat-label">Piliers Actifs</div></div>
         <div class="stat-card" style="--sc:#00cc88"><div class="stat-icon">✦</div><div class="stat-val" id="stat-vivants">0</div><div class="stat-label">En Service</div></div>
         <div class="stat-card" style="--sc:#8b0000"><div class="stat-icon">💀</div><div class="stat-val" id="stat-wanted">0</div><div class="stat-label">Démons Ciblés</div></div>
-        <div class="stat-card" style="--sc:#00a2ff"><div class="stat-icon">📜</div><div class="stat-val" id="stat-missions">0</div><div class="stat-label">Missions Actives</div></div>
         <div class="stat-card" style="--sc:#555"><div class="stat-icon">✝</div><div class="stat-val" id="stat-morts">0</div><div class="stat-label">Tombés au Combat</div></div>
       </div>
       <div id="verify-widget-container"></div>
@@ -1033,20 +1025,6 @@ body::after{content:'';position:fixed;left:0;width:100%;height:2px;background:li
         <button class="btn btn-crimson auth-only" id="btnAddWanted" onclick="openFormWanted()" style="display:none">+ Désigner une Cible</button>
       </div>
       <div id="wantedContainer"><div class="loader"></div></div>
-    </section>
-
-    <!-- MISSIONS -->
-    <section id="section-missions" class="section">
-      <div class="section-header">
-        <div><div class="section-title">Tableau des Missions</div><div class="section-sub">Opérations en cours et archivées</div></div>
-        <button class="btn btn-gold auth-only" id="btnAddMission" onclick="openFormMission()" style="display:none">+ Nouvelle Mission</button>
-      </div>
-      <div class="missions-board">
-        <div class="mission-col col-attente"><div class="mission-col-title">⏳ <span>En Attente</span></div><div id="col-attente"></div></div>
-        <div class="mission-col col-encours"><div class="mission-col-title">⚔ <span>En Cours</span></div><div id="col-encours"></div></div>
-        <div class="mission-col col-terminee"><div class="mission-col-title">✓ <span>Terminées</span></div><div id="col-terminee"></div></div>
-        <div class="mission-col col-echec"><div class="mission-col-title">✗ <span>Échec</span></div><div id="col-echec"></div></div>
-      </div>
     </section>
 
     <!-- HISTORIQUE -->
@@ -1186,7 +1164,7 @@ body::after{content:'';position:fixed;left:0;width:100%;height:2px;background:li
           <div class="form-group" style="margin-bottom:14px">
             <label class="form-label">Rôles (plusieurs possibles)</label>
             <div class="role-checks" id="wlRoleChecks">
-              <label class="role-check-item"><input type="checkbox" value="veilleur" checked><div class="rci-text"><div class="rci-label">Veilleur</div><div class="rci-desc">Accès au registre, cibles et missions</div></div></label>
+              <label class="role-check-item"><input type="checkbox" value="veilleur" checked><div class="rci-text"><div class="rci-label">Veilleur</div><div class="rci-desc">Accès au registre et aux cibles</div></div></label>
               <label class="role-check-item"><input type="checkbox" value="sphere"><div class="rci-text"><div class="rci-label">Sphère Secrète</div><div class="rci-desc">Accès aux opérations secrètes</div></div></label>
               <label class="role-check-item"><input type="checkbox" value="adminsphere"><div class="rci-text"><div class="rci-label">Admin Sphère</div><div class="rci-desc">Historique + gestion, sans Sphère Secrète</div></div></label>
               <label class="role-check-item"><input type="checkbox" value="admin"><div class="rci-text"><div class="rci-label">Admin</div><div class="rci-desc">Accès complet à tout</div></div></label>
@@ -1588,34 +1566,6 @@ body::after{content:'';position:fixed;left:0;width:100%;height:2px;background:li
   </div>
 </div>
 
-<!-- ═══ MODAL MISSION FORM ═══ -->
-<div class="modal-overlay" id="modalMission">
-  <div class="modal-box">
-    <button class="modal-close" onclick="closeModal('modalMission')">✕</button>
-    <div class="modal-title" id="missionFormTitle">Nouvelle Mission</div>
-    <input type="hidden" id="missionEditId">
-    <div class="form-grid">
-      <div class="form-group full"><label class="form-label">Titre de la Mission</label><input class="form-input" id="mfTitre" placeholder="Objectif principal..."></div>
-      <div class="form-group">
-        <label class="form-label">Priorité</label>
-        <select class="form-select" id="mfPriorite"><option value="haute">Haute — Urgente</option><option value="normale" selected>Normale</option><option value="basse">Basse</option></select>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Statut</label>
-        <select class="form-select" id="mfStatut"><option value="attente">En Attente</option><option value="encours">En Cours</option><option value="terminee">Terminée</option><option value="echec">Échec</option></select>
-      </div>
-      <div class="form-group full"><label class="form-label">Membres Assignés (séparés par virgules)</label><input class="form-input" id="mfAssignes" placeholder="Nom1, Nom2..."></div>
-      <div class="form-group full"><label class="form-label">Description</label><textarea class="form-textarea" id="mfDesc" placeholder="Détails, objectifs, zone d'opération..."></textarea></div>
-      <button class="form-submit" onclick="saveMission()">Enregistrer la Mission</button>
-    </div>
-  </div>
-</div>
-
-<!-- ═══ MODAL MISSION DETAIL ═══ -->
-<div class="modal-overlay" id="modalMissionDetail">
-  <div class="modal-box"><button class="modal-close" onclick="closeModal('modalMissionDetail')">✕</button><div id="missionDetailContent"></div></div>
-</div>
-
 <!-- ═══ MODAL SIGNALEMENT ═══ -->
 <div class="modal-overlay" id="modalReport">
   <div class="modal-box">
@@ -1651,7 +1601,7 @@ let pendingPhotoWanted = null;
 let _gallerySlots = []; // [{url,position,file,objUrl}]
 const _GALLERY_MAX = 5;
 let pendingUser = null; // données whitelist en attente de vérification code
-let allPourfendeurs = [], allWanted = [], allMissions = [], allLogs = [];
+let allPourfendeurs = [], allWanted = [], allLogs = [];
 let registreFilter = 'all', logFilter = 'all', searchQuery = '';
 
 /* ═══ PHOTO UPLOAD ═══ */
@@ -1979,7 +1929,7 @@ function onUserLogin() {
   // Masquer les boutons d'ajout si pas les droits
   const canAdd = hasAnyRole('admin','superadmin','adminsphere');
   if(!canAdd){
-    ['btnAddWanted','btnAddMission'].forEach(id=>{const el=document.getElementById(id);if(el)el.style.display='none';});
+    ['btnAddWanted'].forEach(id=>{const el=document.getElementById(id);if(el)el.style.display='none';});
   }
   if(!canAdd && !hasAnyRole('admin','superadmin')){
     const el=document.getElementById('btnAddSphere');if(el)el.style.display='none';
@@ -2050,7 +2000,6 @@ const souffleColors = {"Souffle de l'Eau":'#00a2ff',"Souffle de la Flamme":'#ff4
 const souffleEmoji = {"Souffle de l'Eau":'🌊',"Souffle de la Flamme":'🔥',"Souffle de la Foudre":'⚡',"Souffle de la Fleur":'🌸',"Souffle de la Roche":'🪨',"Souffle de la Brume":'🌫',"Souffle du Son":'🎵',"Autre / Dérivé":'⚔'};
 const hierarchyIdx={"Maître des Pourfendeurs":0,"Conseiller":1,"Pilier":2,"Kinoe":3,"Kinoto":4,"Hinoe":5,"Hinoto":6,"Tsuchinoe":7,"Tsuchinoto":8,"Kanoe":9,"Kanoto":10,"Mizunoe":11,"Mizunoto":12};
 const rankScore={"Maître des Pourfendeurs":100,"Conseiller":95,"Pilier":88,"Kinoe":75,"Kinoto":62,"Hinoe":50,"Hinoto":40,"Tsuchinoe":32,"Tsuchinoto":24,"Kanoe":18,"Kanoto":13,"Mizunoe":9,"Mizunoto":5};
-const missionColors={attente:'#888',encours:'#00a2ff',terminee:'#00cc88',echec:'#cc2200'};
 const logColors={'INSCRIPTION':'#00cc88','MODIFICATION':'#00a2ff','SUPPRESSION':'#ff3300','DÉSIGNATION':'#8b0000','MISSION_CRÉÉE':'#c9a227','CONNEXION':'#666','RESTAURATION':'#00ffaa','VÉRIFICATION':'#00cc88','SIGNALEMENT':'#ff8c00'};
 
 /* ── Seuils de fraîcheur (en jours) — à ajuster selon votre rythme de mise à jour ── */
@@ -2497,12 +2446,7 @@ window.sphereGlobalSearch=(val)=>{
     const fields=[nom,w.grade,w.raison,w.description].filter(Boolean).join(' ').toLowerCase();
     if(fields.includes(q)) results.push({source:'cible',name:nom||'—',sub:w.grade||'',extra:w.raison||'',photo:w.photo||'',info:w.description||w.raison||'',id:w._id,data:w});
   });
-  // 3. Missions
-  allMissions.filter(m=>!m.deleted).forEach(m=>{
-    const fields=[m.titre,m.description,m.cible,m.responsable,m.statut].filter(Boolean).join(' ').toLowerCase();
-    if(fields.includes(q)) results.push({source:'mission',name:m.titre||'—',sub:m.statut||'',extra:m.cible?'Cible : '+m.cible:'',photo:'',info:m.description||'',id:m._id,data:m});
-  });
-  // 4. Opérations Sphère
+  // 3. Opérations Sphère
   allSphere.forEach(s=>{
     const fields=[s.targetName,s.targetGrade,s.type,s.notes,s.operateur,s.statut,s.priorite].filter(Boolean).join(' ').toLowerCase();
     if(fields.includes(q)) results.push({source:'sphere',name:s.targetName||s.type||'—',sub:s.type||'',extra:s.statut||'',photo:s.targetPhoto||'',info:s.notes||'',id:s._id,data:s});
@@ -2513,9 +2457,9 @@ window.sphereGlobalSearch=(val)=>{
     return;
   }
   // Grouper par source
-  const groups={registre:[],cible:[],mission:[],sphere:[]};
+  const groups={registre:[],cible:[],sphere:[]};
   results.forEach(r=>groups[r.source].push(r));
-  const sourceLabels={registre:'📋 Registre des Pourfendeurs',cible:'🎯 Cibles Répertoriées',mission:'⚔ Missions',sphere:'⚫ Opérations Sphère'};
+  const sourceLabels={registre:'📋 Registre des Pourfendeurs',cible:'🎯 Cibles Répertoriées',sphere:'⚫ Opérations Sphère'};
   let html='';
   for(const [src,items] of Object.entries(groups)){
     if(!items.length) continue;
@@ -2524,7 +2468,7 @@ window.sphereGlobalSearch=(val)=>{
       const photoHtml=r.photo?`<img src="${r.photo}" alt="">`:'⚔';
       const infoTrunc=r.info.length>120?r.info.slice(0,120)+'…':r.info;
       const clickAction=src==='registre'?`showSection('registre');openProfile('${r.id}')`:src==='cible'?`showSection('wanted')`:src==='sphere'?'':'';
-      html+=`<div class="sphere-result-card" style="--src-color:${src==='registre'?'rgba(0,150,255,.5)':src==='cible'?'rgba(220,50,50,.6)':src==='mission'?'rgba(200,160,0,.5)':'rgba(180,0,0,.6)'}"
+      html+=`<div class="sphere-result-card" style="--src-color:${src==='registre'?'rgba(0,150,255,.5)':src==='cible'?'rgba(220,50,50,.6)':'rgba(180,0,0,.6)'}"
         ${clickAction?`onclick="${clickAction}"`:''}>
         <div class="sphere-result-photo">${photoHtml}</div>
         <div class="sphere-result-body">
@@ -2750,64 +2694,6 @@ window.deleteWanted=async(id,nom)=>{
   });
 };
 
-/* ═══ MISSIONS ═══ */
-function _onMissionsData(items){
-  allMissions=items.filter(d=>!d.deleted);
-  renderMissions();updateStats();
-}
-socket.emit('missions:join', {}, res=>{ if(res?.ok) _onMissionsData(res.items); });
-socket.on('missions:state', _onMissionsData);
-
-function renderMissions(){
-  const cols={attente:[],encours:[],terminee:[],echec:[]};
-  allMissions.forEach(m=>{if(cols[m.statut]!==undefined)cols[m.statut].push(m);});
-  Object.entries(cols).forEach(([key,missions])=>{
-    const c=document.getElementById('col-'+key);const color=missionColors[key];
-    if(!missions.length){c.innerHTML='<div style="font-size:.63rem;color:var(--text-muted);text-align:center;padding:18px 0">Aucune mission</div>';return;}
-    c.innerHTML=missions.map(m=>`<div class="mission-card" style="--mc:${color}" onclick="openMissionDetail('${m._id}')"><div class="mission-title">${m.titre||'—'}</div><div class="mission-desc">${(m.description||'').substring(0,80)}${(m.description?.length||0)>80?'…':''}</div><div class="mission-meta"><span class="mission-assignes">${m.assignes||'Non assignée'}</span><span class="mission-priority prio-${m.priorite||'normale'}">${m.priorite||'normale'}</span></div></div>`).join('');
-  });
-  const active=allMissions.filter(m=>m.statut==='encours').length;
-  document.getElementById('badge-missions').textContent=active;
-  document.getElementById('stat-missions').textContent=active;
-}
-
-window.openFormMission=(id=null)=>{
-  document.getElementById('missionEditId').value=id||'';
-  document.getElementById('missionFormTitle').textContent=id?'Modifier la Mission':'Nouvelle Mission';
-  if(id){const m=allMissions.find(x=>x._id===id);if(m){document.getElementById('mfTitre').value=m.titre||'';document.getElementById('mfPriorite').value=m.priorite||'normale';document.getElementById('mfStatut').value=m.statut||'attente';document.getElementById('mfAssignes').value=m.assignes||'';document.getElementById('mfDesc').value=m.description||'';}}
-  else{['mfTitre','mfAssignes','mfDesc'].forEach(i=>document.getElementById(i).value='');document.getElementById('mfPriorite').value='normale';document.getElementById('mfStatut').value='attente';}
-  openModal('modalMission');
-};
-
-window.saveMission=async()=>{
-  if(!currentUser){toast('Connexion requise.','warn');return;}
-  const titre=document.getElementById('mfTitre').value.trim();
-  if(!titre){toast('Titre requis.','warn');return;}
-  const data={titre,priorite:document.getElementById('mfPriorite').value,statut:document.getElementById('mfStatut').value,assignes:document.getElementById('mfAssignes').value.trim(),description:document.getElementById('mfDesc').value.trim()};
-  const editId=document.getElementById('missionEditId').value;
-  if(editId) data._id=editId;
-  socket.emit('missions:save', data, (res)=>{
-    if(!res?.ok){toast('Erreur : '+(res?.error||'inconnue'),'error');return;}
-    toast(editId?'Mission mise à jour.':'Mission créée.','success');
-    closeModal('modalMission');
-  });
-};
-
-window.openMissionDetail=(id)=>{
-  const m=allMissions.find(x=>x._id===id);if(!m)return;
-  const color=missionColors[m.statut]||'#888';
-  document.getElementById('missionDetailContent').innerHTML=`<div class="modal-title" style="color:${color}">${m.titre}</div><div style="display:flex;gap:8px;margin-bottom:14px"><span class="mission-priority prio-${m.priorite||'normale'}">Priorité : ${m.priorite||'normale'}</span></div><div class="profile-obs" style="margin-bottom:12px">${m.description||'Aucune description.'}</div><div><span class="pf-label">Assignés</span><br><span class="pf-val">${m.assignes||'Non assignée'}</span></div>${currentUser?`<div class="modal-footer"><button class="btn btn-danger btn-sm" onclick="deleteMission('${m._id}','${(m.titre||'').replace(/'/g,"\\'")}')">✕ Supprimer</button><button class="btn btn-gold btn-sm" onclick="closeModal('modalMissionDetail');openFormMission('${m._id}')">✎ Modifier</button></div>`:''}`;
-  openModal('modalMissionDetail');
-};
-
-window.deleteMission=async(id,titre)=>{
-  if(!currentUser||!confirm(`Supprimer "${titre}" ?`))return;
-  socket.emit('missions:delete', id, (res)=>{
-    if(!res?.ok){toast('Erreur : '+(res?.error||'inconnue'),'error');return;}
-    closeModal('modalMissionDetail');toast('Mission supprimée.','warn');
-  });
-};
-
 /* ═══ HISTORIQUE ═══ */
 function _onLogsData(items){ allLogs=items; renderLogs(); }
 socket.on('logs:state', _onLogsData);
@@ -2904,7 +2790,7 @@ function renderWhitelist(){
 
 
 const roleDescriptions={
-  veilleur:'Peut modifier les fiches, mais pas ajouter de cibles, missions ou opérations Sphère.',
+  veilleur:'Peut modifier les fiches, mais pas ajouter de cibles ou opérations Sphère.',
   accesplus:'Veilleur avec accès en lecture à la Sphère Secrète. Ne peut pas créer d\'opérations.',
   sphere:'Accès en lecture seule à la Sphère Secrète. Aucune modification possible.',
   adminsphere:'Peut tout gérer sauf la Sphère Secrète. Accès à l\'Historique et à la restauration.',
@@ -3094,7 +2980,7 @@ window.toggleAcc=(header)=>{
 const sectionObserver=new IntersectionObserver((entries)=>{
   entries.forEach(entry=>{
     if(entry.isIntersecting){
-      entry.target.querySelectorAll('.stat-card,.breath-group,.wanted-card,.mission-card,.acc-item,.hier-section,.conseiller-card,.pilier-card,.sphere-card,.log-entry,.admin-card,.wl-item,.sf-result,.sphere-result-card,.maitre-card').forEach((el,i)=>{
+      entry.target.querySelectorAll('.stat-card,.breath-group,.wanted-card,.acc-item,.hier-section,.conseiller-card,.pilier-card,.sphere-card,.log-entry,.admin-card,.wl-item,.sf-result,.sphere-result-card,.maitre-card').forEach((el,i)=>{
         el.style.animationDelay=`${i*0.06}s`;
         el.classList.add('animate-in');
       });
@@ -3129,7 +3015,7 @@ function animateCount(el,target){
 const _origUpdateStats=window.updateStats;
 window.updateStats=()=>{
   if(_origUpdateStats)_origUpdateStats();
-  ['stat-total','stat-piliers','stat-vivants','stat-wanted','stat-missions','stat-morts'].forEach(id=>{
+  ['stat-total','stat-piliers','stat-vivants','stat-wanted','stat-morts'].forEach(id=>{
     const el=document.getElementById(id);
     if(el){const v=parseInt(el.textContent)||0;el.textContent=0;animateCount(el,v);}
   });
@@ -3153,9 +3039,13 @@ window.updateStats=()=>{
 
 window.enterCodex = () => {
   const splash=document.getElementById('splash');
-  splash.classList.add('hidden');
-  setTimeout(()=>splash.remove(),900);
+  if(splash.classList.contains('breaking'))return; // évite un double-clic
+  splash.classList.add('breaking');
   if(_audio) _audio.play().then(()=>_showControls(true)).catch(()=>{});
+  setTimeout(()=>{
+    splash.classList.add('hidden');
+    setTimeout(()=>splash.remove(),900);
+  },260);
 };
 
 /* ═══ MUSIQUE ═══ */
@@ -3259,14 +3149,22 @@ window.setMusicVol = (v) => {
    ═══════════  UPGRADE VISUEL — SCRIPTS ADDITIFS  ═══════════
    ══════════════════════════════════════════════════ */
 
-/* ═══ CANVAS BRAISES / FUMÉE ═══ */
+/* ═══ CANVAS BRAISES / FUMÉE ═══
+   Version allégée : plus de shadowBlur (de loin l'opération canvas la plus
+   coûteuse, recalculée par instance à chaque frame), effectifs réduits,
+   rendu plafonné à ~30 im/s, et mis en pause quand l'onglet est en arrière-plan
+   ou que l'utilisateur a demandé "réduire les animations". Le halo des braises
+   est maintenant un dégradé radial pré-calculé (même technique que la fumée,
+   déjà bon marché) plutôt qu'un flou recalculé à la volée. */
 (function cxEmbers(){
   const cv=document.getElementById('cx-embers');
   if(!cv)return;
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
   const ctx=cv.getContext('2d');
-  let w,h,embers=[],smoke=[];
+  let w,h,embers=[],smoke=[],running=true;
   function resize(){w=cv.width=innerWidth;h=cv.height=innerHeight;}
   resize();window.addEventListener('resize',resize);
+  document.addEventListener('visibilitychange',()=>{running=!document.hidden;if(running){last=performance.now();requestAnimationFrame(frame);}});
 
   function spawnEmber(){
     return{x:Math.random()*w,y:h+20,r:Math.random()*2+.6,vy:-(Math.random()*.5+.25),vx:(Math.random()-.5)*.4,
@@ -3276,12 +3174,17 @@ window.setMusicVol = (v) => {
     return{x:Math.random()*w,y:h+40,r:Math.random()*60+40,vy:-(Math.random()*.15+.06),vx:(Math.random()-.5)*.15,
       life:0,maxLife:Math.random()*800+600,alpha:Math.random()*.035+.015};
   }
-  for(let i=0;i<45;i++){const e=spawnEmber();e.y=Math.random()*h;embers.push(e);}
-  for(let i=0;i<10;i++){const s=spawnSmoke();s.y=Math.random()*h;smoke.push(s);}
+  for(let i=0;i<24;i++){const e=spawnEmber();e.y=Math.random()*h;embers.push(e);}
+  for(let i=0;i<6;i++){const s=spawnSmoke();s.y=Math.random()*h;smoke.push(s);}
 
   let last=performance.now();
+  const FRAME_INTERVAL=1000/30;
   function frame(now){
-    const dt=Math.min(now-last,50);last=now;
+    if(!running)return;
+    requestAnimationFrame(frame);
+    const elapsed=now-last;
+    if(elapsed<FRAME_INTERVAL)return;
+    const dt=Math.min(elapsed,50);last=now;
     ctx.clearRect(0,0,w,h);
     smoke.forEach((s,i)=>{
       s.life+=dt;s.x+=s.vx;s.y+=s.vy;
@@ -3296,12 +3199,15 @@ window.setMusicVol = (v) => {
     embers.forEach((e,i)=>{
       e.life+=dt;e.x+=e.vx;e.y+=e.vy;e.vx+=(Math.random()-.5)*.02;
       const t=e.life/e.maxLife,fade=t<.1?t/.1:t>.75?(1-t)/.25:1;
-      const col=e.hue===18?`rgba(255,110,20,${e.alpha*fade})`:`rgba(255,200,90,${e.alpha*fade})`;
-      ctx.beginPath();ctx.fillStyle=col;ctx.shadowColor=col;ctx.shadowBlur=e.r*4;
-      ctx.arc(e.x,e.y,e.r,0,7);ctx.fill();ctx.shadowBlur=0;
+      const warm=e.hue===18;
+      const core=warm?`rgba(255,150,60,${e.alpha*fade})`:`rgba(255,220,130,${e.alpha*fade})`;
+      const glow=warm?`rgba(255,90,10,0)`:`rgba(255,200,60,0)`;
+      ctx.beginPath();
+      const grad=ctx.createRadialGradient(e.x,e.y,0,e.x,e.y,e.r*4);
+      grad.addColorStop(0,core);grad.addColorStop(1,glow);
+      ctx.fillStyle=grad;ctx.arc(e.x,e.y,e.r*4,0,7);ctx.fill();
       if(e.life>=e.maxLife||e.y< -10){embers[i]=spawnEmber();}
     });
-    requestAnimationFrame(frame);
   }
   requestAnimationFrame(frame);
 })();
@@ -3329,7 +3235,7 @@ window.setMusicVol = (v) => {
 
 /* ═══ TILT 3D + REFLET SUR LES CARTES ═══ */
 (function cxTilt(){
-  const SEL='.stat-card,.wanted-card,.sphere-card,.pilier-card,.conseiller-card,.maitre-card,.breath-group,.mission-card';
+  const SEL='.stat-card,.wanted-card,.sphere-card,.pilier-card,.conseiller-card,.maitre-card,.breath-group';
   let current=null;
   document.addEventListener('mousemove',e=>{
     const card=e.target.closest(SEL);
