@@ -1428,6 +1428,12 @@ body::after{content:'';position:fixed;left:0;width:100%;height:2px;background:li
     <div class="modal-title">🔑 Mes Identifiants</div>
     <p class="login-info" style="margin-bottom:14px">Conservez ces informations pour vous connecter depuis un autre appareil.</p>
     <div class="form-group" style="margin-bottom:12px">
+      <label class="form-label">Nom</label>
+      <div class="code-display">
+        <span class="code-val" id="credName">—</span>
+      </div>
+    </div>
+    <div class="form-group" style="margin-bottom:12px">
       <label class="form-label">Steam ID 64</label>
       <div class="code-display">
         <span class="code-val" id="credSteamId">—</span>
@@ -1435,13 +1441,12 @@ body::after{content:'';position:fixed;left:0;width:100%;height:2px;background:li
       </div>
     </div>
     <div class="form-group" style="margin-bottom:18px">
-      <label class="form-label">Code Secret</label>
-      <div class="code-display" id="credCodeWrap">
-        <span class="code-val" id="credCode">••••••</span>
-        <button class="btn-copy" onclick="toggleCode()">Afficher</button>
+      <label class="form-label">Rôles</label>
+      <div class="code-display" id="credRolesWrap">
+        <span class="code-val" id="credRoles">—</span>
       </div>
     </div>
-    <p class="form-hint">⚠ Ne partagez jamais votre code secret avec quelqu'un d'autre que vous-même.</p>
+    <p class="form-hint">⚠ Votre code secret n'est plus affiché ici : il est protégé côté serveur et jamais transmis au navigateur. Un administrateur peut le réinitialiser si besoin.</p>
   </div>
 </div>
 
@@ -1629,23 +1634,9 @@ body::after{content:'';position:fixed;left:0;width:100%;height:2px;background:li
 
 <div id="toast-container"></div>
 
+<script src="/socket.io/socket.io.js"></script>
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getFirestore, collection, addDoc, onSnapshot, doc, deleteDoc, updateDoc, setDoc, getDoc, getDocs, serverTimestamp, query, orderBy, limit, where } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
-
-const app = initializeApp({
-  apiKey:"AIzaSyDHc5tFYxaWeGUkrxrGJAFjeEe1RJEJTHU",
-  authDomain:"archives-demoniaques.firebaseapp.com",
-  projectId:"archives-demoniaques",
-  storageBucket:"archives-demoniaques.firebasestorage.app",
-  messagingSenderId:"660726727180",
-  appId:"1:660726727180:web:de33021940c7c8b0d8a429"
-});
-const db = getFirestore(app);
-const auth = getAuth(app);
-const storage = getStorage(app);
+const socket = io();
 
 /* ═══ ÉTAT ═══ */
 let currentUser = null;
@@ -1872,13 +1863,6 @@ function _carouselStopAuto(){
   if(_carouselTimer){clearInterval(_carouselTimer);_carouselTimer=null;}
 }
 
-/* ═══ HASH ═══ */
-async function hashCode(steamId, code) {
-  const msg = `${steamId}:${code}:codex-obscura-sel-2024`;
-  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(msg));
-  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
-}
-
 /* ═══ AUTH — LOGIN MULTI-ÉTAPES ═══ */
 window.openLoginModal = () => { goStep(1); openModal('modalLogin'); };
 
@@ -1893,11 +1877,12 @@ window.checkSteamId = async () => {
   if (!steamId) { toast('Entrez votre Steam ID.','warn'); return; }
   const btn = document.getElementById('btnStep1');
   btn.disabled = true; btn.textContent = 'Vérification...';
-  try {
-    const snap = await getDoc(doc(db, 'whitelist', steamId));
-    if (!snap.exists()) { toast('Steam ID non autorisé.','error'); btn.disabled=false; btn.textContent='Continuer →'; return; }
-    pendingUser = { steamId, ...snap.data() };
-    if (!pendingUser.codeHash) {
+  socket.emit('auth:checkSteamId', steamId, (res) => {
+    btn.disabled=false; btn.textContent='Continuer →';
+    if (!res?.ok) { toast('Erreur : ' + (res?.error||'connexion impossible'),'error'); return; }
+    if (!res.exists) { toast('Steam ID non autorisé.','error'); return; }
+    pendingUser = { steamId, name: res.name };
+    if (!res.hasCode) {
       // Première connexion
       document.getElementById('welcomeName').textContent = `Bienvenue, ${pendingUser.name || steamId} !`;
       goStep('2a');
@@ -1906,8 +1891,7 @@ window.checkSteamId = async () => {
       document.getElementById('loginCode').value = '';
       goStep('2b');
     }
-  } catch(e) { toast('Erreur : ' + e.message,'error'); }
-  btn.disabled=false; btn.textContent='Continuer →';
+  });
 };
 
 window.createCode = async () => {
@@ -1917,14 +1901,11 @@ window.createCode = async () => {
   if (code !== confirm) { toast('Les codes ne correspondent pas.','warn'); return; }
   const btn = document.getElementById('btnStep2a');
   btn.disabled = true; btn.textContent = 'Création...';
-  try {
-    const hash = await hashCode(pendingUser.steamId, code);
-    await signInAnonymously(auth);
-    await updateDoc(doc(db, 'whitelist', pendingUser.steamId), { codeHash: hash });
-    pendingUser.codeHash = hash;
-    await finishLogin(pendingUser.steamId, pendingUser.name, pendingUser.roles||pendingUser.role, code);
-  } catch(e) { toast('Erreur : ' + e.message,'error'); }
-  btn.disabled=false; btn.textContent='Valider mon Code ✓';
+  socket.emit('auth:createCode', { steamId: pendingUser.steamId, code }, (res) => {
+    btn.disabled=false; btn.textContent='Valider mon Code ✓';
+    if (!res?.ok) { toast('Erreur : ' + (res?.error||'inconnue'),'error'); return; }
+    finishLogin(pendingUser.steamId, res);
+  });
 };
 
 window.verifyCode = async () => {
@@ -1932,48 +1913,39 @@ window.verifyCode = async () => {
   if (!code) { toast('Entrez votre code.','warn'); return; }
   const btn = document.getElementById('btnStep2b');
   btn.disabled=true; btn.textContent='Vérification...';
-  try {
-    const hash = await hashCode(pendingUser.steamId, code);
-    if (hash !== pendingUser.codeHash) { toast('Code incorrect.','error'); btn.disabled=false; btn.textContent='Accéder aux Archives ⚔'; return; }
-    await finishLogin(pendingUser.steamId, pendingUser.name, pendingUser.roles||pendingUser.role, code);
-  } catch(e) { toast('Erreur : ' + e.message,'error'); }
-  btn.disabled=false; btn.textContent='Accéder aux Archives ⚔';
+  socket.emit('auth:verifyCode', { steamId: pendingUser.steamId, code }, (res) => {
+    btn.disabled=false; btn.textContent='Accéder aux Archives ⚔';
+    if (!res?.ok) { toast(res?.error || 'Code incorrect.','error'); return; }
+    finishLogin(pendingUser.steamId, res);
+  });
 };
 
-async function finishLogin(steamId, name, rolesRaw, rawCode) {
-  await signInAnonymously(auth);
-  const roles = toRolesArray(rolesRaw);
-  currentUser = { steamId, name: name||steamId, roles, role: topRole(roles) };
-  const hash = await hashCode(steamId, rawCode);
-  localStorage.setItem('codex_auth', JSON.stringify({ steamId, name: currentUser.name, roles, code: rawCode, codeHash: hash }));
+function finishLogin(steamId, res) {
+  const roles = toRolesArray(res.roles);
+  currentUser = { steamId, name: res.name||steamId, roles, role: topRole(roles) };
+  localStorage.setItem('codex_auth_token', res.token);
   closeModal('modalLogin');
   onUserLogin();
-  await logAction('CONNEXION', currentUser.name, null, null);
   toast(`Accès accordé, ${currentUser.name}.`, 'success');
 }
 
-// Auto-login depuis localStorage
-(async function autoLogin() {
-  const saved = localStorage.getItem('codex_auth');
-  if (!saved) return;
-  try {
-    const { steamId, name, roles: savedRoles, role: savedRole, codeHash } = JSON.parse(saved);
-    const snap = await getDoc(doc(db, 'whitelist', steamId));
-    if (!snap.exists() || snap.data().codeHash !== codeHash) { localStorage.removeItem('codex_auth'); return; }
-    await signInAnonymously(auth);
-    const roles = toRolesArray(snap.data().roles || snap.data().role || savedRoles || savedRole);
-    currentUser = { steamId, name: snap.data().name || name, roles, role: topRole(roles) };
-    const stored = JSON.parse(localStorage.getItem('codex_auth'));
-    stored.name = currentUser.name; stored.roles = currentUser.roles;
-    localStorage.setItem('codex_auth', JSON.stringify(stored));
+// Auto-login depuis le token stocké localement
+(function autoLogin() {
+  const token = localStorage.getItem('codex_auth_token');
+  if (!token) return;
+  socket.emit('auth:token', token, (res) => {
+    if (!res?.ok) { localStorage.removeItem('codex_auth_token'); return; }
+    const roles = toRolesArray(res.session.roles);
+    currentUser = { steamId: res.session.steamId, name: res.session.name, roles, role: topRole(roles) };
+    if (res.token) localStorage.setItem('codex_auth_token', res.token);
     onUserLogin();
-  } catch(e) { localStorage.removeItem('codex_auth'); }
+  });
 })();
 
 window.logout = () => {
   currentUser = null;
-  localStorage.removeItem('codex_auth');
-  auth.signOut();
+  localStorage.removeItem('codex_auth_token');
+  socket.emit('auth:logout');
   onUserLogout();
   toast('Déconnecté.','info');
 };
@@ -2020,11 +1992,12 @@ function onUserLogin() {
     });
   }
   // Préparer le modal identifiants
-  const saved = JSON.parse(localStorage.getItem('codex_auth') || '{}');
   document.getElementById('credSteamId').textContent = currentUser.steamId;
-  document.getElementById('credCode').textContent = '••••••';
-  document.getElementById('credCode').dataset.real = saved.code || '—';
-  // Rafraîchir les sections dépendantes du rôle
+  document.getElementById('credName').textContent = currentUser.name;
+  document.getElementById('credRoles').textContent = currentUser.roles.map(r=>roleLabels[r]||r).join(', ');
+  // Rejoindre les canaux réservés (le serveur revalide les rôles) puis rafraîchir les sections dépendantes du rôle
+  socket.emit('logs:join', {}, res=>{ if(res?.ok) _onLogsData(res.items); });
+  socket.emit('whitelist:join', {}, res=>{ if(res?.ok) _onWhitelistData(res.items); });
   setTimeout(()=>{ renderWhitelist(); },200);
 }
 
@@ -2042,12 +2015,6 @@ function onUserLogout() {
 }
 
 /* ═══ IDENTIFIANTS MODAL ═══ */
-window.toggleCode = () => {
-  const el = document.getElementById('credCode');
-  const btn = el.nextElementSibling;
-  if (el.textContent === '••••••') { el.textContent = el.dataset.real || '—'; btn.textContent = 'Masquer'; }
-  else { el.textContent = '••••••'; btn.textContent = 'Afficher'; }
-};
 window.copyText = (id) => {
   const el = document.getElementById(id);
   const val = el.dataset.real || el.textContent;
@@ -2078,13 +2045,6 @@ window.toast = (msg, type='info') => {
   setTimeout(()=>{el.classList.add('removing');setTimeout(()=>el.remove(),300);},3500);
 };
 
-/* ═══ LOGS ═══ */
-async function logAction(action, target, snapshot, col) {
-  if (!currentUser) return;
-  try { await addDoc(collection(db,'logs'),{steamId:currentUser.steamId,userName:currentUser.name,action,target:target||'—',snapshot:snapshot||null,collection:col||null,date:serverTimestamp()}); }
-  catch(e){}
-}
-
 /* ═══ UTILITAIRES ═══ */
 const souffleColors = {"Souffle de l'Eau":'#00a2ff',"Souffle de la Flamme":'#ff4500',"Souffle de la Foudre":'#e8e800',"Souffle de la Fleur":'#ffb6c1',"Souffle de la Roche":'#a0602a',"Souffle de la Brume":'#a0a0b0',"Souffle du Son":'#daa520',"Autre / Dérivé":'#888'};
 const souffleEmoji = {"Souffle de l'Eau":'🌊',"Souffle de la Flamme":'🔥',"Souffle de la Foudre":'⚡',"Souffle de la Fleur":'🌸',"Souffle de la Roche":'🪨',"Souffle de la Brume":'🌫',"Souffle du Son":'🎵',"Autre / Dérivé":'⚔'};
@@ -2110,7 +2070,7 @@ window.previewDanger=()=>{
 };
 
 /* ═══ FRAÎCHEUR / VÉRIFICATION ═══ */
-function tsToDate(ts){ return ts?.toDate ? ts.toDate() : (ts instanceof Date ? ts : null); }
+function tsToDate(ts){ if(!ts) return null; const d = ts instanceof Date ? ts : new Date(ts); return isNaN(d.getTime()) ? null : d; }
 function daysSince(ts){
   const d=tsToDate(ts); if(!d) return null;
   return Math.floor((Date.now()-d.getTime())/86400000);
@@ -2128,11 +2088,10 @@ function freshnessBadge(updatedAt){
 }
 window.reverify=async(col,id,name)=>{
   if(!currentUser){toast('Connexion requise.','warn');return;}
-  try{
-    await updateDoc(doc(db,col,id),{updatedAt:serverTimestamp(),updatedBy:currentUser.steamId});
-    await logAction('VÉRIFICATION',name,null,col);
+  socket.emit(col+':reverify', id, (res)=>{
+    if(!res?.ok){toast('Erreur : '+(res?.error||'inconnue'),'error');return;}
     toast(`${name} — information reconfirmée.`,'success');
-  }catch(e){toast('Erreur : '+e.message,'error');}
+  });
 };
 
 /* ═══ FIABILITÉ ═══ */
@@ -2205,11 +2164,13 @@ window.toggleFicheHistory=(btn)=>{
 
 /* ═══ SIGNALEMENTS ═══ */
 let allReports=[]; let reportFilter='ouvert';
-onSnapshot(collection(db,'signalements'),snap=>{
-  allReports=snap.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(tsToDate(b.date)?.getTime()||0)-(tsToDate(a.date)?.getTime()||0));
+function _onSignalementsData(items){
+  allReports=items.slice().sort((a,b)=>(tsToDate(b.date)?.getTime()||0)-(tsToDate(a.date)?.getTime()||0));
   document.getElementById('badge-signalements').textContent=allReports.filter(r=>r.status!=='resolu').length;
   renderReports();
-},()=>{ /* collection absente tant qu'aucun signalement n'a été créé : ignoré silencieusement */ });
+}
+socket.emit('signalements:join', {}, res=>{ if(res?.ok) _onSignalementsData(res.items); });
+socket.on('signalements:state', _onSignalementsData);
 
 window.openReport=(col,id,name)=>{
   if(!currentUser){toast('Connexion requise pour signaler.','warn');return;}
@@ -2225,12 +2186,11 @@ window.submitReport=async()=>{
   const col=document.getElementById('reportCol').value;
   const targetId=document.getElementById('reportTargetId').value;
   const targetName=document.getElementById('reportTargetName').textContent;
-  try{
-    await addDoc(collection(db,'signalements'),{collection:col,targetId,targetName,reason,status:'ouvert',reportedBy:currentUser.steamId,reportedByName:currentUser.name,date:serverTimestamp()});
-    await logAction('SIGNALEMENT',targetName,null,col);
+  socket.emit('signalements:submit', {collection:col,targetId,targetName,reason}, (res)=>{
+    if(!res?.ok){toast('Erreur : '+(res?.error||'inconnue'),'error');return;}
     toast('Signalement envoyé — un admin va vérifier.','success');
     closeModal('modalReport');
-  }catch(e){toast('Erreur : '+e.message+' (la collection Firestore "signalements" doit être autorisée en écriture)','error');}
+  });
 };
 function renderReports(){
   const c=document.getElementById('reportsContainer'); if(!c)return;
@@ -2245,16 +2205,22 @@ function renderReports(){
         <div class="report-reason">${r.reason||''}</div>
         <div class="report-meta">Signalé par ${r.reportedByName||'?'} · ${date?date.toLocaleString('fr-FR'):'—'}${resolved?' · ✓ Résolu':''}</div>
       </div>
-      ${!resolved&&currentUser&&hasAnyRole('admin','superadmin','adminsphere')?`<div style="display:flex;flex-direction:column;gap:6px"><button class="btn btn-success btn-sm" onclick="resolveReport('${r.id}')">✓ Résolu</button><button class="btn btn-ghost btn-sm" onclick="dismissReport('${r.id}')">Ignorer</button></div>`:''}
+      ${!resolved&&currentUser&&hasAnyRole('admin','superadmin','adminsphere')?`<div style="display:flex;flex-direction:column;gap:6px"><button class="btn btn-success btn-sm" onclick="resolveReport('${r._id}')">✓ Résolu</button><button class="btn btn-ghost btn-sm" onclick="dismissReport('${r._id}')">Ignorer</button></div>`:''}
     </div>`;
   }).join('');
 }
 window.filterReports=(f,el)=>{reportFilter=f;el.parentElement.querySelectorAll('.filter-chip').forEach(c=>c.classList.remove('active'));el.classList.add('active');renderReports();};
 window.resolveReport=async(id)=>{
-  try{await updateDoc(doc(db,'signalements',id),{status:'resolu',resolvedAt:serverTimestamp(),resolvedBy:currentUser.steamId});toast('Signalement marqué résolu.','success');}catch(e){toast('Erreur : '+e.message,'error');}
+  socket.emit('signalements:resolve', id, (res)=>{
+    if(!res?.ok){toast('Erreur : '+(res?.error||'inconnue'),'error');return;}
+    toast('Signalement marqué résolu.','success');
+  });
 };
 window.dismissReport=async(id)=>{
-  try{await updateDoc(doc(db,'signalements',id),{status:'ignore',resolvedAt:serverTimestamp(),resolvedBy:currentUser.steamId});toast('Signalement ignoré.','info');}catch(e){toast('Erreur : '+e.message,'error');}
+  socket.emit('signalements:dismiss', id, (res)=>{
+    if(!res?.ok){toast('Erreur : '+(res?.error||'inconnue'),'error');return;}
+    toast('Signalement ignoré.','info');
+  });
 };
 
 /* ═══ IMPRESSION FICHE ═══ */
@@ -2269,18 +2235,20 @@ window.toggleSidebar=()=>{document.getElementById('sidebar').classList.toggle('o
 window.closeSidebar=()=>{document.getElementById('sidebar').classList.remove('open');document.getElementById('sidebarOverlay').classList.remove('open');};
 
 /* ═══ POURFENDEURS ═══ */
-onSnapshot(collection(db,'pourfendeurs'),snap=>{
-  allPourfendeurs=snap.docs.map(d=>({id:d.id,...d.data()})).filter(d=>!d.deleted)
+function _onPourfendeursData(items){
+  allPourfendeurs=items.filter(d=>!d.deleted)
     .sort((a,b)=>(hierarchyIdx[a.rang]||99)-(hierarchyIdx[b.rang]||99));
   renderRegistre(); updateStats(); renderDashPreview(); renderVerifyWidget();
-});
+}
+socket.emit('pourfendeurs:join', {}, res=>{ if(res?.ok) _onPourfendeursData(res.items); });
+socket.on('pourfendeurs:state', _onPourfendeursData);
 
 function buildMemberRow(m){
   const nc=m.statut==='Mort'?'mort':m.statut==='Retraité'?'retraite':'';
   const rang=m.rang||'';
   const bc=['Maître des Pourfendeurs','Conseiller','Pilier','Kinoe','Kinoto'].includes(rang)
     ?`badge-${rang==='Maître des Pourfendeurs'?'Maitre':rang==='Conseiller'?'Conseiller':rang}`:'badge-default';
-  return `<tr><td><span class="member-name ${nc}" onclick="openProfile('${m.id}')">${m.nom||'—'}</span>${m.brigade?`<br><span class="member-brigade">${m.brigade}</span>`:''}</td><td><span class="badge ${bc}">${rang||'—'}</span></td><td><span class="status-dot status-${m.statut}"></span>${m.statut||'—'}</td><td style="font-size:.72rem;color:var(--text-muted)">${m.jours||0} j</td><td>${freshnessBadge(m.updatedAt)}</td><td class="td-actions"><button class="btn btn-ghost btn-sm" onclick="openProfile('${m.id}')">Fiche</button>${currentUser?`<button class="btn btn-ghost btn-sm" onclick="openFormMembre('${m.id}')">✎</button><button class="btn btn-danger btn-sm" onclick="deleteMembre('${m.id}','${(m.nom||'').replace(/'/g,"\\'")}')">✕</button>`:''}</td></tr>`;
+  return `<tr><td><span class="member-name ${nc}" onclick="openProfile('${m._id}')">${m.nom||'—'}</span>${m.brigade?`<br><span class="member-brigade">${m.brigade}</span>`:''}</td><td><span class="badge ${bc}">${rang||'—'}</span></td><td><span class="status-dot status-${m.statut}"></span>${m.statut||'—'}</td><td style="font-size:.72rem;color:var(--text-muted)">${m.jours||0} j</td><td>${freshnessBadge(m.updatedAt)}</td><td class="td-actions"><button class="btn btn-ghost btn-sm" onclick="openProfile('${m._id}')">Fiche</button>${currentUser?`<button class="btn btn-ghost btn-sm" onclick="openFormMembre('${m._id}')">✎</button><button class="btn btn-danger btn-sm" onclick="deleteMembre('${m._id}','${(m.nom||'').replace(/'/g,"\\'")}')">✕</button>`:''}</td></tr>`;
 }
 
 function renderRegistre(){
@@ -2328,7 +2296,7 @@ window.openFormMembre=(id=null)=>{
   document.getElementById('membreEditId').value=id||'';
   document.getElementById('membreFormTitle').textContent=id?'Modifier la Fiche':'Nouvelle Fiche de Service';
   if(id){
-    const m=allPourfendeurs.find(x=>x.id===id);
+    const m=allPourfendeurs.find(x=>x._id===id);
     if(m){
       document.getElementById('fNom').value=m.nom||'';
       document.getElementById('fRang').value=m.rang||'Kinoe';
@@ -2373,27 +2341,28 @@ window.saveMembre=async()=>{
     if(url)photosData.push({url,position:s.position??50});
   }
   const mainPhoto=photosData[0]||null;
-  const data={nom,rang,rang_idx:hierarchyIdx[rang]||99,souffle:document.getElementById('fSouffle').value,statut:document.getElementById('fStatut').value,jours:parseInt(document.getElementById('fJours').value)||0,pilier_ref:document.getElementById('fPilierRef').value.trim(),kinoe_ref:document.getElementById('fKinoeRef').value.trim(),brigade:document.getElementById('fBrigade').value.trim(),photos:photosData,photo:mainPhoto?.url||'',photoPosition:mainPhoto?.position??50,info:document.getElementById('fInfo').value.trim(),updatedAt:serverTimestamp(),updatedBy:currentUser.steamId};
+  const data={nom,rang,rang_idx:hierarchyIdx[rang]||99,souffle:document.getElementById('fSouffle').value,statut:document.getElementById('fStatut').value,jours:parseInt(document.getElementById('fJours').value)||0,pilier_ref:document.getElementById('fPilierRef').value.trim(),kinoe_ref:document.getElementById('fKinoeRef').value.trim(),brigade:document.getElementById('fBrigade').value.trim(),photos:photosData,photo:mainPhoto?.url||'',photoPosition:mainPhoto?.position??50,info:document.getElementById('fInfo').value.trim()};
   const editId=document.getElementById('membreEditId').value;
-  try{
-    if(editId){const old=allPourfendeurs.find(x=>x.id===editId);await updateDoc(doc(db,'pourfendeurs',editId),data);await logAction('MODIFICATION',nom,old,'pourfendeurs');toast(`${nom} mis à jour.`,'success');}
-    else{data.createdAt=serverTimestamp();data.createdBy=currentUser.steamId;await addDoc(collection(db,'pourfendeurs'),data);await logAction('INSCRIPTION',nom,null,'pourfendeurs');toast(`${nom} enregistré.`,'success');}
+  if(editId) data._id=editId;
+  socket.emit('pourfendeurs:save', data, (res)=>{
+    if(!res?.ok){toast('Erreur : '+(res?.error||'inconnue'),'error');return;}
+    toast(editId?`${nom} mis à jour.`:`${nom} enregistré.`,'success');
     closeModal('modalMembre');
-  }catch(e){toast('Erreur : '+e.message,'error');}
+  });
 };
 
 window.deleteMembre=async(id,nom)=>{
   if(!currentUser)return;
   if(!confirm(`Supprimer ${nom} ? (restaurable depuis l'Historique)`))return;
-  const m=allPourfendeurs.find(x=>x.id===id);
-  await updateDoc(doc(db,'pourfendeurs',id),{deleted:true,deletedAt:serverTimestamp(),deletedBy:currentUser.steamId});
-  await logAction('SUPPRESSION',nom,m,'pourfendeurs');
-  toast(`${nom} supprimé. Restaurable depuis l'Historique.`,'warn');
+  socket.emit('pourfendeurs:delete', id, (res)=>{
+    if(!res?.ok){toast('Erreur : '+(res?.error||'inconnue'),'error');return;}
+    toast(`${nom} supprimé. Restaurable depuis l'Historique.`,'warn');
+  });
 };
 
 /* ═══ PROFIL ═══ */
 window.openProfile=async(id)=>{
-  const m=allPourfendeurs.find(x=>x.id===id);if(!m)return;
+  const m=allPourfendeurs.find(x=>x._id===id);if(!m)return;
   const color=souffleColors[m.souffle]||'#888';
   const statutColor={'Vivant':'#00cc88','Mort':'#666','Retraité':'#c9a227'}[m.statut]||'#888';
   const statutDot=`<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${statutColor};box-shadow:0 0 6px ${statutColor};margin-right:5px;vertical-align:middle"></span>`;
@@ -2452,7 +2421,7 @@ window.openProfile=async(id)=>{
           <div class="fiche-history-body">${buildHistoryHTML('pourfendeurs',m.nom,m,[['rang','Rang'],['souffle','Souffle'],['statut','Statut'],['brigade','Brigade'],['jours','Jours de service']])}</div>
         </div>
         <div class="modal-footer" style="margin-top:auto;padding-top:16px;display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-          ${currentUser?`<button class="btn btn-gold btn-sm" onclick="closeModal('modalProfile');openFormMembre('${m.id}')">✎ Modifier la fiche</button><button class="btn btn-reverify btn-sm" onclick="reverify('pourfendeurs','${m.id}','${(m.nom||'').replace(/'/g,"\\'")}')">✓ Revérifié</button><button class="btn btn-report btn-sm" onclick="openReport('pourfendeurs','${m.id}','${(m.nom||'').replace(/'/g,"\\'")}')">🚩 Signaler</button>`:''}
+          ${currentUser?`<button class="btn btn-gold btn-sm" onclick="closeModal('modalProfile');openFormMembre('${m._id}')">✎ Modifier la fiche</button><button class="btn btn-reverify btn-sm" onclick="reverify('pourfendeurs','${m._id}','${(m.nom||'').replace(/'/g,"\\'")}')">✓ Revérifié</button><button class="btn btn-report btn-sm" onclick="openReport('pourfendeurs','${m._id}','${(m.nom||'').replace(/'/g,"\\'")}')">🚩 Signaler</button>`:''}
           <button class="btn btn-ghost btn-sm" onclick="printFiche()">🖨 Imprimer</button>
           <span style="font-size:.5rem;letter-spacing:3px;color:rgba(200,0,0,.4);font-family:'Cinzel',serif;margin-left:auto">CONFIDENTIEL</span>
         </div>
@@ -2464,10 +2433,12 @@ window.openProfile=async(id)=>{
 
 /* ═══ SPHÈRE SECRÈTE ═══ */
 let allSphere=[];
-onSnapshot(collection(db,'sphere'),snap=>{
-  allSphere=snap.docs.map(d=>({id:d.id,...d.data()})).filter(d=>!d.deleted);
+function _onSphereData(items){
+  allSphere=items.filter(d=>!d.deleted);
   renderSphere();
-});
+}
+socket.emit('sphere:join', {}, res=>{ if(res?.ok) _onSphereData(res.items); });
+socket.on('sphere:state', _onSphereData);
 
 function renderSphere(){
   const c=document.getElementById('sphereContainer');if(!c)return;
@@ -2490,7 +2461,7 @@ function renderSphere(){
         <span class="sphere-operateur">⚔ ${op.operateur||'—'}</span>
         <span class="sphere-prio ${prioClass}">${op.priorite||''}</span>
         <span class="sphere-statut ${statutClass}">${statutLabel}</span>
-        ${currentUser&&hasAnyRole('admin','superadmin')?`<div style="display:flex;gap:5px"><button class="btn btn-ghost btn-sm" onclick="openFormSphere('${op.id}')">✎</button><button class="btn btn-danger btn-sm" onclick="deleteSphere('${op.id}')">✕</button></div>`:''}
+        ${currentUser&&hasAnyRole('admin','superadmin')?`<div style="display:flex;gap:5px"><button class="btn btn-ghost btn-sm" onclick="openFormSphere('${op._id}')">✎</button><button class="btn btn-danger btn-sm" onclick="deleteSphere('${op._id}')">✕</button></div>`:''}
       </div>
     </div>`;
   }).join('')}</div>`;
@@ -2518,23 +2489,23 @@ window.sphereGlobalSearch=(val)=>{
   // 1. Registre Pourfendeurs
   allPourfendeurs.filter(p=>!p.deleted).forEach(p=>{
     const fields=[p.nom,p.rang,p.souffle,p.brigade,p.statut,p.info,p.pilier_ref,p.kinoe_ref].filter(Boolean).join(' ').toLowerCase();
-    if(fields.includes(q)) results.push({source:'registre',name:p.nom||'—',sub:p.rang||'',extra:p.souffle||'',photo:p.photo||'',info:p.info||'',id:p.id,data:p});
+    if(fields.includes(q)) results.push({source:'registre',name:p.nom||'—',sub:p.rang||'',extra:p.souffle||'',photo:p.photo||'',info:p.info||'',id:p._id,data:p});
   });
   // 2. Cibles (Wanted)
   allWanted.filter(w=>!w.deleted).forEach(w=>{
     const nom=`${w.prenom||''} ${w.nom||''}`.trim();
     const fields=[nom,w.grade,w.raison,w.description].filter(Boolean).join(' ').toLowerCase();
-    if(fields.includes(q)) results.push({source:'cible',name:nom||'—',sub:w.grade||'',extra:w.raison||'',photo:w.photo||'',info:w.description||w.raison||'',id:w.id,data:w});
+    if(fields.includes(q)) results.push({source:'cible',name:nom||'—',sub:w.grade||'',extra:w.raison||'',photo:w.photo||'',info:w.description||w.raison||'',id:w._id,data:w});
   });
   // 3. Missions
   allMissions.filter(m=>!m.deleted).forEach(m=>{
     const fields=[m.titre,m.description,m.cible,m.responsable,m.statut].filter(Boolean).join(' ').toLowerCase();
-    if(fields.includes(q)) results.push({source:'mission',name:m.titre||'—',sub:m.statut||'',extra:m.cible?'Cible : '+m.cible:'',photo:'',info:m.description||'',id:m.id,data:m});
+    if(fields.includes(q)) results.push({source:'mission',name:m.titre||'—',sub:m.statut||'',extra:m.cible?'Cible : '+m.cible:'',photo:'',info:m.description||'',id:m._id,data:m});
   });
   // 4. Opérations Sphère
   allSphere.forEach(s=>{
     const fields=[s.targetName,s.targetGrade,s.type,s.notes,s.operateur,s.statut,s.priorite].filter(Boolean).join(' ').toLowerCase();
-    if(fields.includes(q)) results.push({source:'sphere',name:s.targetName||s.type||'—',sub:s.type||'',extra:s.statut||'',photo:s.targetPhoto||'',info:s.notes||'',id:s.id,data:s});
+    if(fields.includes(q)) results.push({source:'sphere',name:s.targetName||s.type||'—',sub:s.type||'',extra:s.statut||'',photo:s.targetPhoto||'',info:s.notes||'',id:s._id,data:s});
   });
   if(!results.length){
     resultsEl.style.display='block';
@@ -2582,10 +2553,10 @@ window.searchSphereTarget=(val)=>{
   if(!q){resultsEl.style.display='none';return;}
   const pResults=allPourfendeurs
     .filter(p=>(p.nom||'').toLowerCase().includes(q)||(p.souffle||'').toLowerCase().includes(q))
-    .slice(0,5).map(p=>({uid:'p_'+p.id,name:p.nom||'',grade:p.rang||'',photo:p.photo||'',raison:p.souffle||'',source:'registre'}));
+    .slice(0,5).map(p=>({uid:'p_'+p._id,name:p.nom||'',grade:p.rang||'',photo:p.photo||'',raison:p.souffle||'',source:'registre'}));
   const wResults=allWanted
     .filter(w=>(`${w.prenom||''} ${w.nom||''}`).toLowerCase().includes(q)||(w.grade||'').toLowerCase().includes(q))
-    .slice(0,5).map(w=>({uid:'w_'+w.id,name:`${w.prenom||''} ${w.nom||''}`.trim(),grade:w.grade||'',photo:w.photo||'',raison:w.raison||'',source:'cible'}));
+    .slice(0,5).map(w=>({uid:'w_'+w._id,name:`${w.prenom||''} ${w.nom||''}`.trim(),grade:w.grade||'',photo:w.photo||'',raison:w.raison||'',source:'cible'}));
   const all=[...pResults,...wResults].slice(0,8);
   if(!all.length){resultsEl.style.display='none';return;}
   resultsEl.innerHTML=all.map(r=>`<div class="sf-result" onclick="selectSphereTarget('${r.uid}','${r.name.replace(/'/g,"\\'")}','${r.grade.replace(/'/g,"\\'")}','${r.photo.replace(/'/g,"\\'")}','${r.raison.replace(/'/g,"\\'").replace(/\n/g,' ')}')" >
@@ -2627,7 +2598,7 @@ window.openFormSphere=(id=null)=>{
   document.getElementById('sfPrio').value='Normale';
   document.getElementById('sfStatut').value='attente';
   if(id){
-    const op=allSphere.find(x=>x.id===id);
+    const op=allSphere.find(x=>x._id===id);
     if(op){
       document.getElementById('sfType').value=op.type||'Élimination';
       document.getElementById('sfPrio').value=op.priorite||'Normale';
@@ -2664,25 +2635,32 @@ window.saveSphere=async()=>{
     targetName:document.getElementById('sfSearchInput').value.trim()||manualName,
     targetGrade:document.getElementById('sfTargetGrade').textContent||'',
     targetPhoto:document.getElementById('sfTargetPhoto').querySelector('img')?.src||'',
-    targetRaison:document.getElementById('sfTargetRaison').textContent||'',
-    updatedAt:serverTimestamp(),updatedBy:currentUser.steamId
+    targetRaison:document.getElementById('sfTargetRaison').textContent||''
   };
   const editId=document.getElementById('sphereEditId').value;
-  try{
-    if(editId){await updateDoc(doc(db,'sphere',editId),data);toast('Opération mise à jour.','success');}
-    else{data.createdAt=serverTimestamp();data.createdBy=currentUser.steamId;await addDoc(collection(db,'sphere'),data);toast('Opération enregistrée.','success');}
+  if(editId) data._id=editId;
+  socket.emit('sphere:save', data, (res)=>{
+    if(!res?.ok){toast('Erreur : '+(res?.error||'inconnue'),'error');return;}
+    toast(editId?'Opération mise à jour.':'Opération enregistrée.','success');
     closeModal('modalSphere');
-  }catch(e){toast('Erreur : '+e.message,'error');}
+  });
 };
 
 window.deleteSphere=async(id)=>{
   if(!currentUser||!confirm('Supprimer cette opération ?'))return;
-  await updateDoc(doc(db,'sphere',id),{deleted:true});
-  toast('Opération supprimée.','warn');
+  socket.emit('sphere:delete', id, (res)=>{
+    if(!res?.ok){toast('Erreur : '+(res?.error||'inconnue'),'error');return;}
+    toast('Opération supprimée.','warn');
+  });
 };
 
 /* ═══ WANTED ═══ */
-onSnapshot(collection(db,'wanted'),snap=>{allWanted=snap.docs.map(d=>({id:d.id,...d.data()})).filter(d=>!d.deleted);renderWanted();updateStats();renderVerifyWidget();});
+function _onWantedData(items){
+  allWanted=items.filter(d=>!d.deleted);
+  renderWanted();updateStats();renderVerifyWidget();
+}
+socket.emit('wanted:join', {}, res=>{ if(res?.ok) _onWantedData(res.items); });
+socket.on('wanted:state', _onWantedData);
 
 function renderWanted(){
   const c=document.getElementById('wantedContainer');
@@ -2720,10 +2698,10 @@ function renderWanted(){
         <div class="fiche-history-body">${wHist}${spark?`<div style="font-size:.55rem;color:var(--text-muted);margin-top:6px">Évolution du danger</div>${spark}`:''}</div>
       </div>
       ${currentUser?`<div style="display:flex;gap:6px;margin-top:10px">
-        <button class="btn btn-reverify btn-sm" style="flex:1" onclick="reverify('wanted','${w.id}','${nameEsc}')" title="Reconfirmer l'info">✓</button>
-        <button class="btn btn-report btn-sm" style="flex:1" onclick="openReport('wanted','${w.id}','${nameEsc}')" title="Signaler une incohérence">🚩</button>
-        <button class="btn btn-ghost btn-sm" style="flex:1" onclick="openFormWanted('${w.id}')">✎</button>
-        <button class="btn btn-danger btn-sm" style="flex:1" onclick="deleteWanted('${w.id}','${nameEsc}')">✕</button>
+        <button class="btn btn-reverify btn-sm" style="flex:1" onclick="reverify('wanted','${w._id}','${nameEsc}')" title="Reconfirmer l'info">✓</button>
+        <button class="btn btn-report btn-sm" style="flex:1" onclick="openReport('wanted','${w._id}','${nameEsc}')" title="Signaler une incohérence">🚩</button>
+        <button class="btn btn-ghost btn-sm" style="flex:1" onclick="openFormWanted('${w._id}')">✎</button>
+        <button class="btn btn-danger btn-sm" style="flex:1" onclick="deleteWanted('${w._id}','${nameEsc}')">✕</button>
       </div>`:''}
     </div></div>`;
   }).join('')}</div>`;
@@ -2733,7 +2711,7 @@ window.openFormWanted=(id=null)=>{
   document.getElementById('wantedEditId').value=id||'';
   document.getElementById('wantedFormTitle').textContent=id?'Modifier la Cible':'Nouvel Avis de Recherche';
   document.getElementById('wfDupWarning').style.display='none';
-  if(id){const w=allWanted.find(x=>x.id===id);if(w){document.getElementById('wfPrenom').value=w.prenom||'';document.getElementById('wfNom').value=w.nom||'';document.getElementById('wfGrade').value=w.grade||'';document.getElementById('wfDanger').value=w.dangerScore||0;document.getElementById('wfRaison').value=w.raison||'';document.getElementById('wfPhoto').value=w.photo||'';document.getElementById('wfReliab').value=w.verifStatus||'confirme';document.getElementById('wfSource').value=w.source||'';previewDanger();}}
+  if(id){const w=allWanted.find(x=>x._id===id);if(w){document.getElementById('wfPrenom').value=w.prenom||'';document.getElementById('wfNom').value=w.nom||'';document.getElementById('wfGrade').value=w.grade||'';document.getElementById('wfDanger').value=w.dangerScore||0;document.getElementById('wfRaison').value=w.raison||'';document.getElementById('wfPhoto').value=w.photo||'';document.getElementById('wfReliab').value=w.verifStatus||'confirme';document.getElementById('wfSource').value=w.source||'';previewDanger();}}
   else{['wfPrenom','wfNom','wfRaison','wfSource'].forEach(i=>document.getElementById(i).value='');document.getElementById('wfDanger').value=50;document.getElementById('wfReliab').value='confirme';document.getElementById('dangerPreview').textContent='Danger : —';}
   pendingPhotoWanted=null; resetPhotoField('wfPhotoFile','wfPhoto','wfPhotoPreview');
   openModal('modalWanted');
@@ -2755,38 +2733,30 @@ window.saveWanted=async()=>{
   if(pendingPhotoWanted){toast('Compression de l\'image...','info');try{wPhotoUrl=await uploadPhoto(pendingPhotoWanted);}catch(e){toast('Erreur image : '+e.message,'error');return;}}
   let verifStatus=document.getElementById('wfReliab').value;
   const grade=document.getElementById('wfGrade').value;
-  const old=editId?allWanted.find(x=>x.id===editId):null;
-  // Écart important vs la dernière valeur connue → on force le statut "Contesté" pour qu'un admin revérifie
-  let autoContested=false;
-  if(old){
-    const oldScore=old.dangerScore||rankScore[old.grade]||50;
-    if(Math.abs(oldScore-s)>=25 || (old.grade&&old.grade!==grade)){ verifStatus='conteste'; autoContested=true; }
-  }
-  const data={prenom,nom,grade,raison:document.getElementById('wfRaison').value.trim(),photo:wPhotoUrl,dangerScore:s,dangerTier:tier,verifStatus,source:document.getElementById('wfSource').value.trim(),updatedAt:serverTimestamp(),updatedBy:currentUser.steamId};
-  try{
-    if(editId){
-      await updateDoc(doc(db,'wanted',editId),data);
-      await logAction('MODIFICATION',fullName,old||null,'wanted');
-      toast(autoContested?`Mis à jour — écart important détecté, fiche marquée "Contestée".`:'Mis à jour.',autoContested?'warn':'success');
-    }else{
-      data.createdAt=serverTimestamp();data.createdBy=currentUser.steamId;
-      await addDoc(collection(db,'wanted'),data);
-      await logAction('DÉSIGNATION',fullName,null,'wanted');
-      toast('Avis émis.','success');
-    }
+  const data={prenom,nom,grade,raison:document.getElementById('wfRaison').value.trim(),photo:wPhotoUrl,dangerScore:s,dangerTier:tier,verifStatus,source:document.getElementById('wfSource').value.trim()};
+  if(editId) data._id=editId;
+  socket.emit('wanted:save', data, (res)=>{
+    if(!res?.ok){toast('Erreur : '+(res?.error||'inconnue'),'error');return;}
+    toast(editId?'Mis à jour.':'Avis émis.','success');
     closeModal('modalWanted');
-  }catch(e){toast('Erreur : '+e.message,'error');}
+  });
 };
 
 window.deleteWanted=async(id,nom)=>{
   if(!currentUser||!confirm(`Retirer ${nom} ?`))return;
-  const w=allWanted.find(x=>x.id===id);
-  await updateDoc(doc(db,'wanted',id),{deleted:true,deletedAt:serverTimestamp(),deletedBy:currentUser.steamId});
-  await logAction('SUPPRESSION',nom,w,'wanted');toast(`${nom} retiré.`,'warn');
+  socket.emit('wanted:delete', id, (res)=>{
+    if(!res?.ok){toast('Erreur : '+(res?.error||'inconnue'),'error');return;}
+    toast(`${nom} retiré.`,'warn');
+  });
 };
 
 /* ═══ MISSIONS ═══ */
-onSnapshot(collection(db,'missions'),snap=>{allMissions=snap.docs.map(d=>({id:d.id,...d.data()})).filter(d=>!d.deleted);renderMissions();updateStats();});
+function _onMissionsData(items){
+  allMissions=items.filter(d=>!d.deleted);
+  renderMissions();updateStats();
+}
+socket.emit('missions:join', {}, res=>{ if(res?.ok) _onMissionsData(res.items); });
+socket.on('missions:state', _onMissionsData);
 
 function renderMissions(){
   const cols={attente:[],encours:[],terminee:[],echec:[]};
@@ -2794,7 +2764,7 @@ function renderMissions(){
   Object.entries(cols).forEach(([key,missions])=>{
     const c=document.getElementById('col-'+key);const color=missionColors[key];
     if(!missions.length){c.innerHTML='<div style="font-size:.63rem;color:var(--text-muted);text-align:center;padding:18px 0">Aucune mission</div>';return;}
-    c.innerHTML=missions.map(m=>`<div class="mission-card" style="--mc:${color}" onclick="openMissionDetail('${m.id}')"><div class="mission-title">${m.titre||'—'}</div><div class="mission-desc">${(m.description||'').substring(0,80)}${(m.description?.length||0)>80?'…':''}</div><div class="mission-meta"><span class="mission-assignes">${m.assignes||'Non assignée'}</span><span class="mission-priority prio-${m.priorite||'normale'}">${m.priorite||'normale'}</span></div></div>`).join('');
+    c.innerHTML=missions.map(m=>`<div class="mission-card" style="--mc:${color}" onclick="openMissionDetail('${m._id}')"><div class="mission-title">${m.titre||'—'}</div><div class="mission-desc">${(m.description||'').substring(0,80)}${(m.description?.length||0)>80?'…':''}</div><div class="mission-meta"><span class="mission-assignes">${m.assignes||'Non assignée'}</span><span class="mission-priority prio-${m.priorite||'normale'}">${m.priorite||'normale'}</span></div></div>`).join('');
   });
   const active=allMissions.filter(m=>m.statut==='encours').length;
   document.getElementById('badge-missions').textContent=active;
@@ -2804,7 +2774,7 @@ function renderMissions(){
 window.openFormMission=(id=null)=>{
   document.getElementById('missionEditId').value=id||'';
   document.getElementById('missionFormTitle').textContent=id?'Modifier la Mission':'Nouvelle Mission';
-  if(id){const m=allMissions.find(x=>x.id===id);if(m){document.getElementById('mfTitre').value=m.titre||'';document.getElementById('mfPriorite').value=m.priorite||'normale';document.getElementById('mfStatut').value=m.statut||'attente';document.getElementById('mfAssignes').value=m.assignes||'';document.getElementById('mfDesc').value=m.description||'';}}
+  if(id){const m=allMissions.find(x=>x._id===id);if(m){document.getElementById('mfTitre').value=m.titre||'';document.getElementById('mfPriorite').value=m.priorite||'normale';document.getElementById('mfStatut').value=m.statut||'attente';document.getElementById('mfAssignes').value=m.assignes||'';document.getElementById('mfDesc').value=m.description||'';}}
   else{['mfTitre','mfAssignes','mfDesc'].forEach(i=>document.getElementById(i).value='');document.getElementById('mfPriorite').value='normale';document.getElementById('mfStatut').value='attente';}
   openModal('modalMission');
 };
@@ -2813,29 +2783,34 @@ window.saveMission=async()=>{
   if(!currentUser){toast('Connexion requise.','warn');return;}
   const titre=document.getElementById('mfTitre').value.trim();
   if(!titre){toast('Titre requis.','warn');return;}
-  const data={titre,priorite:document.getElementById('mfPriorite').value,statut:document.getElementById('mfStatut').value,assignes:document.getElementById('mfAssignes').value.trim(),description:document.getElementById('mfDesc').value.trim(),updatedAt:serverTimestamp(),updatedBy:currentUser.steamId};
+  const data={titre,priorite:document.getElementById('mfPriorite').value,statut:document.getElementById('mfStatut').value,assignes:document.getElementById('mfAssignes').value.trim(),description:document.getElementById('mfDesc').value.trim()};
   const editId=document.getElementById('missionEditId').value;
-  try{if(editId){await updateDoc(doc(db,'missions',editId),data);await logAction('MODIFICATION',titre,null,'missions');toast('Mission mise à jour.','success');}else{data.createdAt=serverTimestamp();data.createdBy=currentUser.steamId;await addDoc(collection(db,'missions'),data);await logAction('MISSION_CRÉÉE',titre,null,'missions');toast('Mission créée.','success');}closeModal('modalMission');}
-  catch(e){toast('Erreur : '+e.message,'error');}
+  if(editId) data._id=editId;
+  socket.emit('missions:save', data, (res)=>{
+    if(!res?.ok){toast('Erreur : '+(res?.error||'inconnue'),'error');return;}
+    toast(editId?'Mission mise à jour.':'Mission créée.','success');
+    closeModal('modalMission');
+  });
 };
 
 window.openMissionDetail=(id)=>{
-  const m=allMissions.find(x=>x.id===id);if(!m)return;
+  const m=allMissions.find(x=>x._id===id);if(!m)return;
   const color=missionColors[m.statut]||'#888';
-  document.getElementById('missionDetailContent').innerHTML=`<div class="modal-title" style="color:${color}">${m.titre}</div><div style="display:flex;gap:8px;margin-bottom:14px"><span class="mission-priority prio-${m.priorite||'normale'}">Priorité : ${m.priorite||'normale'}</span></div><div class="profile-obs" style="margin-bottom:12px">${m.description||'Aucune description.'}</div><div><span class="pf-label">Assignés</span><br><span class="pf-val">${m.assignes||'Non assignée'}</span></div>${currentUser?`<div class="modal-footer"><button class="btn btn-danger btn-sm" onclick="deleteMission('${m.id}','${(m.titre||'').replace(/'/g,"\\'")}')">✕ Supprimer</button><button class="btn btn-gold btn-sm" onclick="closeModal('modalMissionDetail');openFormMission('${m.id}')">✎ Modifier</button></div>`:''}`;
+  document.getElementById('missionDetailContent').innerHTML=`<div class="modal-title" style="color:${color}">${m.titre}</div><div style="display:flex;gap:8px;margin-bottom:14px"><span class="mission-priority prio-${m.priorite||'normale'}">Priorité : ${m.priorite||'normale'}</span></div><div class="profile-obs" style="margin-bottom:12px">${m.description||'Aucune description.'}</div><div><span class="pf-label">Assignés</span><br><span class="pf-val">${m.assignes||'Non assignée'}</span></div>${currentUser?`<div class="modal-footer"><button class="btn btn-danger btn-sm" onclick="deleteMission('${m._id}','${(m.titre||'').replace(/'/g,"\\'")}')">✕ Supprimer</button><button class="btn btn-gold btn-sm" onclick="closeModal('modalMissionDetail');openFormMission('${m._id}')">✎ Modifier</button></div>`:''}`;
   openModal('modalMissionDetail');
 };
 
 window.deleteMission=async(id,titre)=>{
   if(!currentUser||!confirm(`Supprimer "${titre}" ?`))return;
-  const m=allMissions.find(x=>x.id===id);
-  await updateDoc(doc(db,'missions',id),{deleted:true,deletedAt:serverTimestamp(),deletedBy:currentUser.steamId});
-  await logAction('SUPPRESSION',titre,m,'missions');
-  closeModal('modalMissionDetail');toast('Mission supprimée.','warn');
+  socket.emit('missions:delete', id, (res)=>{
+    if(!res?.ok){toast('Erreur : '+(res?.error||'inconnue'),'error');return;}
+    closeModal('modalMissionDetail');toast('Mission supprimée.','warn');
+  });
 };
 
 /* ═══ HISTORIQUE ═══ */
-onSnapshot(query(collection(db,'logs'),orderBy('date','desc'),limit(80)),snap=>{allLogs=snap.docs.map(d=>({id:d.id,...d.data()}));renderLogs();});
+function _onLogsData(items){ allLogs=items; renderLogs(); }
+socket.on('logs:state', _onLogsData);
 
 function renderLogs(){
   const c=document.getElementById('logsContainer');
@@ -2844,10 +2819,11 @@ function renderLogs(){
   if(!data.length){c.innerHTML='<div class="empty-state"><div class="empty-icon">🕰</div><p>Aucune action enregistrée</p></div>';return;}
   c.innerHTML=`<div class="log-list">${data.map(l=>{
     const color=logColors[l.action]||'#c9a227';
-    const date=l.date?.toDate?l.date.toDate().toLocaleString('fr-FR'):'—';
+    const dateObj=tsToDate(l.date);
+    const date=dateObj?dateObj.toLocaleString('fr-FR'):'—';
     const canRestore=['SUPPRESSION','MODIFICATION'].includes(l.action)&&l.snapshot&&currentUser&&hasAnyRole('admin','superadmin','adminsphere');
     const restoreLabel=l.action==='MODIFICATION'?'↺ Annuler modif':'↺ Restaurer';
-    return `<div class="log-entry" style="--lc:${color}"><div class="log-action">${l.action||'—'}</div><div class="log-detail"><span class="log-target">${l.target||'—'}</span><br><span class="log-user">par ${l.userName||l.steamId||'?'}</span></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:5px"><span class="log-date">${date}</span>${canRestore?`<button class="btn btn-success btn-sm" onclick="restoreEntry('${l.id}')">${restoreLabel}</button>`:''}</div></div>`;
+    return `<div class="log-entry" style="--lc:${color}"><div class="log-action">${l.action||'—'}</div><div class="log-detail"><span class="log-target">${l.target||'—'}</span><br><span class="log-user">par ${l.userName||l.steamId||'?'}</span></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:5px"><span class="log-date">${date}</span>${canRestore?`<button class="btn btn-success btn-sm" onclick="restoreEntry('${l._id}')">${restoreLabel}</button>`:''}</div></div>`;
   }).join('')}</div>`;
 }
 
@@ -2855,25 +2831,15 @@ window.filterLogs=(f,el)=>{logFilter=f;document.querySelectorAll('[onclick^="fil
 
 window.restoreEntry=async(logId)=>{
   if(!currentUser||!hasAnyRole('admin','superadmin','adminsphere')){toast('Accès insuffisant.','error');return;}
-  const l=allLogs.find(x=>x.id===logId);
+  const l=allLogs.find(x=>x._id===logId);
   if(!l?.snapshot||!l?.collection){toast('Snapshot introuvable.','error');return;}
   const isMod=l.action==='MODIFICATION';
   const confirmMsg=isMod?`Annuler la modification de "${l.target}" et revenir à l'état précédent ?`:`Restaurer "${l.target}" ?`;
   if(!confirm(confirmMsg))return;
-  try{
-    const snap={...l.snapshot};
-    delete snap.deleted;delete snap.deletedAt;delete snap.deletedBy;
-    snap.restoredAt=serverTimestamp();snap.restoredBy=currentUser.steamId;
-    if(isMod&&snap.id){
-      const{id,...data}=snap;
-      await setDoc(doc(db,l.collection,id),data);
-    } else {
-      const{id,...data}=snap;
-      await addDoc(collection(db,l.collection),data);
-    }
-    await logAction('RESTAURATION',l.target,null,l.collection);
+  socket.emit('logs:restore', logId, (res)=>{
+    if(!res?.ok){toast('Erreur : '+(res?.error||'inconnue'),'error');return;}
     toast(`"${l.target}" ${isMod?'revenu à l\'état précédent':'restauré'}.`,'success');
-  }catch(e){toast('Erreur : '+e.message,'error');}
+  });
 };
 
 /* ═══ ADMIN — WHITELIST ═══ */
@@ -2892,10 +2858,11 @@ const _wlGroupMeta={
 };
 
 let _allWlItems=[];
-onSnapshot(collection(db,'whitelist'),snap=>{
-  _allWlItems=snap.docs.map(d=>({id:d.id,...d.data()}));
+function _onWhitelistData(items){
+  _allWlItems=items;
   renderWhitelist();
-});
+}
+socket.on('whitelist:state', _onWhitelistData);
 
 function renderWhitelist(){
   const c=document.getElementById('whitelistContainer');if(!c)return;
@@ -2918,16 +2885,15 @@ function renderWhitelist(){
     list.forEach(u=>{
       const roles=u._roles;
       const badges=roles.map(r=>`<span class="wl-role role-${r}">${roleLabels[r]||r}</span>`).join('');
-      const escapedName=(u.name||u.id).replace(/'/g,"\\'");
+      const escapedName=(u.name||u._id).replace(/'/g,"\\'");
       html+=`<div class="wl-item">
         <div>
-          <div class="wl-name">${u.name||u.id}</div>
-          <div class="wl-steam">${u.id}</div>
-          <div class="wl-code-status ${u.codeHash?'wl-code-set':'wl-code-pending'}">${u.codeHash?'✓ Code défini':'⏳ En attente (1ère connexion)'}</div>
+          <div class="wl-name">${u.name||u._id}</div>
+          <div class="wl-steam">${u._id}</div>
         </div>
         <div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap;justify-content:flex-end">
           <div style="display:flex;gap:4px;flex-wrap:wrap">${badges}</div>
-          ${isAdmin?`<button class="btn btn-ghost btn-sm" onclick="openChangeRole('${u.id}','${escapedName}','${roles.join(',')}')" title="Changer les rôles">✎ Rôles</button><button class="btn btn-ghost btn-sm" onclick="resetCode('${u.id}','${escapedName}')">↺ Code</button><button class="btn btn-danger btn-sm" onclick="removeFromWhitelist('${u.id}','${escapedName}')">✕</button>`:''}
+          ${isAdmin?`<button class="btn btn-ghost btn-sm" onclick="openChangeRole('${u._id}','${escapedName}','${roles.join(',')}')" title="Changer les rôles">✎ Rôles</button><button class="btn btn-ghost btn-sm" onclick="resetCode('${u._id}','${escapedName}')">↺ Code</button><button class="btn btn-danger btn-sm" onclick="removeFromWhitelist('${u._id}','${escapedName}')">✕</button>`:''}
         </div>
       </div>`;
     });
@@ -2968,12 +2934,11 @@ window.saveWlRole=async()=>{
   // Sécurité : Admin Sphère ne peut attribuer que des rôles autorisés
   if(isAdminSphere) newRoles=newRoles.filter(r=>_adminSphereAllowedRoles.includes(r));
   if(!newRoles.length){toast('Sélectionne au moins un rôle.','warn');return;}
-  try{
-    await updateDoc(doc(db,'whitelist',steamId),{roles:newRoles,role:topRole(newRoles)});
-    await logAction('MODIFICATION','Rôles → '+newRoles.map(r=>roleLabels[r]||r).join(', '),null,'whitelist');
+  socket.emit('whitelist:changeRole', {steamId, roles:newRoles}, (res)=>{
+    if(!res?.ok){toast('Erreur : '+(res?.error||'inconnue'),'error');return;}
     toast('Rôles mis à jour : '+newRoles.map(r=>roleLabels[r]||r).join(', '),'success');
     closeModal('modalChangeRole');
-  }catch(e){toast('Erreur : '+e.message,'error');}
+  });
 };
 
 window.addToWhitelist=async()=>{
@@ -2985,29 +2950,29 @@ window.addToWhitelist=async()=>{
   if(isAdminSphere) newRoles=newRoles.filter(r=>_adminSphereAllowedRoles.includes(r));
   if(!newRoles.length){toast('Sélectionne au moins un rôle.','warn');return;}
   if(!steamId){toast('Steam ID requis.','warn');return;}
-  try{
-    await setDoc(doc(db,'whitelist',steamId),{name:name||steamId,roles:newRoles,role:topRole(newRoles),codeHash:null,addedAt:serverTimestamp(),addedBy:currentUser.steamId});
-    await logAction('AUTORISATION',name||steamId,null,'whitelist');
+  socket.emit('whitelist:add', {steamId, name:name||steamId, roles:newRoles}, (res)=>{
+    if(!res?.ok){toast('Erreur : '+(res?.error||'inconnue'),'error');return;}
     document.getElementById('wlSteamId').value='';document.getElementById('wlName').value='';
     toast(`${name||steamId} ajouté. Il pourra choisir son code à sa première connexion.`,'success');
-  }catch(e){toast('Erreur : '+e.message,'error');}
+  });
 };
 
 window.resetCode=async(steamId,name)=>{
   if(!currentUser||!hasAnyRole('admin','superadmin'))return;
   if(!confirm(`Réinitialiser le code de ${name} ? Il devra en choisir un nouveau à sa prochaine connexion.`))return;
-  try{
-    await updateDoc(doc(db,'whitelist',steamId),{codeHash:null});
-    await logAction('RESET_CODE',name,null,'whitelist');
+  socket.emit('whitelist:resetCode', steamId, (res)=>{
+    if(!res?.ok){toast('Erreur : '+(res?.error||'inconnue'),'error');return;}
     toast(`Code de ${name} réinitialisé.`,'warn');
-  }catch(e){toast('Erreur : '+e.message,'error');}
+  });
 };
 
 window.removeFromWhitelist=async(steamId,name)=>{
   if(!currentUser||!hasAnyRole('admin','superadmin'))return;
   if(!confirm(`Retirer ${name} de la liste blanche ?`))return;
-  try{await deleteDoc(doc(db,'whitelist',steamId));await logAction('RÉVOCATION',name,null,'whitelist');toast(`${name} retiré.`,'warn');}
-  catch(e){toast('Erreur : '+e.message,'error');}
+  socket.emit('whitelist:remove', steamId, (res)=>{
+    if(!res?.ok){toast('Erreur : '+(res?.error||'inconnue'),'error');return;}
+    toast(`${name} retiré.`,'warn');
+  });
 };
 
 /* ═══ STATS & DASHBOARD ═══ */
@@ -3023,12 +2988,12 @@ function renderVerifyWidget(){
   const items=[];
   allPourfendeurs.filter(m=>m.statut!=='Mort').forEach(m=>{
     const f=freshnessState(m.updatedAt);
-    if(f.cls!=='fresh-ok') items.push({type:'pourfendeur',id:m.id,name:m.nom||'—',days:f.days??999,weight:f.days??999,meta:m.rang||''});
+    if(f.cls!=='fresh-ok') items.push({type:'pourfendeur',id:m._id,name:m.nom||'—',days:f.days??999,weight:f.days??999,meta:m.rang||''});
   });
   allWanted.forEach(w=>{
     const f=freshnessState(w.updatedAt);
     const name=`${w.prenom||''} ${w.nom||''}`.trim();
-    if(f.cls!=='fresh-ok') items.push({type:'wanted',id:w.id,name,days:f.days??999,weight:(f.days??999)*((w.dangerScore||50)/50),meta:`Priorité ${getDangerTier(w.dangerScore||rankScore[w.grade]||50).tier}`});
+    if(f.cls!=='fresh-ok') items.push({type:'wanted',id:w._id,name,days:f.days??999,weight:(f.days??999)*((w.dangerScore||50)/50),meta:`Priorité ${getDangerTier(w.dangerScore||rankScore[w.grade]||50).tier}`});
   });
   items.sort((a,b)=>b.weight-a.weight);
   const top=items.slice(0,8);
@@ -3064,7 +3029,7 @@ function renderDashPreview(){
   html+=`<div class="hier-section">
     <div class="hier-label">✦ Maître des Pourfendeurs ✦</div>`;
   if(maitre){
-    html+=`<div class="maitre-card" onclick="showSection('registre');openProfile('${maitre.id}')" style="cursor:pointer">
+    html+=`<div class="maitre-card" onclick="showSection('registre');openProfile('${maitre._id}')" style="cursor:pointer">
       <div class="maitre-photo">${maitre.photo?`<img src="${maitre.photo}" alt="${maitre.nom}">`:`<span class="maitre-photo-ph">⚔</span>`}</div>
       <div>
         <div class="maitre-name">${maitre.nom}</div>
@@ -3083,7 +3048,7 @@ function renderDashPreview(){
       <div class="hier-label">◈ Conseillers du Maître ◈</div>
       <div class="conseiller-grid">
         ${conseillers.map(m=>`
-          <div class="conseiller-card" onclick="showSection('registre');openProfile('${m.id}')">
+          <div class="conseiller-card" onclick="showSection('registre');openProfile('${m._id}')">
             <div class="conseiller-photo">${m.photo?`<img src="${m.photo}" alt="${m.nom}">`:`<span class="conseiller-photo-ph">⚔</span>`}</div>
             <div>
               <div class="conseiller-name">${m.nom}</div>
@@ -3100,7 +3065,7 @@ function renderDashPreview(){
       <div class="hier-label">⚔ Piliers ⚔</div>
       <div class="pilier-grid">
         ${piliers.map(m=>`
-          <div class="pilier-card" onclick="showSection('registre');openProfile('${m.id}')">
+          <div class="pilier-card" onclick="showSection('registre');openProfile('${m._id}')">
             <div class="pilier-photo">${m.photo?`<img src="${m.photo}" alt="${m.nom}">`:`<span class="pilier-photo-ph">⚔</span>`}</div>
             <div class="pilier-info">
               <div class="pilier-name">${m.nom}</div>
