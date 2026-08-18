@@ -46,6 +46,8 @@ input,select,textarea{font-family:inherit;}
 .sidebar-logo-title{font-family:'Cinzel Decorative',serif;font-size:1.15rem;font-weight:700;letter-spacing:3px;background:linear-gradient(135deg,#bf953f,#fcf6ba,#b38728);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-size:200% auto;animation:shimmer 4s linear infinite;line-height:1.5;}
 .sidebar-logo-sub{font-size:.52rem;letter-spacing:4px;color:var(--text-muted);text-transform:uppercase;margin-top:4px;}
 .sidebar-ornament{color:var(--crimson);font-size:1.6rem;display:block;margin-bottom:10px;filter:drop-shadow(0 0 8px rgba(139,0,0,.6));}
+.codex-crest{width:52px;height:52px;display:block;margin:0 auto 10px;filter:drop-shadow(0 0 8px rgba(139,0,0,.5));animation:cxCrestBreathe 5s ease-in-out infinite;}
+@keyframes cxCrestBreathe{0%,100%{filter:drop-shadow(0 0 6px rgba(139,0,0,.4));transform:rotate(0deg)}50%{filter:drop-shadow(0 0 14px rgba(201,162,39,.5));transform:rotate(1.5deg)}}
 .nav-list{list-style:none;padding:16px 0;flex:1;}
 .nav-item{margin:2px 10px;border-radius:6px;}
 .nav-btn{display:flex;align-items:center;gap:12px;width:100%;padding:11px 16px;background:none;border:none;color:var(--text-muted);font-family:'Cinzel',serif;font-size:.64rem;letter-spacing:2px;text-transform:uppercase;transition:.2s;border-radius:6px;}
@@ -380,6 +382,23 @@ input,select,textarea{font-family:inherit;}
 .sphere-result-meta{font-size:.7rem;color:rgba(180,160,160,.65);line-height:1.6;}
 .sphere-result-meta strong{color:rgba(220,180,180,.85);}
 .sphere-no-results{text-align:center;padding:30px;color:rgba(180,100,100,.5);font-family:'Cinzel',serif;font-size:.7rem;letter-spacing:3px;}
+
+/* ── INTERROGATOIRE ── */
+.interro-box{max-width:640px;background:linear-gradient(160deg,rgba(10,3,3,.98),rgba(4,1,1,1));border:1px solid rgba(150,0,0,.25);}
+.interro-header{margin-bottom:22px;padding-bottom:16px;border-bottom:1px solid rgba(150,0,0,.2);}
+.interro-kicker{font-family:'Cinzel',serif;font-size:.52rem;letter-spacing:5px;color:rgba(200,0,0,.6);text-transform:uppercase;margin-bottom:6px;}
+.interro-header .modal-title{color:#ff9999;text-shadow:0 0 20px rgba(200,0,0,.3);}
+.interro-sub{font-size:.72rem;color:rgba(190,160,160,.6);line-height:1.7;margin-top:8px;}
+.interro-list{display:flex;flex-direction:column;gap:10px;max-height:50vh;overflow-y:auto;}
+.interro-item{background:rgba(255,255,255,.02);border:1px solid rgba(150,0,0,.15);border-left:3px solid rgba(200,0,0,.5);border-radius:6px;padding:12px 16px;animation:fadeUp .3s ease-out both;}
+.interro-q{font-family:'Cinzel',serif;font-size:.58rem;letter-spacing:2px;color:rgba(220,100,100,.8);text-transform:uppercase;margin-bottom:6px;display:flex;align-items:center;gap:7px;}
+.interro-q::before{content:'?';display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:50%;border:1px solid rgba(200,0,0,.5);font-size:.6rem;flex-shrink:0;}
+.interro-a{font-size:.78rem;color:rgba(210,190,190,.9);line-height:1.5;padding-left:23px;}
+.interro-a b{color:#ffb0b0;font-weight:700;}
+.interro-empty{text-align:center;padding:30px;color:rgba(180,100,100,.5);font-family:'Cinzel',serif;font-size:.65rem;letter-spacing:2px;}
+.interro-footer{margin-top:16px;padding-top:14px;border-top:1px solid rgba(150,0,0,.15);text-align:center;font-family:'Cinzel',serif;font-size:.5rem;letter-spacing:3px;color:rgba(150,0,0,.5);text-transform:uppercase;}
+.btn-interro{border-color:rgba(200,0,0,.35);color:#ff8080;}
+.btn-interro:hover{background:rgba(200,0,0,.1);}
 /* ── RÈGLES D'OPÉRATION ── */
 .sphere-rules-wrap{background:linear-gradient(135deg,rgba(8,1,1,.98),rgba(4,0,0,1));border:1px solid rgba(150,0,0,.2);border-top:2px solid rgba(180,0,0,.5);border-radius:10px;margin-bottom:28px;overflow:hidden;}
 .sphere-rules-header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;cursor:pointer;transition:.2s;user-select:none;}
@@ -937,7 +956,21 @@ body::after{content:'';position:fixed;left:0;width:100%;height:2px;background:li
 <!-- SIDEBAR -->
 <nav id="sidebar">
   <div class="sidebar-logo">
-    <span class="sidebar-ornament">⚔</span>
+    <svg class="codex-crest" viewBox="0 0 100 100" aria-hidden="true">
+      <circle cx="50" cy="50" r="46" fill="none" stroke="#c9a227" stroke-width="0.6" opacity=".5"/>
+      <circle cx="50" cy="50" r="38" fill="none" stroke="#8b0000" stroke-width="1.2" opacity=".7"/>
+      <g stroke="#c9a227" stroke-width="1" opacity=".6">
+        <line x1="50" y1="4" x2="50" y2="12"/><line x1="50" y1="88" x2="50" y2="96"/>
+        <line x1="4" y1="50" x2="12" y2="50"/><line x1="88" y1="50" x2="96" y2="50"/>
+        <line x1="18.7" y1="18.7" x2="24.6" y2="24.6"/><line x1="75.4" y1="75.4" x2="81.3" y2="81.3"/>
+        <line x1="18.7" y1="81.3" x2="24.6" y2="75.4"/><line x1="75.4" y1="24.6" x2="81.3" y2="18.7"/>
+      </g>
+      <path d="M32 50 Q50 34 68 50 Q50 66 32 50 Z" fill="none" stroke="#c9a227" stroke-width="1.4"/>
+      <circle cx="50" cy="50" r="6" fill="#8b0000"/>
+      <circle cx="50" cy="50" r="2" fill="#c9a227"/>
+      <line x1="50" y1="38" x2="50" y2="44" stroke="#8b0000" stroke-width="1.2"/>
+      <line x1="50" y1="56" x2="50" y2="62" stroke="#8b0000" stroke-width="1.2"/>
+    </svg>
     <div class="sidebar-logo-title">CODEX<br>OBSCURA</div>
     <div class="sidebar-logo-sub">Archives Suprêmes</div>
   </div>
@@ -1433,6 +1466,20 @@ body::after{content:'';position:fixed;left:0;width:100%;height:2px;background:li
   <div class="modal-box modal-wide" style="position:relative;">
     <button class="modal-close" onclick="closeModal('modalProfile')" style="position:absolute;top:12px;right:12px;z-index:10;">✕</button>
     <div id="profileContent"></div>
+  </div>
+</div>
+
+<!-- ═══ MODAL INTERROGATOIRE ═══ -->
+<div class="modal-overlay" id="modalInterrogation">
+  <div class="modal-box interro-box">
+    <button class="modal-close" onclick="closeModal('modalInterrogation')">✕</button>
+    <div class="interro-header">
+      <div class="interro-kicker">Protocole de Vérification</div>
+      <div class="modal-title" id="interroTitle">Questions d'Interrogatoire</div>
+      <div class="interro-sub">Pose ces questions au sujet interrogé et compare ses réponses à celles ci-dessous. Une réponse fausse ou évasive trahit un mensonge ou une ignorance suspecte.</div>
+    </div>
+    <div id="interroList" class="interro-list"></div>
+    <div class="interro-footer">Les réponses attendues sont tirées des Archives — à usage exclusif de l'interrogateur.</div>
   </div>
 </div>
 
@@ -2397,7 +2444,7 @@ window.openProfile=async(id)=>{
           <div class="fiche-history-body">${buildHistoryHTML('pourfendeurs',m.nom,m,[['rang','Rang'],['souffle','Souffle'],['statut','Statut'],['brigade','Brigade'],['jours','Jours de service']])}</div>
         </div>
         <div class="modal-footer" style="margin-top:auto;padding-top:16px;display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-          ${currentUser?`<button class="btn btn-gold btn-sm" onclick="closeModal('modalProfile');openFormMembre('${m._id}')">✎ Modifier la fiche</button><button class="btn btn-reverify btn-sm" onclick="reverify('pourfendeurs','${m._id}','${(m.nom||'').replace(/'/g,"\\'")}')">✓ Revérifié</button><button class="btn btn-report btn-sm" onclick="openReport('pourfendeurs','${m._id}','${(m.nom||'').replace(/'/g,"\\'")}')">🚩 Signaler</button>`:''}
+          ${currentUser?`<button class="btn btn-gold btn-sm" onclick="closeModal('modalProfile');openFormMembre('${m._id}')">✎ Modifier la fiche</button><button class="btn btn-reverify btn-sm" onclick="reverify('pourfendeurs','${m._id}','${(m.nom||'').replace(/'/g,"\\'")}')">✓ Revérifié</button><button class="btn btn-report btn-sm" onclick="openReport('pourfendeurs','${m._id}','${(m.nom||'').replace(/'/g,"\\'")}')">🚩 Signaler</button><button class="btn btn-interro btn-sm" onclick="openInterrogation('pourfendeur','${m._id}')">🗨 Questions d'interrogatoire</button>`:''}
           <button class="btn btn-ghost btn-sm" onclick="printFiche()">🖨 Imprimer</button>
           <span style="font-size:.5rem;letter-spacing:3px;color:rgba(200,0,0,.4);font-family:'Cinzel',serif;margin-left:auto">CONFIDENTIEL</span>
         </div>
@@ -2405,6 +2452,50 @@ window.openProfile=async(id)=>{
     </div>`;
   openModal('modalProfile');
   if(isMulti){_carouselApply();_carouselStartAuto();}
+};
+
+/* ═══ QUESTIONS D'INTERROGATOIRE ═══
+   Dérivées uniquement de champs factuels déjà connus (rang, souffle,
+   brigade, référents, motif de recherche...) — jamais d'opinion ni de
+   question fermée par oui/non, pour qu'une réponse fausse soit un vrai
+   signal. Formulées en désignant la cible par son nom plutôt que par un
+   pronom, pour ne pas avoir à deviner un genre. */
+function generateInterrogationQuestions(type, entity){
+  const qs=[];
+  if(type==='pourfendeur'){
+    const nom=entity.nom||'ce Pourfendeur';
+    if(entity.rang) qs.push({q:`Quel est le rang exact de ${nom} au sein de l'Ordre des Pourfendeurs ?`,a:entity.rang});
+    if(entity.souffle) qs.push({q:`Quel style de Souffle ${nom} pratique-t-il ?`,a:entity.souffle});
+    if(entity.brigade) qs.push({q:`À quelle brigade ${nom} est-il rattaché ?`,a:entity.brigade});
+    if(entity.pilier_ref) qs.push({q:`Sous les ordres de quel Pilier ${nom} sert-il ?`,a:entity.pilier_ref});
+    if(entity.kinoe_ref) qs.push({q:`Qui est le Kinoe référent de ${nom} ?`,a:entity.kinoe_ref});
+    if(entity.jours) qs.push({q:`Depuis approximativement combien de temps ${nom} est-il en service ? (une estimation proche est acceptable)`,a:`${entity.jours} jours`});
+    if(entity.statut) qs.push({q:`${nom} est-il toujours en service, à la retraite, ou tombé au combat ?`,a:entity.statut});
+    if(entity.info) qs.push({q:`Que peux-tu dire des observations récentes rapportées sur ${nom} ?`,a:entity.info});
+  } else if(type==='wanted'){
+    const nom=`${entity.prenom||''} ${entity.nom||''}`.trim()||'cette cible';
+    if(entity.grade) qs.push({q:`Quel rang était attribué à ${nom} avant sa désignation comme cible ?`,a:entity.grade});
+    if(entity.raison) qs.push({q:`Pour quel motif ${nom} est-il activement recherché ?`,a:entity.raison});
+    if(typeof entity.dangerScore==='number'){
+      const dt=getDangerTier(entity.dangerScore||rankScore[entity.grade]||50);
+      qs.push({q:`Quel niveau de dangerosité représente ${nom} ?`,a:`Priorité ${dt.tier} — ${dt.label}`});
+    }
+    if(entity.source) qs.push({q:`Qui a rapporté les premières informations sur ${nom} ?`,a:entity.source});
+    if(entity.verifStatus) qs.push({q:`Le dossier de ${nom} est-il confirmé, douteux, ou contesté à ce jour ?`,a:{confirme:'Confirmé',douteux:'Non confirmé',conteste:'Contesté'}[entity.verifStatus]||entity.verifStatus});
+  }
+  return qs;
+}
+
+window.openInterrogation=(type,id)=>{
+  const entity=type==='pourfendeur'?allPourfendeurs.find(x=>x._id===id):allWanted.find(x=>x._id===id);
+  if(!entity)return;
+  const name=type==='pourfendeur'?entity.nom:`${entity.prenom||''} ${entity.nom||''}`.trim();
+  document.getElementById('interroTitle').textContent=`Interrogatoire — au sujet de ${name}`;
+  const qs=generateInterrogationQuestions(type,entity);
+  const list=document.getElementById('interroList');
+  list.innerHTML=qs.length?qs.map((item,i)=>`<div class="interro-item" style="animation-delay:${i*.05}s"><div class="interro-q">${item.q}</div><div class="interro-a">Réponse attendue : <b>${item.a}</b></div></div>`).join('')
+    :`<div class="interro-empty">Trop peu d'informations connues sur ${name} pour générer des questions fiables.</div>`;
+  openModal('modalInterrogation');
 };
 
 /* ═══ SPHÈRE SECRÈTE ═══ */
@@ -2650,7 +2741,7 @@ function renderWanted(){
     const wHist=buildHistoryHTML('wanted',fullName,w,[['grade','Rang'],['dangerScore','Danger'],['raison','Motif'],['verifStatus','Fiabilité']]);
     const sparkVals=[...getEntityLogs('wanted',fullName).map(l=>l.snapshot?.dangerScore).filter(v=>typeof v==='number'),s];
     const spark=sparklineSVG(sparkVals,'#ff5544');
-    return `<div class="wanted-card">${drips}<div class="wanted-inner">
+    return `<div class="wanted-card"><div class="profile-corner tl" style="--pbc:#c9a227"></div><div class="profile-corner tr" style="--pbc:#c9a227"></div><div class="profile-corner bl" style="--pbc:#c9a227"></div><div class="profile-corner br" style="--pbc:#c9a227"></div>${drips}<div class="wanted-inner">
       <div class="wanted-number">#${String(i+1).padStart(2,'0')}</div>
       <div style="text-align:center"><div class="wanted-seal">CIBLE DÉSIGNÉE</div></div>
       <div class="wanted-photo">${photo}</div>
@@ -2672,6 +2763,7 @@ function renderWanted(){
       ${currentUser?`<div style="display:flex;gap:6px;margin-top:10px">
         <button class="btn btn-reverify btn-sm" style="flex:1" onclick="reverify('wanted','${w._id}','${nameEsc}')" title="Reconfirmer l'info">✓</button>
         <button class="btn btn-report btn-sm" style="flex:1" onclick="openReport('wanted','${w._id}','${nameEsc}')" title="Signaler une incohérence">🚩</button>
+        <button class="btn btn-interro btn-sm" style="flex:1" onclick="openInterrogation('wanted','${w._id}')" title="Générer des questions d'interrogatoire">🗨</button>
         <button class="btn btn-ghost btn-sm" style="flex:1" onclick="openFormWanted('${w._id}')">✎</button>
         <button class="btn btn-danger btn-sm" style="flex:1" onclick="deleteWanted('${w._id}','${nameEsc}')">✕</button>
       </div>`:''}
