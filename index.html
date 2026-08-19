@@ -1649,6 +1649,27 @@ function wantedPhotoSrc(w){
   return '';
 }
 
+/* Rendu paresseux : les données arrivent en temps réel dès la connexion
+   (badges/compteurs à jour immédiatement), mais la construction du DOM
+   d'une section coûteuse (tableau du Registre, grille des Cibles,
+   opérations Sphère, Signalements) n'a lieu qu'à la première visite de
+   cette section — au lieu de tout construire d'un coup au chargement,
+   y compris ce que personne ne regarde encore. */
+const _sectionRendered={registre:false,wanted:false,sphere:false,signalements:false};
+const _sectionRenderFns={
+  registre:()=>renderRegistre(),
+  wanted:()=>renderWanted(),
+  sphere:()=>renderSphere(),
+  signalements:()=>renderReports()
+};
+function _ensureSectionRendered(name){
+  if(_sectionRendered[name])return;
+  const fn=_sectionRenderFns[name];
+  if(!fn)return;
+  _sectionRendered[name]=true;
+  fn();
+}
+
 /* ═══ ÉTAT ═══ */
 let currentUser = null;
 // ─── Helpers rôles ───
@@ -2040,6 +2061,7 @@ window.showSection = (name) => {
   document.getElementById('section-'+name).classList.add('active');
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.s===name));
   if(typeof closeSidebar==='function') closeSidebar();
+  _ensureSectionRendered(name);
 };
 
 /* ═══ MODALS ═══ */
@@ -2179,7 +2201,7 @@ let allReports=[]; let reportFilter='ouvert';
 function _onSignalementsData(items){
   allReports=items.slice().sort((a,b)=>(tsToDate(b.date)?.getTime()||0)-(tsToDate(a.date)?.getTime()||0));
   document.getElementById('badge-signalements').textContent=allReports.filter(r=>r.status!=='resolu').length;
-  renderReports();
+  if(_sectionRendered.signalements) renderReports();
 }
 socket.emit('signalements:join', {}, res=>{ if(res?.ok) _onSignalementsData(res.items); });
 socket.on('signalements:state', _onSignalementsData);
@@ -2250,7 +2272,9 @@ window.closeSidebar=()=>{document.getElementById('sidebar').classList.remove('op
 function _onPourfendeursData(items){
   allPourfendeurs=items.filter(d=>!d.deleted)
     .sort((a,b)=>(hierarchyIdx[a.rang]||99)-(hierarchyIdx[b.rang]||99));
-  renderRegistre(); updateStats(); renderDashPreview(); renderVerifyWidget();
+  document.getElementById('badge-registre').textContent=allPourfendeurs.length;
+  updateStats(); renderDashPreview(); renderVerifyWidget(); // léger, nécessaire dès le tableau de bord
+  if(_sectionRendered.registre) renderRegistre(); // le tableau complet n'est reconstruit que si déjà visité
 }
 socket.emit('pourfendeurs:join', {}, res=>{ if(res?.ok) _onPourfendeursData(res.items); });
 socket.on('pourfendeurs:state', _onPourfendeursData);
@@ -2502,7 +2526,7 @@ window.openInterrogation=(type,id)=>{
 let allSphere=[];
 function _onSphereData(items){
   allSphere=items.filter(d=>!d.deleted);
-  renderSphere();
+  if(_sectionRendered.sphere) renderSphere();
 }
 socket.emit('sphere:join', {}, res=>{ if(res?.ok) _onSphereData(res.items); });
 socket.on('sphere:state', _onSphereData);
@@ -2719,15 +2743,16 @@ window.deleteSphere=async(id)=>{
 /* ═══ WANTED ═══ */
 function _onWantedData(items){
   allWanted=items.filter(d=>!d.deleted);
-  renderWanted();updateStats();renderVerifyWidget();
+  document.getElementById('badge-wanted').textContent=allWanted.length;
+  document.getElementById('stat-wanted').textContent=allWanted.length;
+  updateStats();renderVerifyWidget(); // léger, nécessaire dès le tableau de bord
+  if(_sectionRendered.wanted) renderWanted(); // la grille complète n'est reconstruite que si déjà visitée
 }
 socket.emit('wanted:join', {}, res=>{ if(res?.ok) _onWantedData(res.items); });
 socket.on('wanted:state', _onWantedData);
 
 function renderWanted(){
   const c=document.getElementById('wantedContainer');
-  document.getElementById('badge-wanted').textContent=allWanted.length;
-  document.getElementById('stat-wanted').textContent=allWanted.length;
   if(!allWanted.length){c.innerHTML='<div class="empty-state"><div class="empty-icon">🎯</div><p>Aucune cible désignée</p></div>';return;}
   const sorted=[...allWanted].sort((a,b)=>(b.dangerScore||0)-(a.dangerScore||0));
   c.innerHTML=`<div class="wanted-grid">${sorted.map((w,i)=>{
