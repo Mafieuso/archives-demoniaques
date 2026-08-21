@@ -1347,7 +1347,7 @@ body{letter-spacing:.2px;}
               <label class="role-check-item"><input type="checkbox" value="admin"><div class="rci-text"><div class="rci-label">Admin</div><div class="rci-desc">Accès complet à tout</div></div></label>
             </div>
           </div>
-          <p class="form-hint">La personne ajoutée pourra choisir son code secret lors de sa première connexion.</p>
+          <p class="form-hint">La personne ajoutée pourra se connecter avec son compte Steam dès maintenant.</p>
           <br>
           <button class="btn btn-gold" onclick="addToWhitelist()" style="width:100%">+ Ajouter à la Liste Blanche</button>
         </div>
@@ -1525,52 +1525,12 @@ body{letter-spacing:.2px;}
 <div class="modal-overlay" id="modalLogin">
   <div class="modal-box" style="max-width:420px">
     <button class="modal-close" onclick="closeModal('modalLogin')">✕</button>
-
-    <!-- ÉTAPE 1 : Steam ID -->
     <div class="login-step active" id="step1">
       <div class="modal-title">Connexion — Accès Éditeur</div>
-      <p class="login-info">Entrez votre <strong>Steam ID 64</strong> pour accéder aux fonctions d'édition.<br>Votre ID commence par <strong>7656119...</strong> — trouvez-le sur steamid.io</p>
-      <div class="form-group" style="margin-bottom:16px">
-        <label class="form-label">Steam ID 64</label>
-        <input class="form-input" id="loginSteamId" placeholder="76561198XXXXXXXXX" onkeypress="if(event.key==='Enter')checkSteamId()">
-      </div>
+      <p class="login-info">L'accès à l'édition se fait via ton compte <strong>Steam</strong> — plus sûr qu'un code, impossible à deviner ou à partager par erreur. Ton Steam ID doit avoir été ajouté au préalable à la liste blanche par un administrateur.</p>
       <div class="modal-footer">
         <button class="btn btn-ghost" onclick="closeModal('modalLogin')">Annuler</button>
-        <button class="btn btn-gold" onclick="checkSteamId()" id="btnStep1">Continuer →</button>
-      </div>
-    </div>
-
-    <!-- ÉTAPE 2A : Première connexion — créer un code -->
-    <div class="login-step" id="step2a">
-      <div class="modal-title">Première Connexion</div>
-      <div class="login-welcome" id="welcomeName"></div>
-      <p class="login-info">C'est votre première connexion. Choisissez un <strong>code secret</strong> que vous seul connaissez. Gardez-le précieusement — il vous sera demandé à chaque connexion depuis un nouvel appareil.</p>
-      <div class="form-group" style="margin-bottom:10px">
-        <label class="form-label">Choisir un code secret</label>
-        <input class="form-input" id="newCode" type="password" placeholder="Minimum 4 caractères" onkeypress="if(event.key==='Enter')createCode()">
-      </div>
-      <div class="form-group" style="margin-bottom:16px">
-        <label class="form-label">Confirmer le code</label>
-        <input class="form-input" id="newCodeConfirm" type="password" placeholder="Répétez le code" onkeypress="if(event.key==='Enter')createCode()">
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-ghost" onclick="goStep(1)">← Retour</button>
-        <button class="btn btn-gold" onclick="createCode()" id="btnStep2a">Valider mon Code ✓</button>
-      </div>
-    </div>
-
-    <!-- ÉTAPE 2B : Code existant -->
-    <div class="login-step" id="step2b">
-      <div class="modal-title">Code Secret</div>
-      <div class="login-welcome" id="welcomeName2"></div>
-      <p class="login-info">Entrez votre <strong>code secret</strong> pour accéder à l'édition.</p>
-      <div class="form-group" style="margin-bottom:16px">
-        <label class="form-label">Code secret</label>
-        <input class="form-input" id="loginCode" type="password" placeholder="Votre code..." onkeypress="if(event.key==='Enter')verifyCode()">
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-ghost" onclick="goStep(1)">← Retour</button>
-        <button class="btn btn-gold" onclick="verifyCode()" id="btnStep2b">Accéder aux Archives ⚔</button>
+        <button class="btn btn-gold" onclick="location.href='/auth/steam'" id="btnSteamLogin">Se connecter avec Steam</button>
       </div>
     </div>
   </div>
@@ -1601,7 +1561,7 @@ body{letter-spacing:.2px;}
         <span class="code-val" id="credRoles">—</span>
       </div>
     </div>
-    <p class="form-hint">⚠ Votre code secret n'est plus affiché ici : il est protégé côté serveur et jamais transmis au navigateur. Un administrateur peut le réinitialiser si besoin.</p>
+    <p class="form-hint">Connexion via Steam — aucun code à retenir. Si ton accès ne fonctionne plus, demande à un administrateur de vérifier la liste blanche.</p>
   </div>
 </div>
 
@@ -1826,7 +1786,6 @@ let pendingPhotoWanted = null;
 /* galerie multi-photos */
 let _gallerySlots = []; // [{url,position,file,objUrl}]
 const _GALLERY_MAX = 5;
-let pendingUser = null; // données whitelist en attente de vérification code
 let allPourfendeurs = [], allWanted = [], allLogs = [];
 let registreFilter = 'all', logFilter = 'all', searchQuery = '';
 const _openBreathGroups = new Set(); // bandes "Souffle de..." dépliées — repliées par défaut
@@ -2051,62 +2010,8 @@ function _carouselStopAuto(){
   if(_carouselTimer){clearInterval(_carouselTimer);_carouselTimer=null;}
 }
 
-/* ═══ AUTH — LOGIN MULTI-ÉTAPES ═══ */
-window.openLoginModal = () => { goStep(1); openModal('modalLogin'); };
-
-window.goStep = (n) => {
-  document.querySelectorAll('.login-step').forEach(s => s.classList.remove('active'));
-  document.getElementById('step' + n)?.classList.add('active');
-  if (n === 1) { document.getElementById('loginSteamId').value = ''; }
-};
-
-window.checkSteamId = async () => {
-  const steamId = document.getElementById('loginSteamId').value.trim();
-  if (!steamId) { toast('Entrez votre Steam ID.','warn'); return; }
-  const btn = document.getElementById('btnStep1');
-  btn.disabled = true; btn.textContent = 'Vérification...';
-  socket.emit('auth:checkSteamId', steamId, (res) => {
-    btn.disabled=false; btn.textContent='Continuer →';
-    if (!res?.ok) { toast('Erreur : ' + (res?.error||'connexion impossible'),'error'); return; }
-    if (!res.exists) { toast('Steam ID non autorisé.','error'); return; }
-    pendingUser = { steamId, name: res.name };
-    if (!res.hasCode) {
-      // Première connexion
-      document.getElementById('welcomeName').textContent = `Bienvenue, ${pendingUser.name || steamId} !`;
-      goStep('2a');
-    } else {
-      document.getElementById('welcomeName2').textContent = pendingUser.name || steamId;
-      document.getElementById('loginCode').value = '';
-      goStep('2b');
-    }
-  });
-};
-
-window.createCode = async () => {
-  const code = document.getElementById('newCode').value;
-  const confirm = document.getElementById('newCodeConfirm').value;
-  if (code.length < 4) { toast('Code trop court (min. 4 caractères).','warn'); return; }
-  if (code !== confirm) { toast('Les codes ne correspondent pas.','warn'); return; }
-  const btn = document.getElementById('btnStep2a');
-  btn.disabled = true; btn.textContent = 'Création...';
-  socket.emit('auth:createCode', { steamId: pendingUser.steamId, code }, (res) => {
-    btn.disabled=false; btn.textContent='Valider mon Code ✓';
-    if (!res?.ok) { toast('Erreur : ' + (res?.error||'inconnue'),'error'); return; }
-    finishLogin(pendingUser.steamId, res);
-  });
-};
-
-window.verifyCode = async () => {
-  const code = document.getElementById('loginCode').value;
-  if (!code) { toast('Entrez votre code.','warn'); return; }
-  const btn = document.getElementById('btnStep2b');
-  btn.disabled=true; btn.textContent='Vérification...';
-  socket.emit('auth:verifyCode', { steamId: pendingUser.steamId, code }, (res) => {
-    btn.disabled=false; btn.textContent='Accéder aux Archives ⚔';
-    if (!res?.ok) { toast(res?.error || 'Code incorrect.','error'); return; }
-    finishLogin(pendingUser.steamId, res);
-  });
-};
+/* ═══ AUTH — CONNEXION VIA STEAM ═══ */
+window.openLoginModal = () => { openModal('modalLogin'); };
 
 function finishLogin(steamId, res) {
   const roles = toRolesArray(res.roles);
@@ -2116,6 +2021,30 @@ function finishLogin(steamId, res) {
   onUserLogin();
   toast(`Accès accordé, ${currentUser.name}.`, 'success');
 }
+
+// Retour de /auth/steam/return : la page se recharge avec ?steamcode=...
+// (ou ?steamerror=...) — on échange ce code à usage unique contre un vrai
+// token JWT via le socket, puis on nettoie l'URL. Différé à DOMContentLoaded
+// car window.toast n'est défini que plus loin dans ce même script.
+function handleSteamCallback(){
+  const params = new URLSearchParams(location.search);
+  const code = params.get('steamcode');
+  const error = params.get('steamerror');
+  if(!code && !error) return;
+  history.replaceState(null, '', location.pathname);
+  if(error){
+    toast(error === 'unregistered' ? "Ce compte Steam n'est pas autorisé — demande à un administrateur de t'ajouter à la liste blanche." : 'Connexion Steam échouée — réessaie.', 'error');
+    return;
+  }
+  socket.emit('auth:steamLogin', code, (res) => {
+    if(!res?.ok){ toast(res?.error || 'Connexion Steam échouée.', 'error'); return; }
+    finishLogin(res.steamId, res);
+  });
+}
+// Un script type="module" s'exécute avant DOMContentLoaded (comme un
+// script "defer") : document.readyState n'est donc jamais 'loading' ici,
+// mais l'événement n'a pas encore eu lieu — on peut toujours s'y abonner.
+document.addEventListener('DOMContentLoaded', handleSteamCallback);
 
 // Auto-login depuis le token stocké localement
 (function autoLogin() {
@@ -3092,7 +3021,7 @@ function renderWhitelist(){
         </div>
         <div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap;justify-content:flex-end">
           <div style="display:flex;gap:4px;flex-wrap:wrap">${badges}</div>
-          ${isAdmin?`<button class="btn btn-ghost btn-sm" onclick="openChangeRole('${u._id}','${escapedName}','${roles.join(',')}')" title="Changer les rôles">✎ Rôles</button><button class="btn btn-ghost btn-sm" onclick="resetCode('${u._id}','${escapedName}')">↺ Code</button><button class="btn btn-danger btn-sm" onclick="removeFromWhitelist('${u._id}','${escapedName}')">✕</button>`:''}
+          ${isAdmin?`<button class="btn btn-ghost btn-sm" onclick="openChangeRole('${u._id}','${escapedName}','${roles.join(',')}')" title="Changer les rôles">✎ Rôles</button><button class="btn btn-danger btn-sm" onclick="removeFromWhitelist('${u._id}','${escapedName}')">✕</button>`:''}
         </div>
       </div>`;
     });
@@ -3152,16 +3081,7 @@ window.addToWhitelist=async()=>{
   socket.emit('whitelist:add', {steamId, name:name||steamId, roles:newRoles}, (res)=>{
     if(!res?.ok){toast('Erreur : '+(res?.error||'inconnue'),'error');return;}
     document.getElementById('wlSteamId').value='';document.getElementById('wlName').value='';
-    toast(`${name||steamId} ajouté. Il pourra choisir son code à sa première connexion.`,'success');
-  });
-};
-
-window.resetCode=async(steamId,name)=>{
-  if(!currentUser||!hasAnyRole('admin','superadmin'))return;
-  if(!confirm(`Réinitialiser le code de ${name} ? Il devra en choisir un nouveau à sa prochaine connexion.`))return;
-  socket.emit('whitelist:resetCode', steamId, (res)=>{
-    if(!res?.ok){toast('Erreur : '+(res?.error||'inconnue'),'error');return;}
-    toast(`Code de ${name} réinitialisé.`,'warn');
+    toast(`${name||steamId} ajouté. Il peut se connecter avec Steam dès maintenant.`,'success');
   });
 };
 
