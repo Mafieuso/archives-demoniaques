@@ -559,6 +559,16 @@ input[type=range].pos-slider::-moz-range-thumb{width:14px;height:14px;border-rad
 .sf-result-info{flex:1;min-width:0;}
 .sf-result-name{color:var(--gold);font-family:'Cinzel',serif;font-size:.72rem;letter-spacing:1px;}
 .sf-result-meta{color:var(--text-muted);font-size:.6rem;margin-top:1px;}
+.interro-search-wrap{max-width:520px;margin-bottom:28px;}
+.interro-empty-select{color:var(--text-muted);text-align:center;padding:50px 20px;font-family:'Cinzel',serif;font-size:.72rem;letter-spacing:2px;text-transform:uppercase;opacity:.6;border:1px dashed var(--border);border-radius:10px;}
+.interro-target-card{background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:22px 26px;margin-bottom:24px;animation:fadeUp .4s ease-out both;}
+.interro-target-top{display:flex;align-items:center;gap:16px;margin-bottom:14px;}
+.interro-target-photo{width:56px;height:56px;border-radius:8px;overflow:hidden;background:rgba(0,0,0,.5);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:1.3rem;}
+.interro-target-photo img{width:100%;height:100%;object-fit:cover;}
+.interro-target-name{font-family:'Cinzel',serif;font-size:1.05rem;letter-spacing:2px;color:var(--gold);}
+.interro-target-tags{display:flex;flex-wrap:wrap;gap:8px 20px;margin-top:4px;}
+.interro-tag{font-size:.68rem;letter-spacing:.5px;color:var(--text-muted);}
+.interro-tag b{color:var(--text);font-weight:600;}
 .sf-source-tag{font-size:.52rem;letter-spacing:2px;padding:1px 6px;border-radius:3px;background:rgba(255,255,255,.05);color:var(--text-muted);}
 .sf-source-tag.registre{color:#88ccff;border:1px solid rgba(136,204,255,.15);}
 .sf-source-tag.cible{color:#ffaaaa;border:1px solid rgba(255,100,100,.15);}
@@ -1122,6 +1132,7 @@ body{letter-spacing:.2px;}
     <li class="nav-item"><button class="nav-btn active" onclick="showSection('dashboard')" data-s="dashboard"><span class="nav-icon">🏛</span><span>Tableau de Bord</span></button></li>
     <li class="nav-item"><button class="nav-btn" onclick="showSection('registre')" data-s="registre"><span class="nav-icon">⚔</span><span>Registre</span><span class="nav-badge" id="badge-registre">0</span></button></li>
     <li class="nav-item"><button class="nav-btn" onclick="showSection('wanted')" data-s="wanted"><span class="nav-icon">🎯</span><span>Cibles Prioritaires</span><span class="nav-badge" id="badge-wanted" style="background:#8b0000">0</span></button></li>
+    <li class="nav-item"><button class="nav-btn" onclick="showSection('interrogatoire')" data-s="interrogatoire"><span class="nav-icon">🗨</span><span>Interrogatoire</span></button></li>
     <li class="nav-item"><button class="nav-btn" onclick="showSection('codex')" data-s="codex"><span class="nav-icon">📖</span><span>Codex</span></button></li>
     <div class="nav-divider"></div>
     <li class="nav-item" id="nav-historique" style="display:none"><button class="nav-btn" onclick="showSection('historique')" data-s="historique"><span class="nav-icon">🕰</span><span>Historique</span></button></li>
@@ -1352,6 +1363,21 @@ body{letter-spacing:.2px;}
           <button class="btn btn-gold" onclick="addToWhitelist()" style="width:100%">+ Ajouter à la Liste Blanche</button>
         </div>
       </div>
+    </section>
+
+    <!-- INTERROGATOIRE -->
+    <section id="section-interrogatoire" class="section">
+      <div class="section-title">Salle d'Interrogatoire</div>
+      <div class="section-sub">Recherche un Pourfendeur pour préparer ses questions de vérification</div>
+
+      <div class="interro-search-wrap sf-search-wrap">
+        <input class="form-input" id="interroSearchInput" placeholder="Rechercher un Pourfendeur par nom..." autocomplete="off" oninput="searchInterroTarget(this.value)" onfocus="searchInterroTarget(this.value)">
+        <div id="interroSearchResults" class="sf-search-results"></div>
+      </div>
+
+      <div id="interroStalePanel"></div>
+
+      <div id="interroTargetPanel"></div>
     </section>
 
     <!-- CODEX -->
@@ -2357,7 +2383,7 @@ function _onPourfendeursData(items){
   allPourfendeurs=items.filter(d=>!d.deleted)
     .sort((a,b)=>(hierarchyIdx[a.rang]||99)-(hierarchyIdx[b.rang]||99));
   document.getElementById('badge-registre').textContent=allPourfendeurs.length;
-  updateStats(); renderDashPreview(); renderVerifyWidget(); // léger, nécessaire dès le tableau de bord
+  updateStats(); renderDashPreview(); renderVerifyWidget(); renderInterroStale(); renderInterroTargetPanel(); // léger, nécessaire dès le tableau de bord
   if(_sectionRendered.registre) renderRegistre(); // le tableau complet n'est reconstruit que si déjà visité
 }
 socket.emit('pourfendeurs:join', {}, res=>{ if(res?.ok) _onPourfendeursData(res.items); });
@@ -2550,7 +2576,7 @@ window.openProfile=async(id)=>{
           <div class="fiche-history-body">${buildHistoryHTML('pourfendeurs',m.nom,m,[['rang','Rang'],['souffle','Souffle'],['statut','Statut'],['brigade','Brigade'],['jours','Jours de service']])}</div>
         </div>
         <div class="modal-footer" style="margin-top:auto;padding-top:16px;display:flex;gap:14px;align-items:center;flex-wrap:wrap">
-          ${currentUser?`<button class="btn btn-gold btn-sm" onclick="closeModal('modalProfile');openFormMembre('${m._id}')">✎ Modifier la fiche</button><button class="btn btn-reverify btn-sm" onclick="reverify('pourfendeurs','${m._id}','${(m.nom||'').replace(/'/g,"\\'")}')">✓ Revérifié</button><button class="btn btn-report btn-sm" onclick="openReport('pourfendeurs','${m._id}','${(m.nom||'').replace(/'/g,"\\'")}')">🚩 Signaler</button><button class="btn btn-interro btn-sm" onclick="openInterrogation('pourfendeur','${m._id}')">🗨 Questions d'interrogatoire</button>`:''}
+          ${currentUser?`<button class="btn btn-gold btn-sm" onclick="closeModal('modalProfile');openFormMembre('${m._id}')">✎ Modifier la fiche</button><button class="btn btn-reverify btn-sm" onclick="reverify('pourfendeurs','${m._id}','${(m.nom||'').replace(/'/g,"\\'")}')">✓ Revérifié</button><button class="btn btn-report btn-sm" onclick="openReport('pourfendeurs','${m._id}','${(m.nom||'').replace(/'/g,"\\'")}')">🚩 Signaler</button><button class="btn btn-interro btn-sm" onclick="goToInterrogatoire('${m._id}')">🗨 Questions d'interrogatoire</button>`:''}
           <button class="btn btn-ghost btn-sm" onclick="printFiche()">🖨 Imprimer</button>
         </div>
       </div>
@@ -2565,7 +2591,7 @@ window.openProfile=async(id)=>{
    question fermée par oui/non, pour qu'une réponse fausse soit un vrai
    signal. Formulées en désignant la cible par son nom plutôt que par un
    pronom, pour ne pas avoir à deviner un genre. */
-function generateInterrogationQuestions(type, entity){
+function generateInterrogationQuestions(type, entity, roster){
   const qs=[];
   if(type==='pourfendeur'){
     const nom=entity.nom||'ce Pourfendeur';
@@ -2577,6 +2603,28 @@ function generateInterrogationQuestions(type, entity){
     if(entity.jours) qs.push({q:`Depuis approximativement combien de temps ${nom} est-il en service ? (une estimation proche est acceptable)`,a:`${entity.jours} jours`});
     if(entity.statut) qs.push({q:`${nom} est-il toujours en service, à la retraite, ou tombé au combat ?`,a:entity.statut});
     if(entity.info) qs.push({q:`Que peux-tu dire des observations récentes rapportées sur ${nom} ?`,a:entity.info});
+
+    /* Questions croisées — nécessitent le reste du registre pour comparer
+       la cible à ses pairs de Souffle et de brigade. */
+    if(Array.isArray(roster)&&roster.length){
+      const autres=roster.filter(p=>p._id!==entity._id&&p.statut!=='Mort');
+      if(entity.souffle){
+        const memesSouffle=autres.filter(p=>p.souffle===entity.souffle);
+        if(memesSouffle.length){
+          const noms=memesSouffle.map(p=>p.nom).filter(Boolean).slice(0,5).join(', ');
+          qs.push({q:`Cite un autre Pourfendeur pratiquant, comme ${nom}, le ${entity.souffle} ?`,a:noms||'—'});
+        }
+        const hg=memesSouffle.filter(p=>p.rang!==entity.rang).sort((a,b)=>(hierarchyIdx[a.rang]??99)-(hierarchyIdx[b.rang]??99))[0];
+        if(hg) qs.push({q:`Qui est le Haut Gradé (HG) référent du ${entity.souffle} ?`,a:hg.nom});
+      }
+      if(entity.brigade){
+        const memeBrigade=autres.filter(p=>p.brigade===entity.brigade);
+        if(memeBrigade.length){
+          const noms=memeBrigade.map(p=>p.nom).filter(Boolean).slice(0,5).join(', ');
+          qs.push({q:`Cite un autre membre de la brigade "${entity.brigade}" à laquelle ${nom} est rattaché ?`,a:noms||'—'});
+        }
+      }
+    }
   } else if(type==='wanted'){
     const nom=`${entity.prenom||''} ${entity.nom||''}`.trim()||'cette cible';
     if(entity.grade) qs.push({q:`Quel rang était attribué à ${nom} avant sa désignation comme cible ?`,a:entity.grade});
@@ -2602,6 +2650,90 @@ window.openInterrogation=(type,id)=>{
     :`<div class="interro-empty">Trop peu d'informations connues sur ${name} pour générer des questions fiables.</div>`;
   openModal('modalInterrogation');
 };
+
+/* ═══ SECTION INTERROGATOIRE ═══ (recherche + questions croisées) */
+let _interroSelectedId=null;
+
+window.goToInterrogatoire=(id)=>{
+  _interroSelectedId=id;
+  closeModal('modalProfile');
+  showSection('interrogatoire');
+  renderInterroTargetPanel();
+};
+
+window.searchInterroTarget=(val)=>{
+  const resultsEl=document.getElementById('interroSearchResults');
+  const q=val.trim().toLowerCase();
+  if(!q){resultsEl.style.display='none';return;}
+  const results=allPourfendeurs
+    .filter(p=>p.statut!=='Mort'&&((p.nom||'').toLowerCase().includes(q)||(p.souffle||'').toLowerCase().includes(q)||(p.brigade||'').toLowerCase().includes(q)))
+    .slice(0,8);
+  if(!results.length){resultsEl.style.display='none';return;}
+  resultsEl.innerHTML=results.map(p=>`<div class="sf-result" onclick="selectInterroTarget('${p._id}')">
+    <div class="sf-result-photo">${p.photos?.[0]?`<img src="${photoSrc('pourfendeurs',p._id,p.photos[0],0)}" alt="">`:'⚔'}</div>
+    <div class="sf-result-info">
+      <div class="sf-result-name">${p.nom||'—'}</div>
+      <div class="sf-result-meta">${p.rang||''}${p.souffle?' · '+p.souffle:''}</div>
+    </div>
+  </div>`).join('');
+  resultsEl.style.display='block';
+};
+document.addEventListener('click',e=>{if(!e.target.closest('#section-interrogatoire .sf-search-wrap'))document.getElementById('interroSearchResults')&&(document.getElementById('interroSearchResults').style.display='none');});
+
+window.selectInterroTarget=(id)=>{
+  _interroSelectedId=id;
+  document.getElementById('interroSearchResults').style.display='none';
+  const p=allPourfendeurs.find(x=>x._id===id);
+  document.getElementById('interroSearchInput').value=p?.nom||'';
+  renderInterroTargetPanel();
+};
+
+function renderInterroTargetPanel(){
+  const c=document.getElementById('interroTargetPanel'); if(!c)return;
+  const m=allPourfendeurs.find(x=>x._id===_interroSelectedId);
+  if(!m){
+    c.innerHTML=`<div class="interro-empty-select">Recherche un Pourfendeur ci-dessus, ou choisis une suggestion à revérifier</div>`;
+    return;
+  }
+  const qs=generateInterrogationQuestions('pourfendeur',m,allPourfendeurs);
+  c.innerHTML=`<div class="interro-target-card">
+    <div class="interro-target-top">
+      <div class="interro-target-photo">${m.photos?.[0]?`<img src="${photoSrc('pourfendeurs',m._id,m.photos[0],0)}" alt="">`:'⚔'}</div>
+      <div>
+        <div class="interro-target-name">${m.nom||'—'}</div>
+        <div class="interro-target-tags">
+          <span class="interro-tag">Grade&nbsp;<b>${m.rang||'—'}</b></span>
+          <span class="interro-tag">Souffle&nbsp;<b>${m.souffle||'—'}</b></span>
+          <span class="interro-tag">Brigade&nbsp;<b>${m.brigade||'—'}</b></span>
+        </div>
+      </div>
+    </div>
+    <div class="interro-list">${qs.length?qs.map((item,i)=>`<div class="interro-item" style="animation-delay:${i*.05}s"><div class="interro-q">${item.q}</div><div class="interro-a">Réponse attendue : <b>${item.a}</b></div></div>`).join('')
+      :`<div class="interro-empty">Trop peu d'informations connues sur ${m.nom} pour générer des questions fiables.</div>`}</div>
+  </div>`;
+}
+
+function renderInterroStale(){
+  const c=document.getElementById('interroStalePanel'); if(!c)return;
+  const items=allPourfendeurs.filter(m=>m.statut!=='Mort').map(m=>({m,f:freshnessState(m.updatedAt)})).filter(x=>x.f.cls!=='fresh-ok');
+  items.sort((a,b)=>(b.f.days??999)-(a.f.days??999));
+  const top=items.slice(0,6);
+  if(!top.length){c.innerHTML='';return;}
+  c.innerHTML=`<div class="verify-widget">
+    <div class="verify-widget-header">
+      <div class="verify-widget-title">⚠ Sujets à revérifier</div>
+      <div class="verify-widget-count">${items.length} au total — cliquer pour préparer l'interrogatoire</div>
+    </div>
+    <div class="verify-list">${top.map(({m,f})=>`
+      <div class="verify-row">
+        <span class="fresh-dot" style="color:${f.days>FRESH_STALE_DAYS?'#ff5544':'#e8a800'}"></span>
+        <span class="verify-row-name" onclick="selectInterroTarget('${m._id}')">${m.nom||'—'}<br><span class="verify-row-meta">${m.rang||''}${m.souffle?' · '+m.souffle:''} · ${f.days===999?'jamais vérifié':f.days+'j sans vérification'}</span></span>
+        <button class="btn btn-interro btn-sm" onclick="selectInterroTarget('${m._id}')">🗨 Interroger</button>
+      </div>`).join('')}
+    </div>
+  </div>`;
+}
+renderInterroTargetPanel(); // affiche l'état vide dès le chargement, avant toute donnée reçue
 
 /* ═══ SPHÈRE SECRÈTE ═══ */
 let allSphere=[];
