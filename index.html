@@ -245,7 +245,12 @@ input,select,textarea{font-family:inherit;}
 
 /* ── PROFILE — layout dossier split ── */
 /* ── Fiche Pourfendeur : portrait en en-tête, nom en surimpression ── */
-.profile-dossier{display:flex;flex-direction:column;border-radius:12px;overflow:hidden;background:#060302;}
+.profile-dossier{display:flex;flex-direction:column;border-radius:12px;overflow:hidden;background:#060302;border:1px solid rgba(var(--pbcrgb,201,162,39),.22);}
+.profile-dossier[data-tier="elite"]{border-color:rgba(var(--pbcrgb,201,162,39),.5);box-shadow:0 0 50px -12px rgba(var(--pbcrgb,201,162,39),.4),0 0 0 1px rgba(var(--pbcrgb,201,162,39),.15) inset;}
+.profile-dossier[data-tier="elite"] .profile-img-accent{height:4px;box-shadow:0 0 14px rgba(var(--pbcrgb,201,162,39),.65);}
+.profile-dossier[data-tier="elite"] .profile-name{text-shadow:0 2px 20px rgba(0,0,0,.8),0 0 26px rgba(var(--pbcrgb,201,162,39),.4);}
+.profile-dossier[data-tier="elite"] .profile-id-line{color:rgba(var(--pbcrgb,201,162,39),.85);}
+.profile-elite-tag{font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:2px;text-transform:uppercase;color:var(--pbc,#c9a227);border:1px solid rgba(var(--pbcrgb,201,162,39),.45);padding:3px 11px;border-radius:20px;background:rgba(var(--pbcrgb,201,162,39),.1);}
 .profile-col-img{position:relative;width:100%;height:340px;flex-shrink:0;background:#030201;overflow:hidden;}
 .profile-col-img img{width:100%;height:100%;object-fit:cover;display:block;}
 .profile-portrait-ph{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:5rem;color:rgba(201,162,39,.08);}
@@ -259,7 +264,8 @@ input,select,textarea{font-family:inherit;}
 .profile-souffle-tag{font-family:'Cormorant',serif;font-size:.72rem;letter-spacing:1px;color:var(--pbc,#c9a227);padding:3px 0;}
 /* Corps : contenu en flux simple, sans grille de boîtes */
 .profile-col-info{flex:1;display:flex;flex-direction:column;padding:24px 30px 22px;position:relative;overflow-y:auto;max-height:420px;}
-.profile-stat-strip{display:flex;align-items:center;gap:18px;flex-wrap:wrap;margin-bottom:20px;padding-bottom:18px;border-bottom:1px solid rgba(255,255,255,.08);}
+.profile-col-info::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 100% 0%,rgba(var(--pbcrgb,201,162,39),.05) 0%,transparent 55%);pointer-events:none;}
+.profile-stat-strip{display:flex;align-items:center;gap:18px;flex-wrap:wrap;margin-bottom:20px;padding-bottom:18px;border-bottom:1px solid rgba(var(--pbcrgb,201,162,39),.16);position:relative;}
 .pf-stat{display:flex;align-items:baseline;gap:6px;}
 .pf-stat-val{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:600;font-size:1.3rem;color:var(--pbc,#c9a227);}
 .pf-stat-label{font-family:'Cormorant',serif;font-size:.72rem;letter-spacing:1px;color:var(--text-muted);text-transform:uppercase;}
@@ -483,8 +489,6 @@ input[type=range].pos-slider::-moz-range-thumb{width:14px;height:14px;border-rad
 /* Effets cartes */
 .stat-card{transition:.25s;cursor:default;}
 .stat-card:hover{transform:translateY(-4px);box-shadow:0 12px 40px rgba(0,0,0,.7),0 0 20px rgba(201,162,39,.08);}
-.breath-group{transition:.2s;}
-.breath-group:hover{box-shadow:0 12px 40px rgba(0,0,0,.6),0 0 1px rgba(255,255,255,.05);}
 /* Glow section title */
 .section-title{text-shadow:0 0 30px rgba(201,162,39,.25);}
 .divider{height:1px;background:var(--border);margin:16px 0;}
@@ -908,7 +912,6 @@ body::after{content:'';position:fixed;left:0;width:100%;height:2px;background:li
 .stat-card:hover,.admin-card:hover{transform:translateY(-3px);box-shadow:0 14px 34px rgba(0,0,0,.55);}
 .wanted-card:hover{transform:translateY(-4px) scale(1.008);}
 .sphere-card:hover{transform:translateY(-3px);}
-.breath-group:hover{box-shadow:0 10px 30px rgba(0,0,0,.4);}
 
 /* ── Coins ornés : légère respiration au survol du conteneur ── */
 .wanted-card:hover .profile-corner,.sphere-card:hover .profile-corner,.admin-card:hover .profile-corner{opacity:.6;}
@@ -2196,6 +2199,10 @@ const souffleEmoji = {"Souffle de l'Eau":'🌊',"Souffle de la Flamme":'🔥',"S
 const hierarchyIdx={"Maître des Pourfendeurs":0,"Conseiller":1,"Pilier":2,"Kinoe":3,"Kinoto":4,"Hinoe":5,"Hinoto":6,"Tsuchinoe":7,"Tsuchinoto":8,"Kanoe":9,"Kanoto":10,"Mizunoe":11,"Mizunoto":12};
 const rankScore={"Maître des Pourfendeurs":100,"Conseiller":95,"Pilier":88,"Kinoe":75,"Kinoto":62,"Hinoe":50,"Hinoto":40,"Tsuchinoe":32,"Tsuchinoto":24,"Kanoe":18,"Kanoto":13,"Mizunoe":9,"Mizunoto":5};
 const logColors={'INSCRIPTION':'#00cc88','MODIFICATION':'#00a2ff','SUPPRESSION':'#ff3300','DÉSIGNATION':'#8b0000','MISSION_CRÉÉE':'#c9a227','CONNEXION':'#666','RESTAURATION':'#00ffaa','VÉRIFICATION':'#00cc88','SIGNALEMENT':'#ff8c00'};
+function hexToRgb(hex){
+  const m=/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex||'');
+  return m?`${parseInt(m[1],16)},${parseInt(m[2],16)},${parseInt(m[3],16)}`:'201,162,39';
+}
 
 /* ── Seuils de fraîcheur (en jours) — à ajuster selon votre rythme de mise à jour ── */
 const FRESH_WARN_DAYS=7;   // au-delà : orange
@@ -2420,7 +2427,7 @@ function renderRegistre(){
       const emoji=souffleEmoji[souffle]||'⚔';
       const isOpen=_openBreathGroups.has(souffle);
       const souffleEsc=souffle.replace(/'/g,"\\'");
-      return `<div class="breath-group${isOpen?' open':''}" style="--bc:${color}"><div class="breath-header" onclick="toggleBreathGroup('${souffleEsc}',this)"><span class="breath-icon">${emoji}</span><span class="breath-name">${souffle}</span><span class="breath-count">${membres.length} membre${membres.length>1?'s':''}</span><span class="breath-chevron">▾</span></div><div class="breath-body"><table class="member-table"><tbody>${membres.map(buildMemberRow).join('')}</tbody></table></div></div>`;
+      return `<div class="breath-group${isOpen?' open':''}" style="--bc:${color};--bcrgb:${hexToRgb(color)}"><div class="breath-header" onclick="toggleBreathGroup('${souffleEsc}',this)"><span class="breath-icon">${emoji}</span><span class="breath-name">${souffle}</span><span class="breath-count">${membres.length} membre${membres.length>1?'s':''}</span><span class="breath-chevron">▾</span></div><div class="breath-body"><table class="member-table"><tbody>${membres.map(buildMemberRow).join('')}</tbody></table></div></div>`;
     }).join('');
   }
 
@@ -2523,6 +2530,8 @@ window.deleteMembre=async(id,nom)=>{
 window.openProfile=async(id)=>{
   const m=allPourfendeurs.find(x=>x._id===id);if(!m)return;
   const color=souffleColors[m.souffle]||'#888';
+  const colorRgb=hexToRgb(color);
+  const isElite=(hierarchyIdx[m.rang]??99)<=2; // Pilier, Conseiller, Maître des Pourfendeurs
   const statutColor={'Vivant':'#00cc88','Mort':'#666','Retraité':'#c9a227'}[m.statut]||'#888';
   const statutDot=`<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${statutColor};box-shadow:0 0 6px ${statutColor};margin-right:5px;vertical-align:middle"></span>`;
   const extras=[
@@ -2546,17 +2555,19 @@ window.openProfile=async(id)=>{
       </div>`
     :`<div class="profile-portrait-ph">⚔</div>`;
   document.getElementById('profileContent').innerHTML=`
-    <div class="profile-dossier" style="--pbc:${color}">
+    <div class="profile-dossier"${isElite?' data-tier="elite"':''} style="--pbc:${color};--pbcrgb:${colorRgb}">
       <div class="profile-col-img">
         ${portraitCol}
         <div class="profile-img-overlay"></div>
         <div class="profile-img-accent"></div>
+        ${isElite?`<div class="profile-corner tl"></div><div class="profile-corner tr"></div><div class="profile-corner bl"></div><div class="profile-corner br"></div>`:''}
         <div class="profile-header-overlay">
-          <div class="profile-id-line">Ordre des Démons · Archive des Pourfendeurs</div>
+          <div class="profile-id-line">Ordre des Démons · ${isElite?'Archive des Hauts Gradés':'Archive des Pourfendeurs'}</div>
           <div class="profile-name">${m.nom}</div>
           <div class="profile-rang-row">
             <span class="badge badge-default" style="border-color:rgba(255,255,255,.3);color:#fff;background:rgba(0,0,0,.5);font-size:.68rem;padding:3px 12px">${m.rang||'—'}</span>
             ${m.souffle?`<span class="profile-souffle-tag">${souffleEmoji[m.souffle]||'⚔'} ${m.souffle}</span>`:''}
+            ${isElite?`<span class="profile-elite-tag">✦ Haut Gradé</span>`:''}
           </div>
         </div>
       </div>
@@ -3601,7 +3612,7 @@ window.setMusicVol = (v) => {
 
 /* ═══ TILT 3D + REFLET SUR LES CARTES ═══ */
 (function cxTilt(){
-  const SEL='.stat-card,.wanted-card,.sphere-card,.pilier-card,.conseiller-card,.maitre-card,.breath-group';
+  const SEL='.stat-card,.wanted-card,.sphere-card,.pilier-card,.conseiller-card,.maitre-card';
   let current=null;
   document.addEventListener('mousemove',e=>{
     const card=e.target.closest(SEL);
