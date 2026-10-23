@@ -563,16 +563,6 @@ input[type=range].pos-slider::-moz-range-thumb{width:14px;height:14px;border-rad
 .sf-result-info{flex:1;min-width:0;}
 .sf-result-name{color:var(--gold);font-family:'Cinzel',serif;font-size:.72rem;letter-spacing:1px;}
 .sf-result-meta{color:var(--text-muted);font-size:.6rem;margin-top:1px;}
-.interro-search-wrap{max-width:520px;margin-bottom:28px;}
-.interro-empty-select{color:var(--text-muted);text-align:center;padding:50px 20px;font-family:'Cinzel',serif;font-size:.72rem;letter-spacing:2px;text-transform:uppercase;opacity:.6;border:1px dashed var(--border);border-radius:10px;}
-.interro-target-card{background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:22px 26px;margin-bottom:24px;animation:fadeUp .4s ease-out both;}
-.interro-target-top{display:flex;align-items:center;gap:16px;margin-bottom:14px;}
-.interro-target-photo{width:56px;height:56px;border-radius:8px;overflow:hidden;background:rgba(0,0,0,.5);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:1.3rem;}
-.interro-target-photo img{width:100%;height:100%;object-fit:cover;}
-.interro-target-name{font-family:'Cinzel',serif;font-size:1.05rem;letter-spacing:2px;color:var(--gold);}
-.interro-target-tags{display:flex;flex-wrap:wrap;gap:8px 20px;margin-top:4px;}
-.interro-tag{font-size:.68rem;letter-spacing:.5px;color:var(--text-muted);}
-.interro-tag b{color:var(--text);font-weight:600;}
 .sf-source-tag{font-size:.52rem;letter-spacing:2px;padding:1px 6px;border-radius:3px;background:rgba(255,255,255,.05);color:var(--text-muted);}
 .sf-source-tag.registre{color:#88ccff;border:1px solid rgba(136,204,255,.15);}
 .sf-source-tag.cible{color:#ffaaaa;border:1px solid rgba(255,100,100,.15);}
@@ -816,27 +806,8 @@ body::after{content:'';position:fixed;left:0;width:100%;height:2px;background:li
 
 /* ══════════════════════ AJOUTS — FRAÎCHEUR / FIABILITÉ / SIGNALEMENTS ══════════════════════ */
 
-/* ── Badge de fraîcheur (vérification) ── */
-.fresh-badge{display:inline-flex;align-items:center;gap:5px;font-family:'Cinzel',serif;font-size:.54rem;letter-spacing:1.5px;text-transform:uppercase;padding:3px 9px;border-radius:20px;border:1px solid;white-space:nowrap;}
-.fresh-ok{color:#00cc88;border-color:rgba(0,204,136,.35);background:rgba(0,204,136,.06);}
-.fresh-warn{color:#e8a800;border-color:rgba(232,168,0,.4);background:rgba(232,168,0,.07);}
-.fresh-stale{color:#ff5544;border-color:rgba(255,85,68,.45);background:rgba(255,85,68,.08);animation:freshStalePulse 2.6s ease-in-out infinite;}
 @keyframes freshStalePulse{0%,100%{box-shadow:0 0 0 rgba(255,68,50,0)}50%{box-shadow:0 0 10px rgba(255,68,50,.35)}}
-.fresh-dot{width:6px;height:6px;border-radius:50%;background:currentColor;flex-shrink:0;}
-.btn-reverify{border-color:rgba(0,204,136,.35);color:#00cc88;}
-.btn-reverify:hover{background:rgba(0,204,136,.1);}
 
-/* ── Widget "À vérifier" (dashboard) ── */
-.verify-widget{background:var(--card-bg);border:1px solid var(--border);border-top:3px solid #e8a800;border-radius:10px;padding:20px 22px;margin-bottom:32px;animation:fadeUp .5s ease-out both;}
-.verify-widget-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
-.verify-widget-title{font-family:'Cinzel',serif;font-size:.85rem;letter-spacing:3px;text-transform:uppercase;color:#e8a800;display:flex;align-items:center;gap:8px;}
-.verify-widget-count{font-family:'Cinzel',serif;font-size:.6rem;color:var(--text-muted);letter-spacing:1px;}
-.verify-list{display:flex;flex-direction:column;gap:6px;}
-.verify-row{display:grid;grid-template-columns:auto 1fr auto auto;align-items:center;gap:12px;padding:9px 12px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.05);border-radius:6px;font-size:.75rem;}
-.verify-row-name{font-weight:600;color:var(--text);cursor:pointer;}
-.verify-row-name:hover{color:var(--gold);}
-.verify-row-meta{font-size:.62rem;color:var(--text-muted);}
-.verify-empty{color:var(--text-muted);text-align:center;padding:18px;font-family:'Cinzel',serif;font-size:.65rem;letter-spacing:2px;}
 
 /* ── Fiabilité (Confirmé / Non confirmé / Contesté) ── */
 .reliab-pill{display:inline-flex;align-items:center;gap:5px;font-family:'Cinzel',serif;font-size:.5rem;letter-spacing:1.5px;text-transform:uppercase;padding:3px 10px;border-radius:20px;border:1px solid;}
@@ -885,7 +856,6 @@ body::after{content:'';position:fixed;left:0;width:100%;height:2px;background:li
   .topbar-search{display:none;}
   #globalSearch{width:150px;}
   .stats-grid{grid-template-columns:repeat(2,1fr);}
-  .verify-row{grid-template-columns:1fr;text-align:left;}
   .form-grid{grid-template-columns:1fr!important;}
 }
 
@@ -969,7 +939,7 @@ body *:not(.sidebar-logo-title):not(.sidebar-logo-title *):not(.splash-title):no
   font-family:'Cormorant Garamond',serif;
 }
 .sidebar-logo-sub,.splash-sub,.section-sub,#readonlyBadge,#btnLoginOpen,#topbarUserInfo,
-.nav-btn,.nav-badge,.filter-chip,.badge,.wl-role,.reliab-pill,.fresh-badge,.profile-classified-stamp,
+.nav-btn,.nav-badge,.filter-chip,.badge,.wl-role,.reliab-pill,.profile-classified-stamp,
 .sphere-stamp,.wanted-seal,.wanted-grade,.danger-label,.interro-kicker,.interro-q{
   font-family:'Cormorant',serif;font-weight:500;
 }
@@ -997,7 +967,6 @@ body{letter-spacing:.2px;}
 .btn-ghost{color:var(--text-muted);}
 .btn-ghost:hover{color:var(--text);}
 .btn-success{color:#00cc88;}
-.btn-reverify{color:#00cc88;}
 .btn-report{color:#ffaa44;}
 .btn-interro{color:#ff8080;}
 .form-submit{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:600;font-size:1rem;
@@ -1047,6 +1016,62 @@ body{letter-spacing:.2px;}
   .modal-box{box-shadow:none!important;border:1px solid #000!important;color:#000!important;background:#fff!important;}
   .modal-overlay:not(.print-target){display:none!important;}
 }
+/* ── Salle d'Interrogatoire (formulaire d'identité + questions) ── */
+.iq-grid{display:grid;grid-template-columns:minmax(300px,400px) minmax(0,1fr);gap:22px;align-items:start;}
+.iq-col{display:flex;flex-direction:column;gap:18px;min-width:0;}
+.iq-card{background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:18px 20px;animation:fadeUp .35s ease-out both;}
+.iq-card-title{font-family:'Cinzel',serif;font-size:.7rem;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:14px;}
+.iq-empty{color:var(--text-muted);font-size:.74rem;line-height:1.7;text-align:center;padding:14px 6px;}
+.iq-nomatch{font-size:.76rem;line-height:1.7;color:var(--text);}
+.iq-nomatch span{color:var(--text-muted);font-size:.68rem;}
+.iq-alert{border-radius:8px;padding:10px 14px;margin-bottom:10px;font-size:.74rem;line-height:1.6;}
+.iq-alert.danger{background:rgba(200,0,0,.12);border:1px solid rgba(255,68,68,.45);color:#ff9a9a;}
+.iq-cand{display:flex;align-items:center;gap:12px;padding:9px 12px;border:1px solid rgba(255,255,255,.06);border-radius:8px;margin-bottom:6px;cursor:pointer;transition:.15s;}
+.iq-cand:hover{background:rgba(201,162,39,.06);}
+.iq-cand.sel{border-color:var(--gold);background:rgba(201,162,39,.09);}
+.iq-cand.wanted.sel{border-color:#ff4444;background:rgba(255,68,68,.08);}
+.iq-cand-photo{width:38px;height:38px;border-radius:6px;overflow:hidden;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:1rem;}
+.iq-cand-photo img{width:100%;height:100%;object-fit:cover;}
+.iq-cand-info{flex:1;min-width:0;}
+.iq-cand-name{font-family:'Cinzel',serif;font-size:.78rem;letter-spacing:1px;color:var(--gold);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.iq-cand-meta{font-size:.62rem;color:var(--text-muted);margin-top:1px;}
+.iq-cand-score{font-family:'Cinzel',serif;font-size:.62rem;color:var(--text-muted);}
+.iq-check-head,.iq-check{display:grid;grid-template-columns:.9fr 1fr 1.2fr 22px;gap:8px;align-items:start;font-size:.7rem;padding:7px 0;}
+.iq-check-head{font-family:'Cinzel',serif;font-size:.52rem;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);border-bottom:1px solid rgba(255,255,255,.06);}
+.iq-check{border-bottom:1px solid rgba(255,255,255,.04);}
+.iq-check:last-child{border-bottom:none;}
+.iq-check-label{color:var(--text-muted);}
+.iq-check em{display:block;font-style:normal;font-size:.6rem;color:var(--text-muted);margin-top:2px;}
+.iq-check-ico{font-weight:700;text-align:center;}
+.iq-check.ok .iq-check-ico{color:#00cc88;} .iq-check.warn .iq-check-ico{color:#e8a800;} .iq-check.bad .iq-check-ico{color:#ff5544;}
+.iq-check.bad{background:rgba(255,68,68,.06);}
+.iq-verdict{border-radius:10px;padding:16px 20px;border:1px solid var(--border);background:var(--card-bg);position:sticky;top:8px;z-index:5;}
+.iq-verdict-label{font-family:'Cinzel',serif;font-size:1rem;letter-spacing:4px;}
+.iq-verdict-hint{font-size:.7rem;color:var(--text-muted);margin-top:4px;}
+.iq-verdict-count{display:flex;gap:16px;margin-top:10px;font-family:'Cinzel',serif;font-size:.7rem;letter-spacing:1px;}
+.iq-verdict-count .ok{color:#00cc88;} .iq-verdict-count .evasif{color:#e8a800;} .iq-verdict-count .faux{color:#ff5544;}
+.iq-verdict.wait .iq-verdict-label{color:var(--text-muted);}
+.iq-verdict.good{border-color:rgba(0,204,136,.5);background:rgba(0,204,136,.07);} .iq-verdict.good .iq-verdict-label{color:#00cc88;}
+.iq-verdict.mid{border-color:rgba(232,168,0,.5);background:rgba(232,168,0,.07);} .iq-verdict.mid .iq-verdict-label{color:#e8a800;}
+.iq-verdict.bad{border-color:rgba(255,68,68,.55);background:rgba(255,68,68,.09);} .iq-verdict.bad .iq-verdict-label{color:#ff5544;}
+.iq-q{border:1px solid rgba(255,255,255,.06);border-left:3px solid rgba(201,162,39,.4);border-radius:8px;padding:12px 14px;margin-bottom:10px;background:rgba(255,255,255,.015);}
+.iq-q.ok{border-left-color:#00cc88;} .iq-q.evasif{border-left-color:#e8a800;} .iq-q.faux{border-left-color:#ff5544;background:rgba(255,68,68,.05);}
+.iq-q-top{display:flex;align-items:flex-start;gap:10px;}
+.iq-q-num{font-family:'Cinzel',serif;font-size:.62rem;color:var(--gold);border:1px solid var(--border-h);border-radius:50%;width:22px;height:22px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;}
+.iq-q-text{flex:1;font-size:.84rem;line-height:1.55;color:var(--text);}
+.iq-tag{font-family:'Cinzel',serif;font-size:.48rem;letter-spacing:1.5px;text-transform:uppercase;padding:2px 8px;border-radius:10px;border:1px solid var(--border);color:var(--text-muted);white-space:nowrap;}
+.iq-tag.t-Alerte,.iq-tag.t-Cible{color:#ff8080;border-color:rgba(255,68,68,.45);}
+.iq-tag.t-Fiche{color:var(--gold);}
+.iq-tag.t-Croisée{color:#8fb8ff;border-color:rgba(100,150,255,.4);}
+.iq-q-ans{margin:8px 0 10px 32px;font-size:.74rem;color:rgba(210,190,190,.85);line-height:1.5;}
+.iq-q-ans b{color:#ffd9a0;}
+.iq-q-btns{display:flex;gap:8px;margin-left:32px;flex-wrap:wrap;}
+.iq-btn{background:transparent;border:1px solid rgba(255,255,255,.14);color:var(--text-muted);border-radius:6px;padding:5px 12px;font-size:.68rem;transition:.15s;}
+.iq-btn.ok:hover,.iq-btn.ok.on{color:#00cc88;border-color:#00cc88;background:rgba(0,204,136,.1);}
+.iq-btn.evasif:hover,.iq-btn.evasif.on{color:#e8a800;border-color:#e8a800;background:rgba(232,168,0,.1);}
+.iq-btn.faux:hover,.iq-btn.faux.on{color:#ff5544;border-color:#ff5544;background:rgba(255,68,68,.1);}
+@media (max-width:980px){.iq-grid{grid-template-columns:1fr;}.iq-verdict{position:static;}}
+
 </style>
 </head>
 <body>
@@ -1189,7 +1214,6 @@ body{letter-spacing:.2px;}
         <div class="stat-card" style="--sc:#8b0000"><div class="stat-icon">💀</div><div class="stat-val" id="stat-wanted">0</div><div class="stat-label">Démons Ciblés</div></div>
         <div class="stat-card" style="--sc:#555"><div class="stat-icon">✝</div><div class="stat-val" id="stat-morts">0</div><div class="stat-label">Tombés au Combat</div></div>
       </div>
-      <div id="verify-widget-container"></div>
       <div id="dash-preview"></div>
     </section>
 
@@ -1204,7 +1228,6 @@ body{letter-spacing:.2px;}
         <span class="filter-chip" onclick="filterRegistre('Vivant',this)">● En service</span>
         <span class="filter-chip" onclick="filterRegistre('Mort',this)">✝ Décédés</span>
         <span class="filter-chip" onclick="filterRegistre('Retraité',this)">◈ Retraités</span>
-        <span class="filter-chip" onclick="filterRegistre('stale',this)" style="color:#e8a800">⚠ À revérifier</span>
       </div>
       <div id="registreContainer"><div class="loader"></div></div>
     </section>
@@ -1370,17 +1393,44 @@ body{letter-spacing:.2px;}
 
     <!-- INTERROGATOIRE -->
     <section id="section-interrogatoire" class="section">
-      <div class="section-title">Salle d'Interrogatoire</div>
-      <div class="section-sub">Recherche un Pourfendeur pour préparer ses questions de vérification</div>
-
-      <div class="interro-search-wrap sf-search-wrap">
-        <input class="form-input" id="interroSearchInput" placeholder="Rechercher un Pourfendeur par nom..." autocomplete="off" oninput="searchInterroTarget(this.value)" onfocus="searchInterroTarget(this.value)">
-        <div id="interroSearchResults" class="sf-search-results"></div>
+      <div class="section-header">
+        <div><div class="section-title">Salle d'Interrogatoire</div><div class="section-sub">Remplis l'identité déclarée par le sujet : les Archives vérifient et proposent les questions</div></div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn btn-ghost btn-sm" onclick="iqCopyReport()">📋 Copier le rapport</button>
+          <button class="btn btn-ghost btn-sm" onclick="iqReset()">↺ Nouveau sujet</button>
+        </div>
       </div>
-
-      <div id="interroStalePanel"></div>
-
-      <div id="interroTargetPanel"></div>
+      <div class="iq-grid">
+        <div class="iq-col">
+          <div class="iq-card">
+            <div class="iq-card-title">🗨 Identité déclarée</div>
+            <div class="form-grid">
+              <div class="form-group full"><label class="form-label">Nom du sujet *</label><input class="form-input" id="iqNom" placeholder="Nom (ou nom partiel)" autocomplete="off" oninput="iqNameInput()"></div>
+              <div class="form-group"><label class="form-label">Rang déclaré</label><select class="form-select" id="iqRang" onchange="iqUpdate()"><option value="">— Non précisé —</option><option value="Maître des Pourfendeurs">Maître des Pourfendeurs</option><option value="Conseiller">Conseiller du Maître</option><option value="Pilier">Pilier — Hashira</option><option value="Kinoe">Kinoe — Rang 1</option><option value="Kinoto">Kinoto — Rang 2</option><option value="Hinoe">Hinoe — Rang 3</option><option value="Hinoto">Hinoto — Rang 4</option><option value="Tsuchinoe">Tsuchinoe — Rang 5</option><option value="Tsuchinoto">Tsuchinoto — Rang 6</option><option value="Kanoe">Kanoe — Rang 7</option><option value="Kanoto">Kanoto — Rang 8</option><option value="Mizunoe">Mizunoe — Rang 9</option><option value="Mizunoto">Mizunoto — Rang 10</option></select></div>
+              <div class="form-group"><label class="form-label">Souffle déclaré</label><select class="form-select" id="iqSouffle" onchange="iqUpdate()"><option value="">— Non précisé —</option><option>Souffle de l'Eau</option><option>Souffle de la Flamme</option><option>Souffle de la Foudre</option><option>Souffle de la Fleur</option><option>Souffle de la Roche</option><option>Souffle de la Brume</option><option>Souffle du Son</option><option>Souffle du Serpent</option><option>Souffle de l'Amour</option><option>Autre / Dérivé</option></select></div>
+              <div class="form-group"><label class="form-label">Brigade / Unité</label><input class="form-input" id="iqBrigade" placeholder="Unité d'affectation" autocomplete="off" oninput="iqUpdate()"></div>
+              <div class="form-group"><label class="form-label">Jours de service</label><input class="form-input" id="iqJours" type="number" min="0" placeholder="Approx." oninput="iqUpdate()"></div>
+              <div class="form-group"><label class="form-label">Pilier référent</label><input class="form-input" id="iqPilier" placeholder="Nom du Pilier" autocomplete="off" oninput="iqUpdate()"></div>
+              <div class="form-group"><label class="form-label">Kinoe référent</label><input class="form-input" id="iqKinoe" placeholder="Nom du Kinoe" autocomplete="off" oninput="iqUpdate()"></div>
+            </div>
+          </div>
+          <div class="iq-card">
+            <div class="iq-card-title">📜 Fiche retrouvée</div>
+            <div id="iqMatch"></div>
+          </div>
+          <div class="iq-card">
+            <div class="iq-card-title">⚖ Déclaré vs Archives</div>
+            <div id="iqChecks"></div>
+          </div>
+        </div>
+        <div class="iq-col">
+          <div id="iqVerdict" class="iq-verdict wait"></div>
+          <div class="iq-card">
+            <div class="iq-card-title">❓ Questions à poser</div>
+            <div id="iqQuestions"></div>
+          </div>
+        </div>
+      </div>
     </section>
 
     <!-- CODEX -->
@@ -1599,20 +1649,6 @@ body{letter-spacing:.2px;}
   <div class="modal-box modal-wide" style="position:relative;">
     <button class="modal-close" onclick="closeModal('modalProfile')" style="position:absolute;top:12px;right:12px;z-index:10;">✕</button>
     <div id="profileContent"></div>
-  </div>
-</div>
-
-<!-- ═══ MODAL INTERROGATOIRE ═══ -->
-<div class="modal-overlay" id="modalInterrogation">
-  <div class="modal-box interro-box">
-    <button class="modal-close" onclick="closeModal('modalInterrogation')">✕</button>
-    <div class="interro-header">
-      <div class="interro-kicker">Protocole de Vérification</div>
-      <div class="modal-title" id="interroTitle">Questions d'Interrogatoire</div>
-      <div class="interro-sub">Pose ces questions au sujet interrogé et compare ses réponses à celles ci-dessous. Une réponse fausse ou évasive trahit un mensonge ou une ignorance suspecte.</div>
-    </div>
-    <div id="interroList" class="interro-list"></div>
-    <div class="interro-footer">Les réponses attendues sont tirées des Archives — à usage exclusif de l'interrogateur.</div>
   </div>
 </div>
 
@@ -2204,9 +2240,6 @@ function hexToRgb(hex){
   return m?`${parseInt(m[1],16)},${parseInt(m[2],16)},${parseInt(m[3],16)}`:'201,162,39';
 }
 
-/* ── Seuils de fraîcheur (en jours) — à ajuster selon votre rythme de mise à jour ── */
-const FRESH_WARN_DAYS=7;   // au-delà : orange
-const FRESH_STALE_DAYS=21; // au-delà : rouge, "à revérifier"
 const RELIAB_LABELS={confirme:'✓ Confirmé',douteux:'? Non confirmé',conteste:'⚠ Contesté'};
 
 function getDangerTier(s){if(s>=90)return{tier:'S',label:'NEUTRALISATION IMMÉDIATE'};if(s>=75)return{tier:'A',label:'EXTRÊMEMENT DANGEREUX'};if(s>=55)return{tier:'B',label:'TRÈS DANGEREUX'};if(s>=35)return{tier:'C',label:'DANGEREUX'};return{tier:'D',label:'PRIORITÉ SECONDAIRE'};}
@@ -2226,24 +2259,6 @@ function daysSince(ts){
   const d=tsToDate(ts); if(!d) return null;
   return Math.floor((Date.now()-d.getTime())/86400000);
 }
-function freshnessState(updatedAt){
-  const days=daysSince(updatedAt);
-  if(days===null) return {cls:'fresh-warn',label:'Jamais vérifié',days:null};
-  if(days<=FRESH_WARN_DAYS) return {cls:'fresh-ok',label:`Vérifié il y a ${days}j`,days};
-  if(days<=FRESH_STALE_DAYS) return {cls:'fresh-warn',label:`À revérifier — ${days}j`,days};
-  return {cls:'fresh-stale',label:`Périmé — ${days}j`,days};
-}
-function freshnessBadge(updatedAt){
-  const f=freshnessState(updatedAt);
-  return `<span class="fresh-badge ${f.cls}"><span class="fresh-dot"></span>${f.label}</span>`;
-}
-window.reverify=async(col,id,name)=>{
-  if(!currentUser){toast('Connexion requise.','warn');return;}
-  socket.emit(col+':reverify', id, (res)=>{
-    if(!res?.ok){toast('Erreur : '+(res?.error||'inconnue'),'error');return;}
-    toast(`${name} — information reconfirmée.`,'success');
-  });
-};
 
 /* ═══ FIABILITÉ ═══ */
 function reliabPill(status){
@@ -2390,7 +2405,7 @@ function _onPourfendeursData(items){
   allPourfendeurs=items.filter(d=>!d.deleted)
     .sort((a,b)=>(hierarchyIdx[a.rang]||99)-(hierarchyIdx[b.rang]||99));
   document.getElementById('badge-registre').textContent=allPourfendeurs.length;
-  updateStats(); renderDashPreview(); renderVerifyWidget(); renderInterroStale(); renderInterroTargetPanel(); // léger, nécessaire dès le tableau de bord
+  updateStats(); renderDashPreview(); iqUpdate(); // léger, nécessaire dès le tableau de bord
   if(_sectionRendered.registre) renderRegistre(); // le tableau complet n'est reconstruit que si déjà visité
 }
 socket.emit('pourfendeurs:join', {}, res=>{ if(res?.ok) _onPourfendeursData(res.items); });
@@ -2401,7 +2416,7 @@ function buildMemberRow(m){
   const rang=m.rang||'';
   const bc=['Maître des Pourfendeurs','Conseiller','Pilier','Kinoe','Kinoto'].includes(rang)
     ?`badge-${rang==='Maître des Pourfendeurs'?'Maitre':rang==='Conseiller'?'Conseiller':rang}`:'badge-default';
-  return `<tr><td><span class="member-name ${nc}" onclick="openProfile('${m._id}')">${m.nom||'—'}</span>${m.brigade?`<br><span class="member-brigade">${m.brigade}</span>`:''}</td><td><span class="badge ${bc}">${rang||'—'}</span></td><td><span class="status-dot status-${m.statut}"></span>${m.statut||'—'}</td><td style="font-size:.72rem;color:var(--text-muted)">${m.jours||0} j</td><td>${freshnessBadge(m.updatedAt)}</td><td class="td-actions"><button class="btn btn-ghost btn-sm" onclick="openProfile('${m._id}')">Fiche</button>${currentUser?`<button class="btn btn-ghost btn-sm" onclick="openFormMembre('${m._id}')">✎</button><button class="btn btn-danger btn-sm" onclick="deleteMembre('${m._id}','${(m.nom||'').replace(/'/g,"\\'")}')">✕</button>`:''}</td></tr>`;
+  return `<tr><td><span class="member-name ${nc}" onclick="openProfile('${m._id}')">${m.nom||'—'}</span>${m.brigade?`<br><span class="member-brigade">${m.brigade}</span>`:''}</td><td><span class="badge ${bc}">${rang||'—'}</span></td><td><span class="status-dot status-${m.statut}"></span>${m.statut||'—'}</td><td style="font-size:.72rem;color:var(--text-muted)">${m.jours||0} j</td><td class="td-actions"><button class="btn btn-ghost btn-sm" onclick="openProfile('${m._id}')">Fiche</button>${currentUser?`<button class="btn btn-ghost btn-sm" onclick="openFormMembre('${m._id}')">✎</button><button class="btn btn-danger btn-sm" onclick="deleteMembre('${m._id}','${(m.nom||'').replace(/'/g,"\\'")}')">✕</button>`:''}</td></tr>`;
 }
 
 function renderRegistre(){
@@ -2411,12 +2426,6 @@ function renderRegistre(){
 
   let html='';
 
-  if(registreFilter==='stale'){
-    const stale=data.filter(m=>m.statut!=='Mort'&&freshnessState(m.updatedAt).cls!=='fresh-ok');
-    c.innerHTML=stale.length?`<table class="member-table"><tbody>${stale.map(buildMemberRow).join('')}</tbody></table>`:'<div class="empty-state"><div class="empty-icon">✓</div><p>Tout est à jour !</p></div>';
-    document.getElementById('badge-registre').textContent=allPourfendeurs.length;
-    return;
-  }
 
   if(registreFilter==='all'||registreFilter==='Vivant'){
     const actifs=data.filter(m=>m.statut==='Vivant');
@@ -2578,7 +2587,6 @@ window.openProfile=async(id)=>{
           <div class="pf-stat"><span class="pf-stat-val">${m.jours||0}</span><span class="pf-stat-label">Jours de service</span></div>
           <div class="pf-stat-sep"></div>
           <div class="pf-stat"><span class="pf-stat-val">${photos.length||'—'}</span><span class="pf-stat-label">Photo${photos.length>1?'s':''}</span></div>
-          <div style="margin-left:auto">${freshnessBadge(m.updatedAt)}</div>
         </div>
         ${extras.length?`<div class="profile-info-grid">${extras.map(([l,v])=>`<div class="pf-info-item"><span class="pf-label">${l}</span><span class="pf-val">${v}</span></div>`).join('')}</div>`:''}
         ${m.info?`<div class="profile-obs-block">${m.info}</div>`:''}
@@ -2587,7 +2595,7 @@ window.openProfile=async(id)=>{
           <div class="fiche-history-body">${buildHistoryHTML('pourfendeurs',m.nom,m,[['rang','Rang'],['souffle','Souffle'],['statut','Statut'],['brigade','Brigade'],['jours','Jours de service']])}</div>
         </div>
         <div class="modal-footer" style="margin-top:auto;padding-top:16px;display:flex;gap:14px;align-items:center;flex-wrap:wrap">
-          ${currentUser?`<button class="btn btn-gold btn-sm" onclick="closeModal('modalProfile');openFormMembre('${m._id}')">✎ Modifier la fiche</button><button class="btn btn-reverify btn-sm" onclick="reverify('pourfendeurs','${m._id}','${(m.nom||'').replace(/'/g,"\\'")}')">✓ Revérifié</button><button class="btn btn-report btn-sm" onclick="openReport('pourfendeurs','${m._id}','${(m.nom||'').replace(/'/g,"\\'")}')">🚩 Signaler</button><button class="btn btn-interro btn-sm" onclick="goToInterrogatoire('${m._id}')">🗨 Questions d'interrogatoire</button>`:''}
+          ${currentUser?`<button class="btn btn-gold btn-sm" onclick="closeModal('modalProfile');openFormMembre('${m._id}')">✎ Modifier la fiche</button><button class="btn btn-report btn-sm" onclick="openReport('pourfendeurs','${m._id}','${(m.nom||'').replace(/'/g,"\\'")}')">🚩 Signaler</button><button class="btn btn-interro btn-sm" onclick="goToInterrogatoire('${m._id}')">🗨 Questions d'interrogatoire</button>`:''}
           <button class="btn btn-ghost btn-sm" onclick="printFiche()">🖨 Imprimer</button>
         </div>
       </div>
@@ -2596,155 +2604,340 @@ window.openProfile=async(id)=>{
   if(isMulti){_carouselApply();_carouselStartAuto();}
 };
 
-/* ═══ QUESTIONS D'INTERROGATOIRE ═══
-   Dérivées uniquement de champs factuels déjà connus (rang, souffle,
-   brigade, référents, motif de recherche...) — jamais d'opinion ni de
-   question fermée par oui/non, pour qu'une réponse fausse soit un vrai
-   signal. Formulées en désignant la cible par son nom plutôt que par un
-   pronom, pour ne pas avoir à deviner un genre. */
-function generateInterrogationQuestions(type, entity, roster){
-  const qs=[];
-  if(type==='pourfendeur'){
-    const nom=entity.nom||'ce Pourfendeur';
-    if(entity.rang) qs.push({q:`Quel est le rang exact de ${nom} au sein de l'Ordre des Pourfendeurs ?`,a:entity.rang});
-    if(entity.souffle) qs.push({q:`Quel style de Souffle ${nom} pratique-t-il ?`,a:entity.souffle});
-    if(entity.brigade) qs.push({q:`À quelle brigade ${nom} est-il rattaché ?`,a:entity.brigade});
-    if(entity.pilier_ref) qs.push({q:`Sous les ordres de quel Pilier ${nom} sert-il ?`,a:entity.pilier_ref});
-    if(entity.kinoe_ref) qs.push({q:`Qui est le Kinoe référent de ${nom} ?`,a:entity.kinoe_ref});
-    if(entity.jours) qs.push({q:`Depuis approximativement combien de temps ${nom} est-il en service ? (une estimation proche est acceptable)`,a:`${entity.jours} jours`});
-    if(entity.statut) qs.push({q:`${nom} est-il toujours en service, à la retraite, ou tombé au combat ?`,a:entity.statut});
-    if(entity.info) qs.push({q:`Que peux-tu dire des observations récentes rapportées sur ${nom} ?`,a:entity.info});
+/* ═══ SALLE D'INTERROGATOIRE ═══
+   Pendant l'interrogatoire, l'interrogateur remplit le formulaire d'identité
+   du sujet (ce que le sujet déclare). Le site :
+   1. cherche le sujet dans les Archives (Pourfendeurs + cibles recherchées),
+   2. compare chaque déclaration à la fiche retrouvée (ou, sans fiche, au reste
+      du registre : brigade, Pilier, Kinoe réellement existants),
+   3. propose des questions dont la réponse est connue des Archives,
+   4. calcule un verdict à mesure que l'interrogateur note les réponses.
+   Tout reste dans le navigateur : rien n'est enregistré sur le serveur. */
+const IQ_RANKS=[
+  ['Maître des Pourfendeurs','Maître des Pourfendeurs'],['Conseiller','Conseiller du Maître'],['Pilier','Pilier — Hashira'],
+  ['Kinoe','Kinoe — Rang 1'],['Kinoto','Kinoto — Rang 2'],['Hinoe','Hinoe — Rang 3'],['Hinoto','Hinoto — Rang 4'],
+  ['Tsuchinoe','Tsuchinoe — Rang 5'],['Tsuchinoto','Tsuchinoto — Rang 6'],['Kanoe','Kanoe — Rang 7'],['Kanoto','Kanoto — Rang 8'],
+  ['Mizunoe','Mizunoe — Rang 9'],['Mizunoto','Mizunoto — Rang 10']
+];
+const IQ_FIELDS=['nom','rang','souffle','brigade','pilier','kinoe','jours'];
+let _iqMatchKey=null;      // 'p:<id>' | 'w:<id>' choisi à la main, sinon meilleure correspondance automatique
+let _iqAnswers={};         // { idQuestion: 'ok' | 'evasif' | 'faux' }
+let _iqQuestions=[];       // questions actuellement affichées (pour le verdict et le rapport)
+let _iqChecks=[];          // comparaisons actuellement affichées
+let _iqMatch=null;         // { type, entity } retenu
 
-    /* Questions croisées — nécessitent le reste du registre pour comparer
-       la cible à ses pairs de Souffle et de brigade. */
-    if(Array.isArray(roster)&&roster.length){
-      const autres=roster.filter(p=>p._id!==entity._id&&p.statut!=='Mort');
-      if(entity.souffle){
-        const memesSouffle=autres.filter(p=>p.souffle===entity.souffle);
-        if(memesSouffle.length){
-          const noms=memesSouffle.map(p=>p.nom).filter(Boolean).slice(0,5).join(', ');
-          qs.push({q:`Cite un autre Pourfendeur pratiquant, comme ${nom}, le ${entity.souffle} ?`,a:noms||'—'});
-        }
-        const hg=memesSouffle.filter(p=>p.rang!==entity.rang).sort((a,b)=>(hierarchyIdx[a.rang]??99)-(hierarchyIdx[b.rang]??99))[0];
-        if(hg) qs.push({q:`Qui est le Haut Gradé (HG) référent du ${entity.souffle} ?`,a:hg.nom});
-      }
-      if(entity.brigade){
-        const memeBrigade=autres.filter(p=>p.brigade===entity.brigade);
-        if(memeBrigade.length){
-          const noms=memeBrigade.map(p=>p.nom).filter(Boolean).slice(0,5).join(', ');
-          qs.push({q:`Cite un autre membre de la brigade "${entity.brigade}" à laquelle ${nom} est rattaché ?`,a:noms||'—'});
-        }
-      }
-    }
-  } else if(type==='wanted'){
-    const nom=`${entity.prenom||''} ${entity.nom||''}`.trim()||'cette cible';
-    if(entity.grade) qs.push({q:`Quel rang était attribué à ${nom} avant sa désignation comme cible ?`,a:entity.grade});
-    if(entity.raison) qs.push({q:`Pour quel motif ${nom} est-il activement recherché ?`,a:entity.raison});
-    if(typeof entity.dangerScore==='number'){
-      const dt=getDangerTier(entity.dangerScore||rankScore[entity.grade]||50);
-      qs.push({q:`Quel niveau de dangerosité représente ${nom} ?`,a:`Priorité ${dt.tier} — ${dt.label}`});
-    }
-    if(entity.source) qs.push({q:`Qui a rapporté les premières informations sur ${nom} ?`,a:entity.source});
-    if(entity.verifStatus) qs.push({q:`Le dossier de ${nom} est-il confirmé, douteux, ou contesté à ce jour ?`,a:{confirme:'Confirmé',douteux:'Non confirmé',conteste:'Contesté'}[entity.verifStatus]||entity.verifStatus});
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function iqEditDistance(a,b){
+  if(a===b)return 0; if(!a.length)return b.length; if(!b.length)return a.length;
+  let prev=Array.from({length:b.length+1},(_,i)=>i);
+  for(let i=1;i<=a.length;i++){
+    const cur=[i];
+    for(let j=1;j<=b.length;j++) cur[j]=Math.min(prev[j]+1,cur[j-1]+1,prev[j-1]+(a[i-1]===b[j-1]?0:1));
+    prev=cur;
   }
-  return qs;
+  return prev[b.length];
+}
+/* Ressemblance entre deux noms (0..1), tolérante aux accents, aux fautes de
+   frappe, à l'ordre des mots et aux noms partiels ("tomioka" ↔ "Giyu Tomioka"). */
+function iqNameScore(query,candidate){
+  const q=normName(query), c=normName(candidate);
+  if(!q||!c)return 0;
+  if(q===c)return 1;
+  if(q.length>=3&&(c.includes(q)||q.includes(c)))return .88;
+  const qt=q.split(/\s+/), ct=c.split(/\s+/);
+  let total=0;
+  for(const t of qt){
+    let best=0;
+    for(const u of ct){
+      const sim=1-iqEditDistance(t,u)/Math.max(t.length,u.length);
+      if(sim>best)best=sim;
+    }
+    total+=best;
+  }
+  return total/qt.length*.9;
+}
+function iqSame(a,b){ // égalité souple entre deux libellés (brigade, nom de référent…)
+  const x=normName(a), y=normName(b);
+  if(!x||!y)return false;
+  return x===y||(x.length>=3&&y.length>=3&&(x.includes(y)||y.includes(x)))||iqNameScore(a,b)>=.8;
+}
+function iqEntityName(type,e){return type==='wanted'?`${e.prenom||''} ${e.nom||''}`.trim():(e.nom||'');}
+
+function iqReadForm(){
+  const v=id=>(document.getElementById(id)?.value||'').trim();
+  return {nom:v('iqNom'),rang:v('iqRang'),souffle:v('iqSouffle'),brigade:v('iqBrigade'),pilier:v('iqPilier'),kinoe:v('iqKinoe'),jours:v('iqJours')};
+}
+/* Beaucoup de fiches contiennent un simple "/" ou "-" à la place d'une valeur : on les traite comme vides. */
+function iqClean(v){return (typeof v==='string'&&/^[\s\/\\\-–—.?]*$/.test(v))?'':v;}
+function iqCleanEntity(type,e){
+  if(type!=='pourfendeur')return e;
+  return {...e,brigade:iqClean(e.brigade),pilier_ref:iqClean(e.pilier_ref),kinoe_ref:iqClean(e.kinoe_ref),info:iqClean(e.info),souffle:iqClean(e.souffle)};
+}
+function iqFindCandidates(nom){
+  if(nom.length<2)return [];
+  const out=[];
+  allPourfendeurs.forEach(p=>{const s=iqNameScore(nom,p.nom); if(s>=.6)out.push({type:'pourfendeur',entity:p,score:s,key:'p:'+p._id});});
+  allWanted.forEach(w=>{const s=iqNameScore(nom,iqEntityName('wanted',w)); if(s>=.6)out.push({type:'wanted',entity:w,score:s,key:'w:'+w._id});});
+  return out.sort((a,b)=>b.score-a.score).slice(0,5);
 }
 
-window.openInterrogation=(type,id)=>{
-  const entity=type==='pourfendeur'?allPourfendeurs.find(x=>x._id===id):allWanted.find(x=>x._id===id);
-  if(!entity)return;
-  const name=type==='pourfendeur'?entity.nom:`${entity.prenom||''} ${entity.nom||''}`.trim();
-  document.getElementById('interroTitle').textContent=`Interrogatoire — au sujet de ${name}`;
-  const qs=generateInterrogationQuestions(type,entity);
-  const list=document.getElementById('interroList');
-  list.innerHTML=qs.length?qs.map((item,i)=>`<div class="interro-item" style="animation-delay:${i*.05}s"><div class="interro-q">${item.q}</div><div class="interro-a">Réponse attendue : <b>${item.a}</b></div></div>`).join('')
-    :`<div class="interro-empty">Trop peu d'informations connues sur ${name} pour générer des questions fiables.</div>`;
-  openModal('modalInterrogation');
+/* Comparaison déclaration ↔ archives. state : ok (concorde) · warn (proche /
+   invérifiable) · bad (contradiction) · none (non déclaré). */
+function iqBuildChecks(form,match){
+  const checks=[];
+  const add=(label,declared,archive,state,note)=>checks.push({label,declared,archive,state,note:note||''});
+  const roster=allPourfendeurs.filter(p=>p.statut!=='Mort');
+  if(match&&match.type==='pourfendeur'){
+    const e=match.entity;
+    if(form.rang){
+      const di=hierarchyIdx[form.rang], ai=hierarchyIdx[e.rang];
+      const state=form.rang===e.rang?'ok':(di!==undefined&&ai!==undefined&&Math.abs(di-ai)===1?'warn':'bad');
+      add('Rang',form.rang,e.rang||'—',e.rang?state:'warn',state==='warn'&&e.rang?'Rang voisin — promotion ou rétrogradation récente ?':'');
+    }
+    if(form.souffle) add('Souffle',form.souffle,e.souffle||'—',!e.souffle?'warn':(form.souffle===e.souffle?'ok':'bad'));
+    if(form.brigade) add('Brigade',form.brigade,e.brigade||'—',!e.brigade?'warn':(iqSame(form.brigade,e.brigade)?'ok':'bad'));
+    if(form.pilier) add('Pilier référent',form.pilier,e.pilier_ref||'—',!e.pilier_ref?'warn':(iqSame(form.pilier,e.pilier_ref)?'ok':'bad'));
+    if(form.kinoe) add('Kinoe référent',form.kinoe,e.kinoe_ref||'—',!e.kinoe_ref?'warn':(iqSame(form.kinoe,e.kinoe_ref)?'ok':'bad'));
+    if(form.jours!==''){
+      const d=parseInt(form.jours,10), a=e.jours||0;
+      const tol=Math.max(30,a*.2);
+      add('Jours de service',`${d} j`,`${a} j`,!a?'warn':(Math.abs(d-a)<=tol?'ok':'bad'),Math.abs(d-a)<=tol?'':'Écart important avec la fiche');
+    }
+  }else if(!match){
+    /* Aucune fiche : on vérifie au moins que ce que le sujet cite existe. */
+    if(form.brigade){
+      const n=roster.filter(p=>iqSame(p.brigade,form.brigade)).length;
+      add('Brigade',form.brigade,n?`${n} membre(s) connu(s)`:'Inconnue des Archives',n?'ok':'bad');
+    }
+    if(form.pilier){
+      const p=allPourfendeurs.find(x=>x.rang==='Pilier'&&iqSame(x.nom,form.pilier));
+      add('Pilier référent',form.pilier,p?`${p.nom} — ${p.souffle||'—'}`:'Aucun Pilier de ce nom',p?'ok':'bad');
+    }
+    if(form.kinoe){
+      const p=allPourfendeurs.find(x=>(x.rang==='Kinoe'||x.rang==='Kinoto')&&iqSame(x.nom,form.kinoe));
+      add('Kinoe référent',form.kinoe,p?`${p.nom} — ${p.rang}`:'Aucun Kinoe de ce nom',p?'ok':'bad');
+    }
+    if(form.souffle){
+      const n=roster.filter(p=>p.souffle===form.souffle).length;
+      add('Souffle',form.souffle,n?`${n} pratiquant(s) connu(s)`:'Aucun pratiquant connu',n?'ok':'warn');
+    }
+  }
+  return checks;
+}
+
+/* Questions : ce que la fiche retrouvée (ou le registre) permet de vérifier.
+   Les champs que le sujet n'a PAS déclaré passent en premier — il n'a pas pu
+   préparer sa réponse. */
+function iqBuildQuestions(form,match){
+  const qs=[]; const seen=new Set();
+  const add=(q,a,tag,field)=>{
+    if(!q||a===undefined||a===null||a==='')return;
+    const id='q'+normName(q).replace(/ /g,'').slice(0,60);
+    if(seen.has(id))return; seen.add(id);
+    qs.push({id,q,a:String(a),tag,declared:field?!!form[field]:false});
+  };
+  const roster=allPourfendeurs.filter(p=>p.statut!=='Mort');
+  const e=match?.type==='pourfendeur'?match.entity:null;
+  const selfId=e?._id;
+
+  if(e){
+    add('Quel est ton rang exact au sein de l\'Ordre ?',e.rang,'Fiche','rang');
+    add('Quel Souffle pratiques-tu ?',e.souffle,'Fiche','souffle');
+    add('À quelle brigade es-tu rattaché ?',e.brigade,'Fiche','brigade');
+    add('Sous les ordres de quel Pilier sers-tu ?',e.pilier_ref,'Fiche','pilier');
+    add('Qui est ton Kinoe référent ?',e.kinoe_ref,'Fiche','kinoe');
+    if(e.jours) add('Depuis combien de temps es-tu en service ? (une estimation proche est acceptable)',`${e.jours} jours`,'Fiche','jours');
+    if(e.pilier_ref){
+      const pil=allPourfendeurs.find(p=>p.rang==='Pilier'&&iqSame(p.nom,e.pilier_ref));
+      if(pil&&pil.souffle) add(`Quel Souffle pratique ${pil.nom}, ton Pilier référent ?`,pil.souffle,'Croisée');
+    }
+    if(e.kinoe_ref){
+      const kin=allPourfendeurs.find(p=>(p.rang==='Kinoe'||p.rang==='Kinoto')&&iqSame(p.nom,e.kinoe_ref));
+      if(kin&&kin.souffle) add(`Quel Souffle pratique ${kin.nom}, ton Kinoe référent ?`,kin.souffle,'Croisée');
+    }
+    if(e.info) add('Décris tes dernières missions ou les observations rapportées à ton sujet.',e.info,'Fiche');
+    if(e.statut==='Mort') add('Quand et comment ta fiche a-t-elle été déclarée « tombé au combat » ?','La fiche indique un décès — toute réponse est suspecte','Alerte');
+  }
+  if(match?.type==='wanted'){
+    const w=match.entity, dt=getDangerTier(w.dangerScore||rankScore[w.grade]||50);
+    add('Quel rang occupais-tu avant d\'être désigné cible ?',w.grade,'Cible');
+    add('Pour quel motif es-tu recherché ?',w.raison,'Cible');
+    add('Qui a rapporté les premières informations sur toi ?',w.source,'Cible');
+    add('Quel niveau de dangerosité te prête-t-on ?',`Priorité ${dt.tier} — ${dt.label}`,'Cible');
+  }
+
+  /* Questions de culture de l'Ordre construites sur ce que le sujet DÉCLARE :
+     elles fonctionnent même sans fiche retrouvée. */
+  const souffle=form.souffle||e?.souffle;
+  if(souffle){
+    const memes=roster.filter(p=>p.souffle===souffle&&p._id!==selfId);
+    const hg=[...memes].sort((a,b)=>(hierarchyIdx[a.rang]??99)-(hierarchyIdx[b.rang]??99))[0];
+    if(hg) add(`Qui est le Haut Gradé (HG) référent du ${souffle} ?`,`${hg.nom} (${hg.rang})`,'Culture');
+    if(memes.length) add(`Cite un autre Pourfendeur pratiquant le ${souffle}.`,memes.slice(0,6).map(p=>p.nom).join(', '),'Culture');
+    const pil=allPourfendeurs.find(p=>p.rang==='Pilier'&&p.souffle===souffle&&p.statut!=='Mort');
+    if(pil) add(`Quel Pilier incarne le ${souffle} ?`,pil.nom,'Culture');
+  }
+  const brigade=form.brigade||e?.brigade;
+  if(brigade){
+    const mates=roster.filter(p=>iqSame(p.brigade,brigade)&&p._id!==selfId);
+    if(mates.length) add(`Cite un autre membre de la brigade « ${brigade} ».`,mates.slice(0,6).map(p=>p.nom).join(', '),'Culture');
+  }
+  if(form.pilier&&!e){
+    const pil=allPourfendeurs.find(p=>p.rang==='Pilier'&&iqSame(p.nom,form.pilier));
+    if(pil&&pil.souffle) add(`Quel Souffle pratique le Pilier ${pil.nom} ?`,pil.souffle,'Culture');
+  }
+  const rang=form.rang||e?.rang;
+  if(rang&&hierarchyIdx[rang]>0){
+    const above=IQ_RANKS.find(([k])=>hierarchyIdx[k]===hierarchyIdx[rang]-1);
+    if(above) add('Quel rang se situe juste au-dessus du tien dans la hiérarchie ?',above[1],'Culture');
+  }
+  if(form.nom||e||match){
+    const maitre=roster.find(p=>p.rang==='Maître des Pourfendeurs');
+    add('Qui est actuellement le Maître des Pourfendeurs ?',maitre?maitre.nom:'Poste vacant','Culture');
+    const piliers=roster.filter(p=>p.rang==='Pilier');
+    if(piliers.length) add('Combien de Piliers sont en service et lesquels ?',`${piliers.length} : ${piliers.map(p=>p.nom).join(', ')}`,'Culture');
+  }
+  /* non déclarés d'abord, puis fiche/cible, puis le reste */
+  const rank=q=>q.tag==='Alerte'?0:q.tag==='Culture'?3:(q.declared?2:1);
+  return qs.sort((a,b)=>rank(a)-rank(b));
+}
+
+function iqVerdict(checks,questions){
+  const bad=checks.filter(c=>c.state==='bad').length;
+  let ok=0,evasif=0,faux=0;
+  questions.forEach(q=>{const a=_iqAnswers[q.id]; if(a==='ok')ok++; else if(a==='evasif')evasif++; else if(a==='faux')faux++;});
+  const answered=ok+evasif+faux;
+  const score=answered?(ok+evasif*.4)/answered:null;
+  let level='wait',label='En attente de réponses…',hint=answered?`${answered}/3 réponses notées minimum`:'Note les réponses du sujet pour obtenir un verdict';
+  if(answered>=3){
+    if(score>=.8&&bad===0){level='good';label='SUJET CRÉDIBLE';}
+    else if(score>=.5&&bad<=1){level='mid';label='SUJET DOUTEUX';}
+    else {level='bad';label='IMPOSTEUR PROBABLE';}
+    hint=`${Math.round(score*100)} % de réponses justes · ${bad} incohérence${bad>1?'s':''} déclarée${bad>1?'s':''}`;
+  }
+  return {level,label,hint,ok,evasif,faux,answered,bad};
+}
+
+window.iqUpdate=()=>{
+  const form=iqReadForm();
+  const cands=iqFindCandidates(form.nom);
+  const manual=_iqMatchKey&&_iqMatchKey!=='none'?cands.find(c=>c.key===_iqMatchKey)||iqLookupKey(_iqMatchKey):null;
+  const best=manual||(_iqMatchKey===null?cands[0]:null);
+  _iqMatch=best&&(best.score>=.6)?{type:best.type,entity:iqCleanEntity(best.type,best.entity)}:null;
+  iqRenderMatch(form,cands,best);
+  _iqChecks=iqBuildChecks(form,_iqMatch);
+  iqRenderChecks();
+  _iqQuestions=form.nom||_iqMatch?iqBuildQuestions(form,_iqMatch):[];
+  iqRenderQuestions(form);
+  iqRenderVerdict();
 };
+function iqLookupKey(key){
+  const [k,id]=key.split(':');
+  if(k==='p'){const e=allPourfendeurs.find(x=>x._id===id); return e?{type:'pourfendeur',entity:e,score:1,key}:null;}
+  const e=allWanted.find(x=>x._id===id); return e?{type:'wanted',entity:e,score:1,key}:null;
+}
+window.iqNameInput=()=>{_iqMatchKey=null; iqUpdate();}; // nouveau nom saisi : on repart de la meilleure correspondance
+window.iqPick=(key)=>{_iqMatchKey=key; iqUpdate();};
+window.iqNoMatch=()=>{_iqMatchKey='none'; iqUpdate();};
 
-/* ═══ SECTION INTERROGATOIRE ═══ (recherche + questions croisées) */
-let _interroSelectedId=null;
-
-window.goToInterrogatoire=(id)=>{
-  _interroSelectedId=id;
-  closeModal('modalProfile');
-  showSection('interrogatoire');
-  renderInterroTargetPanel();
-};
-
-window.searchInterroTarget=(val)=>{
-  const resultsEl=document.getElementById('interroSearchResults');
-  const q=val.trim().toLowerCase();
-  if(!q){resultsEl.style.display='none';return;}
-  const results=allPourfendeurs
-    .filter(p=>p.statut!=='Mort'&&((p.nom||'').toLowerCase().includes(q)||(p.souffle||'').toLowerCase().includes(q)||(p.brigade||'').toLowerCase().includes(q)))
-    .slice(0,8);
-  if(!results.length){resultsEl.style.display='none';return;}
-  resultsEl.innerHTML=results.map(p=>`<div class="sf-result" onclick="selectInterroTarget('${p._id}')">
-    <div class="sf-result-photo">${p.photos?.[0]?`<img src="${photoSrc('pourfendeurs',p._id,p.photos[0],0)}" alt="">`:'⚔'}</div>
-    <div class="sf-result-info">
-      <div class="sf-result-name">${p.nom||'—'}</div>
-      <div class="sf-result-meta">${p.rang||''}${p.souffle?' · '+p.souffle:''}</div>
-    </div>
-  </div>`).join('');
-  resultsEl.style.display='block';
-};
-document.addEventListener('click',e=>{if(!e.target.closest('#section-interrogatoire .sf-search-wrap'))document.getElementById('interroSearchResults')&&(document.getElementById('interroSearchResults').style.display='none');});
-
-window.selectInterroTarget=(id)=>{
-  _interroSelectedId=id;
-  document.getElementById('interroSearchResults').style.display='none';
-  const p=allPourfendeurs.find(x=>x._id===id);
-  document.getElementById('interroSearchInput').value=p?.nom||'';
-  renderInterroTargetPanel();
-};
-
-function renderInterroTargetPanel(){
-  const c=document.getElementById('interroTargetPanel'); if(!c)return;
-  const m=allPourfendeurs.find(x=>x._id===_interroSelectedId);
-  if(!m){
-    c.innerHTML=`<div class="interro-empty-select">Recherche un Pourfendeur ci-dessus, ou choisis une suggestion à revérifier</div>`;
+function iqRenderMatch(form,cands,best){
+  const c=document.getElementById('iqMatch'); if(!c)return;
+  if(!form.nom){c.innerHTML=`<div class="iq-empty">Saisis le nom du sujet : le site cherche aussitôt dans les Archives.</div>`;return;}
+  if(_iqMatchKey==='none'||!cands.length&&!best){
+    c.innerHTML=`<div class="iq-nomatch"><b>Aucune fiche retrouvée</b> pour « ${esc(form.nom)} ».<br><span>Les déclarations du sujet sont vérifiées contre le reste du registre (brigade, Pilier, Kinoe, Souffle).</span>${_iqMatchKey==='none'&&cands.length?`<br><button class="btn btn-ghost btn-sm" onclick="iqPick(null)">Rechercher à nouveau</button>`:''}</div>`;
     return;
   }
-  const qs=generateInterrogationQuestions('pourfendeur',m,allPourfendeurs);
-  c.innerHTML=`<div class="interro-target-card">
-    <div class="interro-target-top">
-      <div class="interro-target-photo">${m.photos?.[0]?`<img src="${photoSrc('pourfendeurs',m._id,m.photos[0],0)}" alt="">`:'⚔'}</div>
-      <div>
-        <div class="interro-target-name">${m.nom||'—'}</div>
-        <div class="interro-target-tags">
-          <span class="interro-tag">Grade&nbsp;<b>${m.rang||'—'}</b></span>
-          <span class="interro-tag">Souffle&nbsp;<b>${m.souffle||'—'}</b></span>
-          <span class="interro-tag">Brigade&nbsp;<b>${m.brigade||'—'}</b></span>
-        </div>
-      </div>
-    </div>
-    <div class="interro-list">${qs.length?qs.map((item,i)=>`<div class="interro-item" style="animation-delay:${i*.05}s"><div class="interro-q">${item.q}</div><div class="interro-a">Réponse attendue : <b>${item.a}</b></div></div>`).join('')
-      :`<div class="interro-empty">Trop peu d'informations connues sur ${m.nom} pour générer des questions fiables.</div>`}</div>
-  </div>`;
+  const list=[...cands]; if(best&&!list.some(x=>x.key===best.key))list.unshift(best);
+  const selKey=_iqMatch?(best?.key):null;
+  c.innerHTML=list.map(x=>{
+    const e=x.entity, isW=x.type==='wanted';
+    const meta=isW?`Cible recherchée · ${esc(e.grade||'—')}`:`${esc(e.rang||'—')} · ${esc(e.souffle||'—')}${e.statut==='Mort'?' · ✝ décédé':''}`;
+    const photo=!isW&&e.photoCount?`<img src="${photoSrc('pourfendeurs',e._id,e.photos?.[0],0)}" alt="">`:(isW?'🎯':'⚔');
+    return `<div class="iq-cand${x.key===selKey?' sel':''}${isW?' wanted':''}" onclick="iqPick('${x.key}')">
+      <div class="iq-cand-photo">${photo}</div>
+      <div class="iq-cand-info"><div class="iq-cand-name">${esc(iqEntityName(x.type,e))}</div><div class="iq-cand-meta">${meta}</div></div>
+      <div class="iq-cand-score">${Math.round(x.score*100)}%</div>
+    </div>`;
+  }).join('')+`<button class="btn btn-ghost btn-sm" style="margin-top:8px" onclick="iqNoMatch()">Ce n'est aucune de ces fiches</button>`;
+  /* bannières d'alerte */
+  if(_iqMatch?.type==='wanted'){
+    const w=_iqMatch.entity;
+    c.innerHTML=`<div class="iq-alert danger">🎯 Le sujet correspond à une <b>cible recherchée</b>${w.raison?` — ${esc(w.raison)}`:''}</div>`+c.innerHTML;
+  }else if(_iqMatch?.entity?.statut==='Mort'){
+    c.innerHTML=`<div class="iq-alert danger">✝ La fiche retrouvée est marquée <b>décédé</b> — usurpation d'identité possible.</div>`+c.innerHTML;
+  }
 }
 
-function renderInterroStale(){
-  const c=document.getElementById('interroStalePanel'); if(!c)return;
-  const items=allPourfendeurs.filter(m=>m.statut!=='Mort').map(m=>({m,f:freshnessState(m.updatedAt)})).filter(x=>x.f.cls!=='fresh-ok');
-  items.sort((a,b)=>(b.f.days??999)-(a.f.days??999));
-  const top=items.slice(0,6);
-  if(!top.length){c.innerHTML='';return;}
-  c.innerHTML=`<div class="verify-widget">
-    <div class="verify-widget-header">
-      <div class="verify-widget-title">⚠ Sujets à revérifier</div>
-      <div class="verify-widget-count">${items.length} au total — cliquer pour préparer l'interrogatoire</div>
-    </div>
-    <div class="verify-list">${top.map(({m,f})=>`
-      <div class="verify-row">
-        <span class="fresh-dot" style="color:${f.days>FRESH_STALE_DAYS?'#ff5544':'#e8a800'}"></span>
-        <span class="verify-row-name" onclick="selectInterroTarget('${m._id}')">${m.nom||'—'}<br><span class="verify-row-meta">${m.rang||''}${m.souffle?' · '+m.souffle:''} · ${f.days===999?'jamais vérifié':f.days+'j sans vérification'}</span></span>
-        <button class="btn btn-interro btn-sm" onclick="selectInterroTarget('${m._id}')">🗨 Interroger</button>
-      </div>`).join('')}
-    </div>
-  </div>`;
+function iqRenderChecks(){
+  const c=document.getElementById('iqChecks'); if(!c)return;
+  if(!_iqChecks.length){c.innerHTML=`<div class="iq-empty">Les comparaisons apparaissent dès que tu remplis les autres champs du formulaire.</div>`;return;}
+  const icon={ok:'✓',warn:'~',bad:'✗'};
+  c.innerHTML=`<div class="iq-check-head"><span>Champ</span><span>Déclaré</span><span>Archives</span><span></span></div>`+_iqChecks.map(k=>
+    `<div class="iq-check ${k.state}"><span class="iq-check-label">${esc(k.label)}</span><span>${esc(k.declared)}</span><span>${esc(k.archive)}${k.note?`<em>${esc(k.note)}</em>`:''}</span><span class="iq-check-ico">${icon[k.state]||''}</span></div>`).join('');
 }
-renderInterroTargetPanel(); // affiche l'état vide dès le chargement, avant toute donnée reçue
+
+function iqRenderQuestions(form){
+  const c=document.getElementById('iqQuestions'); if(!c)return;
+  if(!_iqQuestions.length){c.innerHTML=`<div class="iq-empty">Les questions apparaissent dès qu'un nom est saisi.</div>`;return;}
+  c.innerHTML=_iqQuestions.map((q,i)=>{
+    const a=_iqAnswers[q.id]||'';
+    return `<div class="iq-q ${a}" data-id="${q.id}">
+      <div class="iq-q-top"><span class="iq-q-num">${i+1}</span><span class="iq-q-text">${esc(q.q)}</span><span class="iq-tag t-${esc(q.tag)}">${esc(q.tag)}${q.tag==='Fiche'&&!q.declared?' · non déclaré':''}</span></div>
+      <div class="iq-q-ans">Réponse attendue : <b>${esc(q.a)}</b></div>
+      <div class="iq-q-btns">
+        <button class="iq-btn ok${a==='ok'?' on':''}" onclick="iqAnswer('${q.id}','ok')">✓ Juste</button>
+        <button class="iq-btn evasif${a==='evasif'?' on':''}" onclick="iqAnswer('${q.id}','evasif')">~ Évasif</button>
+        <button class="iq-btn faux${a==='faux'?' on':''}" onclick="iqAnswer('${q.id}','faux')">✗ Faux</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+window.iqAnswer=(id,val)=>{
+  _iqAnswers[id]=_iqAnswers[id]===val?'':val; // recliquer annule
+  const form=iqReadForm();
+  iqRenderQuestions(form); iqRenderVerdict();
+};
+
+function iqRenderVerdict(){
+  const c=document.getElementById('iqVerdict'); if(!c)return;
+  const v=iqVerdict(_iqChecks,_iqQuestions);
+  c.className='iq-verdict '+v.level;
+  c.innerHTML=`<div class="iq-verdict-label">${v.label}</div><div class="iq-verdict-hint">${v.hint}</div>
+    <div class="iq-verdict-count"><span class="ok">✓ ${v.ok}</span><span class="evasif">~ ${v.evasif}</span><span class="faux">✗ ${v.faux}</span></div>`;
+}
+
+window.iqReset=()=>{
+  IQ_FIELDS.forEach(f=>{const el=document.getElementById('iq'+f[0].toUpperCase()+f.slice(1)); if(el)el.value='';});
+  _iqMatchKey=null; _iqAnswers={}; iqUpdate();
+};
+window.iqCopyReport=async()=>{
+  const form=iqReadForm(); const v=iqVerdict(_iqChecks,_iqQuestions);
+  const lines=[`RAPPORT D'INTERROGATOIRE — ${form.nom||'sujet inconnu'}`,`Date : ${new Date().toLocaleString('fr-FR')}`,''];
+  lines.push('IDENTITÉ DÉCLARÉE');
+  [['Rang',form.rang],['Souffle',form.souffle],['Brigade',form.brigade],['Pilier référent',form.pilier],['Kinoe référent',form.kinoe],['Jours de service',form.jours]].forEach(([l,x])=>{if(x)lines.push(`- ${l} : ${x}`);});
+  lines.push('',_iqMatch?`FICHE RETROUVÉE : ${iqEntityName(_iqMatch.type,_iqMatch.entity)} (${_iqMatch.type==='wanted'?'cible recherchée':'pourfendeur'})`:'FICHE RETROUVÉE : aucune');
+  if(_iqChecks.length){lines.push('','COMPARAISON');_iqChecks.forEach(k=>lines.push(`- ${k.label} : déclaré « ${k.declared} » / archives « ${k.archive} » → ${{ok:'concorde',warn:'à vérifier',bad:'CONTRADICTION'}[k.state]}`));}
+  const asked=_iqQuestions.filter(q=>_iqAnswers[q.id]);
+  if(asked.length){lines.push('','QUESTIONS POSÉES');asked.forEach(q=>lines.push(`- ${q.q} → ${{ok:'juste',evasif:'évasif',faux:'FAUX'}[_iqAnswers[q.id]]} (attendu : ${q.a})`));}
+  lines.push('',`VERDICT : ${v.label} — ${v.hint}`);
+  try{await navigator.clipboard.writeText(lines.join('\n')); toast('Rapport copié dans le presse-papiers.','success');}
+  catch{toast('Copie impossible — autorise le presse-papiers.','error');}
+};
+
+/* Points d'entrée depuis une fiche (bouton « 🗨 »). */
+function iqFromEntity(type,id){
+  const e=type==='pourfendeur'?allPourfendeurs.find(x=>x._id===id):allWanted.find(x=>x._id===id);
+  if(!e)return;
+  showSection('interrogatoire');
+  iqReset();
+  document.getElementById('iqNom').value=iqEntityName(type,e);
+  _iqMatchKey=(type==='wanted'?'w:':'p:')+id;
+  iqUpdate();
+}
+window.goToInterrogatoire=(id)=>iqFromEntity('pourfendeur',id);
+window.openInterrogation=(type,id)=>iqFromEntity(type,id);
+
+iqUpdate(); // affiche l'état vide dès le chargement
 
 /* ═══ SPHÈRE SECRÈTE ═══ */
 let allSphere=[];
@@ -2969,7 +3162,7 @@ function _onWantedData(items){
   allWanted=items.filter(d=>!d.deleted);
   document.getElementById('badge-wanted').textContent=allWanted.length;
   document.getElementById('stat-wanted').textContent=allWanted.length;
-  updateStats();renderVerifyWidget(); // léger, nécessaire dès le tableau de bord
+  updateStats(); // léger, nécessaire dès le tableau de bord
   if(_sectionRendered.wanted) renderWanted(); // la grille complète n'est reconstruite que si déjà visitée
 }
 socket.emit('wanted:join', {}, res=>{ if(res?.ok) _onWantedData(res.items); });
@@ -2997,7 +3190,7 @@ function renderWanted(){
       <div class="wanted-name">${w.prenom||''} ${w.nom||''}</div>
       <div class="wanted-grade">${w.grade||'—'}</div>
       <div class="wanted-raison">${w.raison||''}</div>
-      <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-top:8px">${freshnessBadge(w.updatedAt)}${reliabPill(w.verifStatus)}</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-top:8px">${reliabPill(w.verifStatus)}</div>
       ${w.source?`<div style="font-size:.56rem;color:var(--text-muted);text-align:center;margin-top:5px">Source : ${w.source}</div>`:''}
       <div class="danger-section d${tier}">
         <div class="danger-label">Priorité de Neutralisation</div>
@@ -3010,7 +3203,6 @@ function renderWanted(){
         <div class="fiche-history-body">${wHist}${spark?`<div style="font-size:.55rem;color:var(--text-muted);margin-top:6px">Évolution du danger</div>${spark}`:''}</div>
       </div>
       ${currentUser?`<div style="display:flex;gap:6px;margin-top:10px">
-        <button class="btn btn-reverify btn-sm" style="flex:1" onclick="reverify('wanted','${w._id}','${nameEsc}')" title="Reconfirmer l'info">✓</button>
         <button class="btn btn-report btn-sm" style="flex:1" onclick="openReport('wanted','${w._id}','${nameEsc}')" title="Signaler une incohérence">🚩</button>
         <button class="btn btn-interro btn-sm" style="flex:1" onclick="openInterrogation('wanted','${w._id}')" title="Générer des questions d'interrogatoire">🗨</button>
         <button class="btn btn-ghost btn-sm" style="flex:1" onclick="openFormWanted('${w._id}')">✎</button>
@@ -3246,36 +3438,6 @@ function updateStats(){
   document.getElementById('stat-morts').textContent=allPourfendeurs.filter(m=>m.statut==='Mort').length;
 }
 
-function renderVerifyWidget(){
-  const c=document.getElementById('verify-widget-container'); if(!c)return;
-  const items=[];
-  allPourfendeurs.filter(m=>m.statut!=='Mort').forEach(m=>{
-    const f=freshnessState(m.updatedAt);
-    if(f.cls!=='fresh-ok') items.push({type:'pourfendeur',id:m._id,name:m.nom||'—',days:f.days??999,weight:f.days??999,meta:m.rang||''});
-  });
-  allWanted.forEach(w=>{
-    const f=freshnessState(w.updatedAt);
-    const name=`${w.prenom||''} ${w.nom||''}`.trim();
-    if(f.cls!=='fresh-ok') items.push({type:'wanted',id:w._id,name,days:f.days??999,weight:(f.days??999)*((w.dangerScore||50)/50),meta:`Priorité ${getDangerTier(w.dangerScore||rankScore[w.grade]||50).tier}`});
-  });
-  items.sort((a,b)=>b.weight-a.weight);
-  const top=items.slice(0,8);
-  if(!top.length){c.innerHTML='';return;}
-  c.innerHTML=`<div class="verify-widget">
-    <div class="verify-widget-header">
-      <div class="verify-widget-title">⚠ Fiches à vérifier</div>
-      <div class="verify-widget-count">${items.length} au total — priorité aux plus anciennes / plus dangereuses</div>
-    </div>
-    <div class="verify-list">${top.map(it=>`
-      <div class="verify-row">
-        <span class="fresh-dot" style="color:${it.days>FRESH_STALE_DAYS?'#ff5544':'#e8a800'}"></span>
-        <span class="verify-row-name" onclick="showSection('${it.type==='pourfendeur'?'registre':'wanted'}');${it.type==='pourfendeur'?`openProfile('${it.id}')`:''}">${it.name}<br><span class="verify-row-meta">${it.meta} · ${it.days===999?'jamais vérifié':it.days+'j sans vérification'}</span></span>
-        ${currentUser?`<button class="btn btn-reverify btn-sm" onclick="reverify('${it.type==='pourfendeur'?'pourfendeurs':'wanted'}','${it.id}','${it.name.replace(/'/g,"\\'")}')">✓ Revérifié</button>`:''}
-        <button class="btn btn-ghost btn-sm" onclick="showSection('${it.type==='pourfendeur'?'registre':'wanted'}')">Voir</button>
-      </div>`).join('')}
-    </div>
-  </div>`;
-}
 
 function renderDashPreview(){
   const c=document.getElementById('dash-preview');
