@@ -1065,6 +1065,7 @@ body{letter-spacing:.2px;}
 .iq-tag.t-Croisée{color:#8fb8ff;border-color:rgba(100,150,255,.4);}
 .iq-q-ans{margin:8px 0 10px 32px;font-size:.74rem;color:rgba(210,190,190,.85);line-height:1.5;}
 .iq-q-ans b{color:#ffd9a0;}
+.iq-q-note{display:block;margin-top:4px;font-size:.66rem;color:#ff9a9a;}
 .iq-q-btns{display:flex;gap:8px;margin-left:32px;flex-wrap:wrap;}
 .iq-btn{background:transparent;border:1px solid rgba(255,255,255,.14);color:var(--text-muted);border-radius:6px;padding:5px 12px;font-size:.68rem;transition:.15s;}
 .iq-btn.ok:hover,.iq-btn.ok.on{color:#00cc88;border-color:#00cc88;background:rgba(0,204,136,.1);}
@@ -2661,6 +2662,19 @@ function iqSame(a,b){ // égalité souple entre deux libellés (brigade, nom de 
   if(!x||!y)return false;
   return x===y||(x.length>=3&&y.length>=3&&(x.includes(y)||y.includes(x)))||iqNameScore(a,b)>=.8;
 }
+/* « Actif » = Vivant, comme le tableau de bord. Un Pourfendeur décédé ou à la retraite
+   ne doit plus apparaître dans les bonnes réponses (HG, Pilier d'un Souffle, liste des
+   Piliers, membres d'une brigade…). Tout est recalculé à chaque mise à jour du Codex. */
+function iqActive(p){return p.statut==='Vivant';}
+function iqStatutLabel(p){return p.statut==='Mort'?'décédé':p.statut==='Retraité'?'retraité':'';}
+function iqFindRef(name,ranks){ // référent cité : on préfère le titulaire encore actif s'il y en a un
+  const all=allPourfendeurs.filter(p=>ranks.includes(p.rang)&&iqSame(p.nom,name));
+  return all.find(iqActive)||all[0]||null;
+}
+function iqPartis(list){
+  const shown=list.slice(0,4).map(p=>`${p.nom} (${iqStatutLabel(p)})`).join(', ');
+  return list.length>4?`${shown} et ${list.length-4} autre${list.length-4>1?'s':''}`:shown;
+}
 function iqEntityName(type,e){return type==='wanted'?`${e.prenom||''} ${e.nom||''}`.trim():(e.nom||'');}
 
 function iqReadForm(){
@@ -2686,7 +2700,7 @@ function iqFindCandidates(nom){
 function iqBuildChecks(form,match){
   const checks=[];
   const add=(label,declared,archive,state,note)=>checks.push({label,declared,archive,state,note:note||''});
-  const roster=allPourfendeurs.filter(p=>p.statut!=='Mort');
+  const roster=allPourfendeurs.filter(iqActive);
   if(match&&match.type==='pourfendeur'){
     const e=match.entity;
     if(form.rang){
@@ -2696,8 +2710,16 @@ function iqBuildChecks(form,match){
     }
     if(form.souffle) add('Souffle',form.souffle,e.souffle||'—',!e.souffle?'warn':(form.souffle===e.souffle?'ok':'bad'));
     if(form.brigade) add('Brigade',form.brigade,e.brigade||'—',!e.brigade?'warn':(iqSame(form.brigade,e.brigade)?'ok':'bad'));
-    if(form.pilier) add('Pilier référent',form.pilier,e.pilier_ref||'—',!e.pilier_ref?'warn':(iqSame(form.pilier,e.pilier_ref)?'ok':'bad'));
-    if(form.kinoe) add('Kinoe référent',form.kinoe,e.kinoe_ref||'—',!e.kinoe_ref?'warn':(iqSame(form.kinoe,e.kinoe_ref)?'ok':'bad'));
+    if(form.pilier){
+      const ref=e.pilier_ref?iqFindRef(e.pilier_ref,['Pilier']):null;
+      const st=ref&&!iqActive(ref)?iqStatutLabel(ref):'';
+      add('Pilier référent',form.pilier,(e.pilier_ref||'—')+(st?` (${st})`:''),!e.pilier_ref?'warn':(iqSame(form.pilier,e.pilier_ref)?(st?'warn':'ok'):'bad'),st?`${ref.nom} est ${st} : la fiche est peut-être à mettre à jour`:'');
+    }
+    if(form.kinoe){
+      const ref=e.kinoe_ref?iqFindRef(e.kinoe_ref,['Kinoe','Kinoto']):null;
+      const st=ref&&!iqActive(ref)?iqStatutLabel(ref):'';
+      add('Kinoe référent',form.kinoe,(e.kinoe_ref||'—')+(st?` (${st})`:''),!e.kinoe_ref?'warn':(iqSame(form.kinoe,e.kinoe_ref)?(st?'warn':'ok'):'bad'),st?`${ref.nom} est ${st} : la fiche est peut-être à mettre à jour`:'');
+    }
     if(form.jours!==''){
       const d=parseInt(form.jours,10), a=e.jours||0;
       const tol=Math.max(30,a*.2);
@@ -2710,12 +2732,14 @@ function iqBuildChecks(form,match){
       add('Brigade',form.brigade,n?`${n} membre(s) connu(s)`:'Inconnue des Archives',n?'ok':'bad');
     }
     if(form.pilier){
-      const p=allPourfendeurs.find(x=>x.rang==='Pilier'&&iqSame(x.nom,form.pilier));
-      add('Pilier référent',form.pilier,p?`${p.nom} — ${p.souffle||'—'}`:'Aucun Pilier de ce nom',p?'ok':'bad');
+      const p=iqFindRef(form.pilier,['Pilier']);
+      const st=p&&!iqActive(p)?iqStatutLabel(p):'';
+      add('Pilier référent',form.pilier,p?`${p.nom} — ${p.souffle||'—'}${st?` (${st})`:''}`:'Aucun Pilier de ce nom',p&&!st?'ok':'bad',st?`${p.nom} est ${st} : ne peut plus être un référent en service`:'');
     }
     if(form.kinoe){
-      const p=allPourfendeurs.find(x=>(x.rang==='Kinoe'||x.rang==='Kinoto')&&iqSame(x.nom,form.kinoe));
-      add('Kinoe référent',form.kinoe,p?`${p.nom} — ${p.rang}`:'Aucun Kinoe de ce nom',p?'ok':'bad');
+      const p=iqFindRef(form.kinoe,['Kinoe','Kinoto']);
+      const st=p&&!iqActive(p)?iqStatutLabel(p):'';
+      add('Kinoe référent',form.kinoe,p?`${p.nom} — ${p.rang}${st?` (${st})`:''}`:'Aucun Kinoe de ce nom',p&&!st?'ok':'bad',st?`${p.nom} est ${st} : ne peut plus être un référent en service`:'');
     }
     if(form.souffle){
       const n=roster.filter(p=>p.souffle===form.souffle).length;
@@ -2730,13 +2754,13 @@ function iqBuildChecks(form,match){
    préparer sa réponse. */
 function iqBuildQuestions(form,match){
   const qs=[]; const seen=new Set();
-  const add=(q,a,tag,field)=>{
+  const add=(q,a,tag,field,note)=>{
     if(!q||a===undefined||a===null||a==='')return;
     const id='q'+normName(q).replace(/ /g,'').slice(0,60);
     if(seen.has(id))return; seen.add(id);
-    qs.push({id,q,a:String(a),tag,declared:field?!!form[field]:false});
+    qs.push({id,q,a:String(a),tag,note:note||'',declared:field?!!form[field]:false});
   };
-  const roster=allPourfendeurs.filter(p=>p.statut!=='Mort');
+  const roster=allPourfendeurs.filter(iqActive);
   const e=match?.type==='pourfendeur'?match.entity:null;
   const selfId=e?._id;
 
@@ -2744,18 +2768,21 @@ function iqBuildQuestions(form,match){
     add('Quel est ton rang exact au sein de l\'Ordre ?',e.rang,'Fiche','rang');
     add('Quel Souffle pratiques-tu ?',e.souffle,'Fiche','souffle');
     add('À quelle brigade es-tu rattaché ?',e.brigade,'Fiche','brigade');
-    add('Sous les ordres de quel Pilier sers-tu ?',e.pilier_ref,'Fiche','pilier');
-    add('Qui est ton Kinoe référent ?',e.kinoe_ref,'Fiche','kinoe');
+    const refP=e.pilier_ref?iqFindRef(e.pilier_ref,['Pilier']):null, refK=e.kinoe_ref?iqFindRef(e.kinoe_ref,['Kinoe','Kinoto']):null;
+    const stale=r=>r&&!iqActive(r)?`⚠ ${r.nom} est ${iqStatutLabel(r)} : la fiche du sujet est peut-être à mettre à jour`:'';
+    add('Sous les ordres de quel Pilier sers-tu ?',e.pilier_ref,'Fiche','pilier',stale(refP));
+    add('Qui est ton Kinoe référent ?',e.kinoe_ref,'Fiche','kinoe',stale(refK));
     if(e.jours) add('Depuis combien de temps es-tu en service ? (une estimation proche est acceptable)',`${e.jours} jours`,'Fiche','jours');
     if(e.pilier_ref){
-      const pil=allPourfendeurs.find(p=>p.rang==='Pilier'&&iqSame(p.nom,e.pilier_ref));
-      if(pil&&pil.souffle) add(`Quel Souffle pratique ${pil.nom}, ton Pilier référent ?`,pil.souffle,'Croisée');
+      const pil=iqFindRef(e.pilier_ref,['Pilier']);
+      if(pil&&iqActive(pil)&&pil.souffle) add(`Quel Souffle pratique ${pil.nom}, ton Pilier référent ?`,pil.souffle,'Croisée');
     }
     if(e.kinoe_ref){
-      const kin=allPourfendeurs.find(p=>(p.rang==='Kinoe'||p.rang==='Kinoto')&&iqSame(p.nom,e.kinoe_ref));
-      if(kin&&kin.souffle) add(`Quel Souffle pratique ${kin.nom}, ton Kinoe référent ?`,kin.souffle,'Croisée');
+      const kin=iqFindRef(e.kinoe_ref,['Kinoe','Kinoto']);
+      if(kin&&iqActive(kin)&&kin.souffle) add(`Quel Souffle pratique ${kin.nom}, ton Kinoe référent ?`,kin.souffle,'Croisée');
     }
     if(e.info) add('Décris tes dernières missions ou les observations rapportées à ton sujet.',e.info,'Fiche');
+    if(e.statut==='Retraité') add('Pourquoi es-tu encore en activité alors que ta fiche indique la retraite ?','La fiche indique une retraite — le sujet ne devrait plus être en service','Alerte');
     if(e.statut==='Mort') add('Quand et comment ta fiche a-t-elle été déclarée « tombé au combat » ?','La fiche indique un décès — toute réponse est suspecte','Alerte');
   }
   if(match?.type==='wanted'){
@@ -2774,8 +2801,11 @@ function iqBuildQuestions(form,match){
     const hg=[...memes].sort((a,b)=>(hierarchyIdx[a.rang]??99)-(hierarchyIdx[b.rang]??99))[0];
     if(hg) add(`Qui est le Haut Gradé (HG) référent du ${souffle} ?`,`${hg.nom} (${hg.rang})`,'Culture');
     if(memes.length) add(`Cite un autre Pourfendeur pratiquant le ${souffle}.`,memes.slice(0,6).map(p=>p.nom).join(', '),'Culture');
-    const pil=allPourfendeurs.find(p=>p.rang==='Pilier'&&p.souffle===souffle&&p.statut!=='Mort');
-    if(pil) add(`Quel Pilier incarne le ${souffle} ?`,pil.nom,'Culture');
+    const pils=allPourfendeurs.filter(p=>p.rang==='Pilier'&&p.souffle===souffle);
+    const actifs=pils.filter(iqActive), partis=pils.filter(p=>!iqActive(p));
+    const noteP=partis.length?`Ne plus accepter : ${iqPartis(partis)}`:'';
+    if(actifs.length) add(`Quel Pilier incarne le ${souffle} ?`,actifs.map(p=>p.nom).join(', '),'Culture',null,noteP);
+    else if(partis.length) add(`Quel Pilier incarne actuellement le ${souffle} ?`,'Aucun — poste vacant','Culture',null,noteP);
   }
   const brigade=form.brigade||e?.brigade;
   if(brigade){
@@ -2783,8 +2813,8 @@ function iqBuildQuestions(form,match){
     if(mates.length) add(`Cite un autre membre de la brigade « ${brigade} ».`,mates.slice(0,6).map(p=>p.nom).join(', '),'Culture');
   }
   if(form.pilier&&!e){
-    const pil=allPourfendeurs.find(p=>p.rang==='Pilier'&&iqSame(p.nom,form.pilier));
-    if(pil&&pil.souffle) add(`Quel Souffle pratique le Pilier ${pil.nom} ?`,pil.souffle,'Culture');
+    const pil=iqFindRef(form.pilier,['Pilier']);
+    if(pil&&iqActive(pil)&&pil.souffle) add(`Quel Souffle pratique le Pilier ${pil.nom} ?`,pil.souffle,'Culture');
   }
   const rang=form.rang||e?.rang;
   if(rang&&hierarchyIdx[rang]>0){
@@ -2793,9 +2823,10 @@ function iqBuildQuestions(form,match){
   }
   if(form.nom||e||match){
     const maitre=roster.find(p=>p.rang==='Maître des Pourfendeurs');
-    add('Qui est actuellement le Maître des Pourfendeurs ?',maitre?maitre.nom:'Poste vacant','Culture');
-    const piliers=roster.filter(p=>p.rang==='Pilier');
-    if(piliers.length) add('Combien de Piliers sont en service et lesquels ?',`${piliers.length} : ${piliers.map(p=>p.nom).join(', ')}`,'Culture');
+    const exMaitre=allPourfendeurs.filter(p=>p.rang==='Maître des Pourfendeurs'&&!iqActive(p));
+    add('Qui est actuellement le Maître des Pourfendeurs ?',maitre?maitre.nom:'Poste vacant','Culture',null,exMaitre.length?`Ne plus accepter : ${iqPartis(exMaitre)}`:'');
+    const piliers=roster.filter(p=>p.rang==='Pilier'), anciens=allPourfendeurs.filter(p=>p.rang==='Pilier'&&!iqActive(p));
+    if(piliers.length) add('Combien de Piliers sont en service et lesquels ?',`${piliers.length} : ${piliers.map(p=>p.nom).join(', ')}`,'Culture',null,anciens.length?`Ne plus accepter : ${iqPartis(anciens)}`:'');
   }
   /* non déclarés d'abord, puis fiche/cible, puis le reste */
   const rank=q=>q.tag==='Alerte'?0:q.tag==='Culture'?3:(q.declared?2:1);
@@ -2851,7 +2882,7 @@ function iqRenderMatch(form,cands,best){
   const selKey=_iqMatch?(best?.key):null;
   c.innerHTML=list.map(x=>{
     const e=x.entity, isW=x.type==='wanted';
-    const meta=isW?`Cible recherchée · ${esc(e.grade||'—')}`:`${esc(e.rang||'—')} · ${esc(e.souffle||'—')}${e.statut==='Mort'?' · ✝ décédé':''}`;
+    const meta=isW?`Cible recherchée · ${esc(e.grade||'—')}`:`${esc(e.rang||'—')} · ${esc(e.souffle||'—')}${e.statut==='Mort'?' · ✝ décédé':e.statut==='Retraité'?' · ◈ retraité':''}`;
     const photo=!isW&&e.photoCount?`<img src="${photoSrc('pourfendeurs',e._id,e.photos?.[0],0)}" alt="">`:(isW?'🎯':'⚔');
     return `<div class="iq-cand${x.key===selKey?' sel':''}${isW?' wanted':''}" onclick="iqPick('${x.key}')">
       <div class="iq-cand-photo">${photo}</div>
@@ -2863,6 +2894,8 @@ function iqRenderMatch(form,cands,best){
   if(_iqMatch?.type==='wanted'){
     const w=_iqMatch.entity;
     c.innerHTML=`<div class="iq-alert danger">🎯 Le sujet correspond à une <b>cible recherchée</b>${w.raison?` — ${esc(w.raison)}`:''}</div>`+c.innerHTML;
+  }else if(_iqMatch?.entity?.statut==='Retraité'){
+    c.innerHTML=`<div class="iq-alert danger">◈ La fiche retrouvée est marquée <b>retraité</b> — le sujet ne devrait plus être en service.</div>`+c.innerHTML;
   }else if(_iqMatch?.entity?.statut==='Mort'){
     c.innerHTML=`<div class="iq-alert danger">✝ La fiche retrouvée est marquée <b>décédé</b> — usurpation d'identité possible.</div>`+c.innerHTML;
   }
@@ -2883,7 +2916,7 @@ function iqRenderQuestions(form){
     const a=_iqAnswers[q.id]||'';
     return `<div class="iq-q ${a}" data-id="${q.id}">
       <div class="iq-q-top"><span class="iq-q-num">${i+1}</span><span class="iq-q-text">${esc(q.q)}</span><span class="iq-tag t-${esc(q.tag)}">${esc(q.tag)}${q.tag==='Fiche'&&!q.declared?' · non déclaré':''}</span></div>
-      <div class="iq-q-ans">Réponse attendue : <b>${esc(q.a)}</b></div>
+      <div class="iq-q-ans">Réponse attendue : <b>${esc(q.a)}</b>${q.note?`<span class="iq-q-note">${esc(q.note)}</span>`:''}</div>
       <div class="iq-q-btns">
         <button class="iq-btn ok${a==='ok'?' on':''}" onclick="iqAnswer('${q.id}','ok')">✓ Juste</button>
         <button class="iq-btn evasif${a==='evasif'?' on':''}" onclick="iqAnswer('${q.id}','evasif')">~ Évasif</button>
@@ -3162,7 +3195,7 @@ function _onWantedData(items){
   allWanted=items.filter(d=>!d.deleted);
   document.getElementById('badge-wanted').textContent=allWanted.length;
   document.getElementById('stat-wanted').textContent=allWanted.length;
-  updateStats(); // léger, nécessaire dès le tableau de bord
+  updateStats(); iqUpdate(); // léger, nécessaire dès le tableau de bord
   if(_sectionRendered.wanted) renderWanted(); // la grille complète n'est reconstruite que si déjà visitée
 }
 socket.emit('wanted:join', {}, res=>{ if(res?.ok) _onWantedData(res.items); });
