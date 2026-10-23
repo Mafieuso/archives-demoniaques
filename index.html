@@ -1073,6 +1073,53 @@ body{letter-spacing:.2px;}
 .iq-btn.faux:hover,.iq-btn.faux.on{color:#ff5544;border-color:#ff5544;background:rgba(255,68,68,.1);}
 @media (max-width:980px){.iq-grid{grid-template-columns:1fr;}.iq-verdict{position:static;}}
 
+/* ── Cartes de profil (registre) ── */
+.view-toggle{margin-left:auto;display:inline-flex;border:1px solid var(--border);border-radius:6px;overflow:hidden;}
+.view-toggle button{background:transparent;border:none;color:var(--text-muted);padding:6px 14px;font-family:'Cinzel',serif;font-size:.56rem;letter-spacing:2px;text-transform:uppercase;transition:.2s;}
+.view-toggle button.on{background:rgba(201,162,39,.14);color:var(--gold);}
+.view-toggle button:hover:not(.on){color:var(--text);}
+#registreFilters{align-items:center;}
+.pcard-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(205px,1fr));gap:18px;padding:22px 24px 26px;position:relative;z-index:1;}
+.pcard{--bc:#c9a227;--bcrgb:201,162,39;position:relative;border-radius:12px;overflow:hidden;cursor:pointer;background:linear-gradient(170deg,rgba(18,12,9,.98),rgba(6,4,3,1));border:1px solid rgba(var(--bcrgb),.22);box-shadow:0 6px 22px rgba(0,0,0,.5);transition:transform .28s cubic-bezier(.2,.8,.2,1),box-shadow .28s,border-color .28s;display:flex;flex-direction:column;}
+.pcard::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,var(--bc),transparent);z-index:3;}
+.pcard:hover{transform:translateY(-6px);border-color:rgba(var(--bcrgb),.7);box-shadow:0 16px 38px rgba(0,0,0,.65),0 0 28px -4px rgba(var(--bcrgb),.45);}
+.pcard-photo{position:relative;aspect-ratio:5/6;background:radial-gradient(circle at 50% 35%,rgba(var(--bcrgb),.16),#050302 70%);overflow:hidden;}
+.pcard-photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .5s ease,filter .3s;}
+.pcard:hover .pcard-photo img{transform:scale(1.07);}
+.pcard-ph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding-bottom:34px;font-size:3.2rem;opacity:.5;filter:drop-shadow(0 0 14px rgba(var(--bcrgb),.7));}
+.pcard.nophoto .pcard-ph{font-size:4.4rem;opacity:.62;}
+.pcard.nophoto .pcard-photo::before{content:'';position:absolute;left:50%;top:42%;width:120px;height:120px;transform:translate(-50%,-50%);border-radius:50%;border:1px solid rgba(var(--bcrgb),.35);box-shadow:0 0 0 10px rgba(var(--bcrgb),.05),inset 0 0 30px rgba(var(--bcrgb),.15);}
+.pcard .badge::after{display:none;}
+.pcard-photo::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(5,3,2,.97) 0%,rgba(5,3,2,.55) 30%,transparent 62%);pointer-events:none;}
+.pcard-rank{position:absolute;top:10px;left:10px;z-index:2;}
+.pcard .badge{padding:3px 9px;font-size:.56rem;letter-spacing:1.5px;backdrop-filter:blur(4px);background-color:rgba(0,0,0,.55);}
+.pcard-status{position:absolute;top:10px;right:10px;z-index:2;display:inline-flex;align-items:center;gap:5px;font-family:'Cormorant',serif;font-size:.62rem;letter-spacing:1.5px;text-transform:uppercase;padding:3px 9px;border-radius:12px;background:rgba(0,0,0,.6);border:1px solid rgba(255,255,255,.1);color:var(--text);backdrop-filter:blur(4px);}
+.pcard-status .status-dot{width:6px;height:6px;margin:0;}
+.pcard-id{position:absolute;left:0;right:0;bottom:0;padding:14px 14px 12px;z-index:2;}
+.pcard-name{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:700;font-size:1.32rem;line-height:1.15;color:#fff;text-shadow:0 2px 14px rgba(0,0,0,.9),0 0 18px rgba(var(--bcrgb),.35);word-break:break-word;}
+.pcard-souffle{font-family:'Cormorant',serif;font-size:.7rem;letter-spacing:1.5px;color:var(--bc);margin-top:3px;text-transform:uppercase;}
+.pcard-meta{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 14px 12px;font-size:.72rem;color:var(--text-muted);border-top:1px solid rgba(var(--bcrgb),.14);min-height:40px;}
+.pcard-brigade{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.pcard-days{font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:1px;color:var(--bc);white-space:nowrap;}
+.pcard-actions{position:absolute;right:8px;bottom:56px;z-index:4;display:flex;gap:6px;opacity:0;transform:translateY(6px);transition:.2s;}
+.pcard:hover .pcard-actions,.pcard:focus-within .pcard-actions{opacity:1;transform:none;}
+.pcard-actions button{width:28px;height:28px;border-radius:6px;border:1px solid rgba(255,255,255,.18);background:rgba(0,0,0,.72);color:var(--text);font-size:.8rem;line-height:1;display:flex;align-items:center;justify-content:center;transition:.15s;}
+.pcard-actions button:hover{border-color:var(--gold);color:var(--gold);}
+.pcard-actions button.del:hover{border-color:#ff5544;color:#ff5544;}
+/* rangs */
+.pcard.r-Maitre{border-color:rgba(240,208,96,.6);box-shadow:0 0 30px -6px rgba(240,208,96,.5),0 6px 22px rgba(0,0,0,.5);}
+.pcard.r-Conseiller{border-color:rgba(200,128,240,.45);}
+.pcard.r-Pilier{border-color:rgba(204,0,0,.5);box-shadow:0 0 24px -8px rgba(204,0,0,.5),0 6px 22px rgba(0,0,0,.5);}
+.pcard.r-Maitre::after,.pcard.r-Pilier::after{content:'';position:absolute;inset:0;border-radius:12px;pointer-events:none;box-shadow:inset 0 0 0 1px rgba(255,255,255,.04),inset 0 0 30px rgba(var(--bcrgb),.08);z-index:3;}
+/* statuts */
+.pcard.st-Retraité{--bc:#3dba7a;--bcrgb:61,186,122;}
+.pcard.st-Retraité .pcard-photo img{filter:saturate(.55) brightness(.9);}
+.pcard.st-Mort{--bc:#888;--bcrgb:136,136,136;opacity:.82;}
+.pcard.st-Mort .pcard-photo img{filter:grayscale(1) brightness(.7);}
+.pcard.st-Mort .pcard-name{color:#aaa;}
+.pcard.st-Mort .pcard-photo::before{content:'✝';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:4.5rem;color:rgba(255,255,255,.1);z-index:1;}
+@media (max-width:640px){.pcard-grid{grid-template-columns:repeat(2,1fr);gap:12px;padding:14px;}.pcard-name{font-size:1.05rem;}.pcard-actions{opacity:1;transform:none;}}
+
 </style>
 </head>
 <body>
@@ -1229,6 +1276,7 @@ body{letter-spacing:.2px;}
         <span class="filter-chip" onclick="filterRegistre('Vivant',this)">● En service</span>
         <span class="filter-chip" onclick="filterRegistre('Mort',this)">✝ Décédés</span>
         <span class="filter-chip" onclick="filterRegistre('Retraité',this)">◈ Retraités</span>
+        <span class="view-toggle"><button id="viewCards" onclick="setRegistreView('cards')">▦ Cartes</button><button id="viewList" onclick="setRegistreView('list')">☰ Liste</button></span>
       </div>
       <div id="registreContainer"><div class="loader"></div></div>
     </section>
@@ -2412,6 +2460,46 @@ function _onPourfendeursData(items){
 socket.emit('pourfendeurs:join', {}, res=>{ if(res?.ok) _onPourfendeursData(res.items); });
 socket.on('pourfendeurs:state', _onPourfendeursData);
 
+/* ── Vue du registre : cartes (défaut) ou liste, mémorisée dans le navigateur ── */
+let registreView='cards';
+try{ if(localStorage.getItem('codexRegistreView')==='list') registreView='list'; }catch{}
+window.setRegistreView=(v)=>{
+  registreView=v==='list'?'list':'cards';
+  try{ localStorage.setItem('codexRegistreView',registreView); }catch{}
+  syncViewToggle(); renderRegistre();
+};
+function syncViewToggle(){
+  document.getElementById('viewCards')?.classList.toggle('on',registreView==='cards');
+  document.getElementById('viewList')?.classList.toggle('on',registreView==='list');
+}
+function buildMemberCard(m){
+  const rang=m.rang||'';
+  const rk=rang==='Maître des Pourfendeurs'?'Maitre':rang;
+  const bcls=['Maître des Pourfendeurs','Conseiller','Pilier','Kinoe','Kinoto'].includes(rang)?'badge-'+rk:'badge-default';
+  const color=souffleColors[m.souffle]||'#c9a227';
+  const statut=m.statut||'Vivant';
+  const statutLabel={Vivant:'En service',Mort:'Tombé',Retraité:'Retraite'}[statut]||statut;
+  const pos=m.photos?.[0]?.position??50;
+  const photo=m.photoCount
+    ?`<img loading="lazy" decoding="async" src="${photoSrc('pourfendeurs',m._id,m.photos?.[0],0)}" alt="" style="object-position:50% ${pos}%">`
+    :`<span class="pcard-ph">${souffleEmoji[m.souffle]||'⚔'}</span>`;
+  const nameEsc=(m.nom||'').replace(/'/g,"\\'").replace(/"/g,'&quot;');
+  return `<div class="pcard r-${rk} st-${statut}${m.photoCount?'':' nophoto'}" style="--bc:${color};--bcrgb:${hexToRgb(color)}" onclick="openProfile('${m._id}')">
+    <div class="pcard-photo">${photo}
+      <span class="pcard-rank"><span class="badge ${bcls}">${esc(rang||'—')}</span></span>
+      <span class="pcard-status"><span class="status-dot status-${statut}"></span>${statutLabel}</span>
+      <div class="pcard-id"><div class="pcard-name">${esc(m.nom||'—')}</div>${m.souffle?`<div class="pcard-souffle">${esc(m.souffle)}</div>`:''}</div>
+    </div>
+    <div class="pcard-meta"><span class="pcard-brigade">${m.brigade&&!/^[\s\/\\\-–—.?]*$/.test(m.brigade)?esc(m.brigade):'Sans brigade'}</span><span class="pcard-days">${m.jours||0} j</span></div>
+    ${currentUser?`<div class="pcard-actions"><button title="Modifier" onclick="event.stopPropagation();openFormMembre('${m._id}')">✎</button><button class="del" title="Supprimer" onclick="event.stopPropagation();deleteMembre('${m._id}','${nameEsc}')">✕</button></div>`:''}
+  </div>`;
+}
+function memberCollection(list){
+  return registreView==='cards'
+    ?`<div class="pcard-grid">${list.map(buildMemberCard).join('')}</div>`
+    :`<table class="member-table"><tbody>${list.map(buildMemberRow).join('')}</tbody></table>`;
+}
+
 function buildMemberRow(m){
   const nc=m.statut==='Mort'?'mort':m.statut==='Retraité'?'retraite':'';
   const rang=m.rang||'';
@@ -2421,6 +2509,7 @@ function buildMemberRow(m){
 }
 
 function renderRegistre(){
+  syncViewToggle();
   const c=document.getElementById('registreContainer');
   let data=[...allPourfendeurs];
   if(searchQuery){const q=searchQuery.toLowerCase();data=data.filter(m=>m.nom?.toLowerCase().includes(q)||m.souffle?.toLowerCase().includes(q)||m.rang?.toLowerCase().includes(q)||m.brigade?.toLowerCase().includes(q));}
@@ -2437,18 +2526,18 @@ function renderRegistre(){
       const emoji=souffleEmoji[souffle]||'⚔';
       const isOpen=_openBreathGroups.has(souffle);
       const souffleEsc=souffle.replace(/'/g,"\\'");
-      return `<div class="breath-group${isOpen?' open':''}" style="--bc:${color};--bcrgb:${hexToRgb(color)}"><div class="breath-header" onclick="toggleBreathGroup('${souffleEsc}',this)"><span class="breath-icon">${emoji}</span><span class="breath-name">${souffle}</span><span class="breath-count">${membres.length} membre${membres.length>1?'s':''}</span><span class="breath-chevron">▾</span></div><div class="breath-body"><table class="member-table"><tbody>${membres.map(buildMemberRow).join('')}</tbody></table></div></div>`;
+      return `<div class="breath-group${isOpen?' open':''}" style="--bc:${color};--bcrgb:${hexToRgb(color)}"><div class="breath-header" onclick="toggleBreathGroup('${souffleEsc}',this)"><span class="breath-icon">${emoji}</span><span class="breath-name">${souffle}</span><span class="breath-count">${membres.length} membre${membres.length>1?'s':''}</span><span class="breath-chevron">▾</span></div><div class="breath-body">${memberCollection(membres)}</div></div>`;
     }).join('');
   }
 
   if(registreFilter==='all'||registreFilter==='Retraité'){
     const retraites=data.filter(m=>m.statut==='Retraité');
-    if(retraites.length) html+=`<div class="special-group sg-retraite"><div class="special-group-header"><span class="special-group-title">◈ En Retraite</span><span class="breath-count" style="border-color:rgba(46,139,87,.4);color:#3dba7a">${retraites.length} membre${retraites.length>1?'s':''}</span></div><table class="member-table"><tbody>${retraites.map(buildMemberRow).join('')}</tbody></table></div>`;
+    if(retraites.length) html+=`<div class="special-group sg-retraite"><div class="special-group-header"><span class="special-group-title">◈ En Retraite</span><span class="breath-count" style="border-color:rgba(46,139,87,.4);color:#3dba7a">${retraites.length} membre${retraites.length>1?'s':''}</span></div>${memberCollection(retraites)}</div>`;
   }
 
   if(registreFilter==='all'||registreFilter==='Mort'){
     const morts=data.filter(m=>m.statut==='Mort');
-    if(morts.length) html+=`<div class="special-group sg-mort"><div class="special-group-header"><span class="special-group-title">✝ Pourfendeurs Tombés</span><span class="breath-count" style="border-color:rgba(80,80,80,.4);color:#888">${morts.length} membre${morts.length>1?'s':''}</span></div><table class="member-table"><tbody>${morts.map(buildMemberRow).join('')}</tbody></table></div>`;
+    if(morts.length) html+=`<div class="special-group sg-mort"><div class="special-group-header"><span class="special-group-title">✝ Pourfendeurs Tombés</span><span class="breath-count" style="border-color:rgba(80,80,80,.4);color:#888">${morts.length} membre${morts.length>1?'s':''}</span></div>${memberCollection(morts)}</div>`;
   }
 
   c.innerHTML=html||'<div class="empty-state"><div class="empty-icon">⚔</div><p>Aucun Pourfendeur trouvé</p></div>';
