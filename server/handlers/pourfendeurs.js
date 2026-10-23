@@ -17,11 +17,39 @@ function sanitizeForBroadcast(doc){
   return { ...rest, photos: photosMeta, photoCount: photosMeta.length };
 }
 
+/* Équivalent de sanitizeForBroadcast, exécuté par MongoDB lui-même : les
+   data URI ne quittent jamais la base, seul le résumé léger est lu. */
+const listPipeline = [
+  { $match: { deleted: { $ne: true } } },
+  { $addFields: {
+    _plist: {
+      $cond: [
+        { $gt: [{ $size: { $cond: [{ $isArray: "$photos" }, "$photos", []] } }, 0] },
+        "$photos",
+        { $cond: [
+          { $and: [{ $eq: [{ $type: "$photo" }, "string"] }, { $ne: ["$photo", ""] }] },
+          [{ url: "$photo", position: { $ifNull: ["$photoPosition", 50] } }],
+          []
+        ] }
+      ]
+    }
+  } },
+  { $addFields: {
+    photos: { $map: { input: "$_plist", as: "p", in: {
+      position: { $ifNull: ["$$p.position", 50] },
+      url: { $cond: [{ $regexMatch: { input: { $ifNull: ["$$p.url", ""] }, regex: "^data:" } }, "$$REMOVE", "$$p.url"] }
+    } } },
+    photoCount: { $size: "$_plist" }
+  } },
+  { $project: { _plist: 0, photo: 0 } }
+];
+
 const handlers = makeEntityHandlers({
   collectionName: "pourfendeurs",
   socketName: "pourfendeurs",
   nameField: (doc) => doc.nom || "?",
-  sanitizeForBroadcast
+  sanitizeForBroadcast,
+  listPipeline
 });
 
 export const initPourfendeurs = handlers.init;

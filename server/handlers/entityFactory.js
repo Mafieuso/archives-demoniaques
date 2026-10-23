@@ -9,15 +9,38 @@ import { isEditor } from "../auth.js";
 import { logAction } from "./logs.js";
 import { registerBroadcaster } from "./entityRegistry.js";
 
-export function makeEntityHandlers({ collectionName, socketName, nameField, createRequiresRole, requireRoleForAll, beforeSave, sanitizeForBroadcast }){
+export function makeEntityHandlers({ collectionName, socketName, nameField, createRequiresRole, requireRoleForAll, beforeSave, sanitizeForBroadcast, listPipeline }){
   let ioRef = null;
   const room = `room:${socketName}`;
 
-  async function activeItems(db){
+  /* Cache mémoire de l'état diffusé : sans lui, chaque connexion ou
+     modification relisait toute la collection dans MongoDB (3-4 s pour
+     174 pourfendeurs à cause des photos). Invalidé à chaque
+     broadcastState() (toutes les écritures y passent) et expiré au bout
+     de 5 min au cas où la base serait modifiée hors de l'appli. */
+  const CACHE_TTL_MS = 5 * 60 * 1000;
+  let cache = null;
+  let cacheAt = 0;
+  let inflight = null;
+
+  async function loadItems(db){
+    /* listPipeline : MongoDB construit lui-même la version allégée (sans
+       base64) au lieu de rapatrier les documents complets. */
+    if(listPipeline) return db.collection(collectionName).aggregate(listPipeline).toArray();
     const docs = await db.collection(collectionName).find({ deleted: { $ne: true } }).toArray();
     return sanitizeForBroadcast ? docs.map(sanitizeForBroadcast) : docs;
   }
+  async function activeItems(db){
+    if(cache && Date.now() - cacheAt < CACHE_TTL_MS) return cache;
+    if(!inflight){
+      inflight = loadItems(db)
+        .then(items => { cache = items; cacheAt = Date.now(); return items; })
+        .finally(() => { inflight = null; });
+    }
+    return inflight;
+  }
   async function broadcastState(){
+    cache = null;
     if(!ioRef) return;
     const db = await getDb();
     const items = await activeItems(db);
