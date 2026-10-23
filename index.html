@@ -627,26 +627,29 @@ body::after{content:'';position:fixed;left:0;width:100%;height:2px;background:li
   .wanted-grid{grid-template-columns:1fr;}
 }
 /* ═══ CURSEUR PERSONNALISÉ ═══ */
-*{cursor:none !important;}
-#codex-cursor{position:fixed;top:0;left:0;pointer-events:none;z-index:999999;will-change:transform;transition:filter .15s;}
-#codex-cursor.is-hover{filter:drop-shadow(0 0 4px rgba(201,162,39,.9));}
-@media(pointer:coarse){#codex-cursor{display:none;}*{cursor:auto !important;}}
+/* Curseur thématique NATIF (propriété CSS cursor) : dessiné par le système, il ne
+   saccade jamais même quand la page est occupée — contrairement à l'ancien curseur
+   fabriqué en HTML qui suivait la souris via JavaScript. */
+*{cursor:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'><path d='M3 3 L3 20 L7 16 L10.5 22.5 L13 21.5 L9.5 15 L16 15 Z' fill='rgba(0,0,0,.45)'/><path d='M2 2 L2 19 L6 15 L9.5 21.5 L12 20.5 L8.5 14 L15 14 Z' fill='%23120808' stroke='%23c9a227' stroke-width='1.1' stroke-linejoin='round'/></svg>") 2 2,auto !important;}
+:is(button,a,input,select,textarea,label,[onclick],[role=button],.btn,.modal-close,.filter-chip,.nav-item,.pcard,.pilier-card,.conseiller-card,.maitre-card,.wanted-card,.sphere-card,.wl-item,.breath-header,.view-toggle),
+:is(button,a,label,[onclick],[role=button],.btn,.pcard,.pilier-card,.wanted-card) *{cursor:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'><path d='M3 3 L3 20 L7 16 L10.5 22.5 L13 21.5 L9.5 15 L16 15 Z' fill='rgba(0,0,0,.45)'/><path d='M2 2 L2 19 L6 15 L9.5 21.5 L12 20.5 L8.5 14 L15 14 Z' fill='%23330a0a' stroke='%23f0d060' stroke-width='1.4' stroke-linejoin='round'/></svg>") 2 2,pointer !important;}
+@media(pointer:coarse){*{cursor:auto !important;}}
 
 /* ══════════════════════════════════════════════════════
    ═══════════  UPGRADE VISUEL — COUCHE ATMOSPHÉRIQUE  ═══════════
    ══════════════════════════════════════════════════════ */
 
 /* Canvas de braises / fumée en fond */
-#cx-embers{position:fixed;inset:0;z-index:-2;pointer-events:none;opacity:.9;mix-blend-mode:screen;}
+#cx-embers{position:fixed;inset:0;z-index:-2;pointer-events:none;opacity:.9;}
 
 /* Grain de film subtil */
-#cx-grain{position:fixed;inset:0;z-index:9998;pointer-events:none;opacity:.045;mix-blend-mode:overlay;
+#cx-grain{position:fixed;inset:0;z-index:9998;pointer-events:none;opacity:.045;
   background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
-  animation:cxGrainShift .5s steps(4) infinite;}
+}
 @keyframes cxGrainShift{0%{transform:translate(0,0)}25%{transform:translate(-1%,1%)}50%{transform:translate(1%,-1%)}75%{transform:translate(-1%,-1%)}100%{transform:translate(0,0)}}
 
 /* Vignette respirante */
-#cx-vignette{position:fixed;inset:0;z-index:9997;pointer-events:none;background:radial-gradient(ellipse at 50% 50%,transparent 42%,rgba(0,0,0,.6) 100%);animation:cxVignettePulse 9s ease-in-out infinite;}
+#cx-vignette{position:fixed;inset:0;z-index:9997;pointer-events:none;background:radial-gradient(ellipse at 50% 50%,transparent 42%,rgba(0,0,0,.6) 100%);}
 @keyframes cxVignettePulse{0%,100%{opacity:.7}50%{opacity:1}}
 
 /* Entrée orchestrée de l'interface */
@@ -663,7 +666,7 @@ body::after{content:'';position:fixed;left:0;width:100%;height:2px;background:li
 .splash-rune-ring.outer{width:min(80vw,760px);height:min(80vw,760px);opacity:.07;animation-duration:150s;animation-direction:reverse;}
 
 /* Traînée de braises du curseur */
-.cx-trail{position:fixed;top:0;left:0;width:4px;height:4px;border-radius:50%;pointer-events:none;z-index:999998;background:radial-gradient(circle,rgba(245,205,120,.95),rgba(200,40,0,0) 70%);will-change:transform,opacity;}
+
 
 /* Reflet holographique au survol des cartes (tilt 3D) */
 .stat-card,.wanted-card,.sphere-card,.pilier-card,.conseiller-card,.maitre-card,.breath-group{will-change:transform;}
@@ -732,10 +735,10 @@ body::after{content:'';position:fixed;left:0;width:100%;height:2px;background:li
 
 /* ── Badges : reflet balayant ── */
 .badge{position:relative;overflow:hidden;}
-.badge::after{content:'';position:absolute;top:0;left:-75%;width:45%;height:100%;
-  background:linear-gradient(115deg,transparent,rgba(255,255,255,.4),transparent);transform:skewX(-20deg);
-  animation:cxBadgeSweep 3.6s ease-in-out infinite;}
-@keyframes cxBadgeSweep{0%{left:-75%}35%{left:135%}100%{left:135%}}
+.badge::after{content:'';position:absolute;top:0;left:0;width:45%;height:100%;display:none;
+  background:linear-gradient(115deg,transparent,rgba(255,255,255,.4),transparent);transform:translateX(-170%) skewX(-20deg);}
+.badge-Maitre::after,.badge-Conseiller::after,.badge-Pilier::after{display:block;will-change:transform;animation:cxBadgeSweep 3.6s ease-in-out infinite;}
+@keyframes cxBadgeSweep{0%{transform:translateX(-170%) skewX(-20deg)}35%,100%{transform:translateX(320%) skewX(-20deg)}}
 
 /* ── Cibles prioritaires : rivets d'affiche ── */
 .wanted-card{position:relative;}
@@ -1073,6 +1076,14 @@ body{letter-spacing:.2px;}
 .iq-btn.faux:hover,.iq-btn.faux.on{color:#ff5544;border-color:#ff5544;background:rgba(255,68,68,.1);}
 @media (max-width:980px){.iq-grid{grid-template-columns:1fr;}.iq-verdict{position:static;}}
 
+/* ── Mode fluide : désactive les effets décoratifs ── */
+html.lite #cx-grain,html.lite #cx-vignette,html.lite #cx-embers,html.lite .particles,html.lite .bg-fx,html.lite body::after{display:none !important;}
+html.lite *,html.lite *::before,html.lite *::after{animation:none !important;}
+html.lite .pcard,html.lite .breath-body{transition:none !important;}
+#liteBtn{background:none;border:1px solid rgba(201,162,39,.2);color:var(--text-muted);font-size:.8rem;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;transition:all .25s;flex-shrink:0;}
+#liteBtn:hover{border-color:rgba(201,162,39,.5);color:var(--gold);}
+html.lite #liteBtn{color:var(--gold);border-color:rgba(201,162,39,.6);background:rgba(201,162,39,.1);}
+
 /* ── Cartes de profil (registre) ── */
 .view-toggle{margin-left:auto;display:inline-flex;border:1px solid var(--border);border-radius:6px;overflow:hidden;}
 .view-toggle button{background:transparent;border:none;color:var(--text-muted);padding:6px 14px;font-family:'Cinzel',serif;font-size:.56rem;letter-spacing:2px;text-transform:uppercase;transition:.2s;}
@@ -1121,6 +1132,7 @@ body{letter-spacing:.2px;}
 @media (max-width:640px){.pcard-grid{grid-template-columns:repeat(2,1fr);gap:12px;padding:14px;}.pcard-name{font-size:1.05rem;}.pcard-actions{opacity:1;transform:none;}}
 
 </style>
+<script>try{if(localStorage.getItem('codexLite')==='1')document.documentElement.classList.add('lite');}catch(e){}</script>
 </head>
 <body>
 <canvas id="cx-embers"></canvas>
@@ -1244,6 +1256,7 @@ body{letter-spacing:.2px;}
         <span id="music-track" style="display:none"></span>
         <input type="range" id="music-vol" min="0" max="100" value="70" oninput="setMusicVol(this.value)" title="Volume" style="display:none">
       </div>
+      <button id="liteBtn" onclick="toggleLite()" title="Mode fluide : désactive les effets visuels si le site rame">⚡</button>
       <div id="topbarUserInfo"></div>
       <span id="readonlyBadge">◈ Lecture seule</span>
       <button id="btnLoginOpen" onclick="openLoginModal()">✦ Éditeur</button>
@@ -3756,37 +3769,6 @@ window.setMusicVol = (v) => {
   document.getElementById('music-vol').style.setProperty('--vp', v+'%');
 };
 
-/* ═══ CURSEUR PERSONNALISÉ ═══ */
-(function initCursor(){
-  const cur=document.createElement('div');
-  cur.id='codex-cursor';
-  // Forme identique au curseur système, couleurs Codex
-  // hotspot = pointe en haut-gauche → translate direct sur clientX/Y
-  cur.innerHTML=`<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-    <!-- ombre pour lisibilité sur fond clair -->
-    <path d="M2 2 L2 19 L6 15 L9.5 21.5 L12 20.5 L8.5 14 L15 14 Z"
-      fill="rgba(0,0,0,.45)" transform="translate(1,1)"/>
-    <!-- corps sombre -->
-    <path d="M2 2 L2 19 L6 15 L9.5 21.5 L12 20.5 L8.5 14 L15 14 Z"
-      fill="#120808"/>
-    <!-- contour doré -->
-    <path d="M2 2 L2 19 L6 15 L9.5 21.5 L12 20.5 L8.5 14 L15 14 Z"
-      fill="none" stroke="#c9a227" stroke-width="0.9" stroke-linejoin="round"/>
-  </svg>`;
-  document.body.appendChild(cur);
-
-  document.addEventListener('mousemove',e=>{
-    cur.style.transform=`translate(${e.clientX}px,${e.clientY}px)`;
-  });
-
-  // Hover sur éléments interactifs → contour cramois
-  const HOVER_SEL='button,a,input,select,textarea,label,[onclick],[role=button],.btn,.modal-close,.pilier-card,.wanted-card,.sphere-result-card,.filter-chip,.wl-item,.nav-item,.gallery-slot-move,.gallery-slot-remove,.gallery-add-btn';
-  document.addEventListener('mouseover',e=>{
-    cur.classList.toggle('is-hover',!!e.target.closest(HOVER_SEL));
-  });
-  document.addEventListener('mouseleave',()=>cur.classList.remove('is-hover'));
-})();
-
 /* ═══ PARTICULES FLOTTANTES ═══ */
 (function spawnParticles(){
   const container=document.querySelector('.particles');
@@ -3843,6 +3825,7 @@ window.setMusicVol = (v) => {
   function frame(now){
     if(!running)return;
     requestAnimationFrame(frame);
+    if(document.documentElement.classList.contains('lite'))return;
     const elapsed=now-last;
     if(elapsed<FRAME_INTERVAL)return;
     const dt=Math.min(elapsed,50);last=now;
@@ -3873,25 +3856,36 @@ window.setMusicVol = (v) => {
   requestAnimationFrame(frame);
 })();
 
-/* ═══ TRAÎNÉE DE BRAISES DU CURSEUR ═══ */
-(function cxCursorTrail(){
-  if(matchMedia('(pointer:coarse)').matches)return;
-  let last=0;
-  document.addEventListener('mousemove',e=>{
-    const now=performance.now();
-    if(now-last<28)return; last=now;
-    const t=document.createElement('div');
-    t.className='cx-trail';
-    const jitter=(Math.random()-.5)*6;
-    t.style.transform=`translate(${e.clientX+jitter}px,${e.clientY+jitter}px)`;
-    document.body.appendChild(t);
-    requestAnimationFrame(()=>{
-      t.style.transition='transform .6s ease-out,opacity .6s ease-out';
-      t.style.transform+=' translateY(-14px) scale(.2)';
-      t.style.opacity='0';
-    });
-    setTimeout(()=>t.remove(),650);
-  });
+/* ═══ MODE FLUIDE ═══
+   Sur une machine qui n'arrive pas à tenir ~40 images/s, les effets décoratifs
+   (grain, vignette, braises, particules, animations infinies) sont coupés
+   automatiquement. Le bouton ⚡ permet de le faire (ou de le défaire) à la main ;
+   le choix est mémorisé dans le navigateur. */
+window.toggleLite=(force)=>{
+  const on=typeof force==='boolean'?force:!document.documentElement.classList.contains('lite');
+  document.documentElement.classList.toggle('lite',on);
+  try{ localStorage.setItem('codexLite',on?'1':'0'); }catch{}
+  if(typeof toast==='function') toast(on?'Mode fluide activé — effets visuels réduits.':'Effets visuels rétablis.','info');
+};
+(function autoLite(){
+  try{ if(localStorage.getItem('codexLite')!==null)return; }catch{} // choix déjà fait (auto ou manuel)
+  if(document.documentElement.classList.contains('lite'))return;
+  let tries=0;
+  function sample(){
+    if(document.hidden||tries>=3)return;
+    tries++;
+    let frames=0,t0=performance.now(),last=t0,paused=false;
+    (function f(t){
+      if(t-last>1000)paused=true;           // onglet figé/en arrière-plan : mesure invalide
+      last=t; frames++;
+      if(t-t0<2500){requestAnimationFrame(f);return;}
+      if(paused||document.hidden){setTimeout(sample,4000);return;}
+      const fps=frames/((t-t0)/1000);
+      if(fps<38){ window.toggleLite(true); }
+      else if(tries<3) setTimeout(sample,6000); // une machine qui tient 60 im/s est vérifiée encore deux fois
+    })(t0);
+  }
+  setTimeout(sample,6000); // laisse passer le chargement initial
 })();
 
 /* ═══ TILT 3D + REFLET SUR LES CARTES ═══ */
@@ -3899,7 +3893,7 @@ window.setMusicVol = (v) => {
   const SEL='.stat-card,.wanted-card,.sphere-card,.pilier-card,.conseiller-card,.maitre-card';
   let current=null;
   document.addEventListener('mousemove',e=>{
-    const card=e.target.closest(SEL);
+    const card=e.target.closest?.(SEL)||null;
     if(card!==current){
       if(current){current.style.transform='';current.classList.remove('cx-tilt-active');}
       if(card){
