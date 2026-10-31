@@ -1131,6 +1131,44 @@ html.lite #liteBtn{color:var(--gold);border-color:rgba(201,162,39,.6);background
 .pcard.st-Mort .pcard-photo::before{content:'✝';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:4.5rem;color:rgba(255,255,255,.1);z-index:1;}
 @media (max-width:640px){.pcard-grid{grid-template-columns:repeat(2,1fr);gap:12px;padding:14px;}.pcard-name{font-size:1.05rem;}.pcard-actions{opacity:1;transform:none;}}
 
+/* ── Cibles ↔ Codex & sous-cibles ── */
+.wf-codex{grid-column:1/-1;background:rgba(201,162,39,.07);border:1px solid rgba(201,162,39,.3);border-radius:8px;padding:10px 13px;font-size:.72rem;}
+.wf-codex.linked{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+.wf-codex-title{font-family:'Cinzel',serif;font-size:.58rem;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:8px;}
+.wf-codex-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:5px 0;border-top:1px solid rgba(255,255,255,.05);}
+.wf-codex-row:first-of-type{border-top:none;}
+.wf-codex-row span{color:var(--text-muted);font-size:.66rem;margin-left:6px;}
+.wf-codex em{color:#ff9a9a;font-style:normal;}
+#wfCodexMatch{grid-column:1/-1;}
+.w-codex{display:flex;flex-wrap:wrap;gap:5px;justify-content:center;margin-top:9px;}
+.w-codex span,.w-codex a{font-size:.58rem;letter-spacing:.5px;padding:3px 9px;border-radius:10px;border:1px solid rgba(201,162,39,.25);color:var(--text-muted);background:rgba(0,0,0,.3);}
+.w-codex a{color:var(--gold);cursor:pointer;border-color:rgba(201,162,39,.5);}
+.w-codex a:hover{background:rgba(201,162,39,.12);}
+.st-modal{max-width:760px;max-height:88vh;overflow-y:auto;}
+.st-base{padding:12px 14px;border:1px solid var(--border);border-radius:8px;background:rgba(255,255,255,.02);margin-bottom:16px;font-size:.84rem;}
+.st-linked{font-size:.62rem;color:#3dba7a;margin-left:8px;}
+.st-nolink{font-size:.62rem;color:#e8a800;margin-left:8px;}
+.st-baseline{margin-top:6px;font-size:.7rem;color:var(--text-muted);line-height:1.6;}
+.st-group{margin-bottom:20px;}
+.st-group-title{font-family:'Cinzel',serif;font-size:.78rem;letter-spacing:3px;text-transform:uppercase;color:var(--gold);}
+.st-group-title span{font-size:.6rem;border:1px solid var(--border-h);border-radius:10px;padding:1px 8px;margin-left:6px;}
+.st-group-desc{font-size:.68rem;color:var(--text-muted);margin:3px 0 10px;line-height:1.5;}
+.st-row{display:flex;align-items:center;gap:12px;padding:9px 10px;border:1px solid rgba(255,255,255,.06);border-radius:8px;margin-bottom:6px;background:rgba(255,255,255,.015);}
+.st-photo{width:42px;height:42px;border-radius:8px;overflow:hidden;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:1.1rem;}
+.st-photo img{width:100%;height:100%;object-fit:cover;}
+.st-main{flex:1;min-width:0;}
+.st-name{font-family:'Cinzel',serif;font-size:.8rem;letter-spacing:1px;color:var(--text);}
+.st-name span{font-family:'Cormorant',serif;font-size:.7rem;letter-spacing:.5px;color:var(--text-muted);margin-left:6px;}
+.st-name em{color:#ff9a9a;font-style:normal;}
+.st-reasons{display:flex;flex-wrap:wrap;gap:5px;margin-top:5px;}
+.st-chip{font-size:.6rem;padding:2px 9px;border-radius:10px;border:1px solid var(--border);color:var(--text-muted);}
+.st-chip.k-famille{color:#ff9ab8;border-color:rgba(255,120,160,.45);}
+.st-chip.k-chaine{color:#8fb8ff;border-color:rgba(100,150,255,.45);}
+.st-chip.k-pair{color:var(--gold);border-color:rgba(201,162,39,.45);}
+.st-chip.k-brigade{color:#3dba7a;border-color:rgba(61,186,122,.45);}
+.st-actions{display:flex;gap:6px;flex-shrink:0;}
+@media(max-width:640px){.st-row{flex-wrap:wrap;}.st-actions{width:100%;justify-content:flex-end;}}
+
 </style>
 <script>try{if(localStorage.getItem('codexLite')==='1')document.documentElement.classList.add('lite');}catch(e){}</script>
 </head>
@@ -1796,8 +1834,10 @@ html.lite #liteBtn{color:var(--gold);border-color:rgba(201,162,39,.6);background
     <div class="modal-title crimson" id="wantedFormTitle">Nouvel Avis de Recherche</div>
     <input type="hidden" id="wantedEditId">
     <div class="form-grid">
-      <div class="form-group"><label class="form-label">Prénom</label><input class="form-input" id="wfPrenom" placeholder="Prénom"></div>
-      <div class="form-group"><label class="form-label">Nom</label><input class="form-input" id="wfNom" placeholder="Nom de famille"></div>
+      <div class="form-group"><label class="form-label">Prénom</label><input class="form-input" id="wfPrenom" placeholder="Prénom" oninput="wfCodexSearch()"></div>
+      <div class="form-group"><label class="form-label">Nom</label><input class="form-input" id="wfNom" placeholder="Nom de famille" oninput="wfCodexSearch()"></div>
+      <div id="wfCodexMatch"></div>
+      <input type="hidden" id="wfCodexId">
       <div class="form-group">
         <label class="form-label">Rang du Pourfendeur</label>
         <select class="form-select" id="wfGrade" onchange="previewDanger()">
@@ -1827,6 +1867,10 @@ html.lite #liteBtn{color:var(--gold);border-color:rgba(201,162,39,.6);background
         </select>
       </div>
       <div class="form-group"><label class="form-label">Source / rapporté par</label><input class="form-input" id="wfSource" placeholder="Ex : témoignage de Kin Tendo, mission du 12/08..."></div>
+      <div class="form-group"><label class="form-label">Souffle (Codex)</label><select class="form-select" id="wfSouffle"><option value="">— Non précisé —</option><option>Souffle de l'Eau</option><option>Souffle de la Flamme</option><option>Souffle de la Foudre</option><option>Souffle de la Fleur</option><option>Souffle de la Roche</option><option>Souffle de la Brume</option><option>Souffle du Son</option><option>Souffle du Serpent</option><option>Souffle de l'Amour</option><option>Autre / Dérivé</option></select></div>
+      <div class="form-group"><label class="form-label">Brigade / Unité</label><input class="form-input" id="wfBrigade" placeholder="Unité d'affectation"></div>
+      <div class="form-group"><label class="form-label">Pilier référent</label><input class="form-input" id="wfPilier" placeholder="Nom du Pilier"></div>
+      <div class="form-group"><label class="form-label">Kinoe référent</label><input class="form-input" id="wfKinoe" placeholder="Nom du Kinoe"></div>
       <div class="dup-warning" id="wfDupWarning"></div>
       <div class="form-group full">
         <label class="form-label">Photo (optionnel)</label>
@@ -1842,6 +1886,16 @@ html.lite #liteBtn{color:var(--gold);border-color:rgba(201,162,39,.6);background
       <div id="dangerPreview" style="grid-column:1/-1;text-align:center;padding:10px;background:rgba(139,0,0,.07);border:1px solid rgba(139,0,0,.2);border-radius:6px;font-family:'Cinzel',serif;font-size:.63rem;color:rgba(200,100,100,.7);">Danger : —</div>
       <button class="form-submit" style="border-color:var(--crimson2);color:#ff9999;" onclick="saveWanted()">Émettre l'Avis de Recherche</button>
     </div>
+  </div>
+</div>
+
+<!-- ═══ MODAL SOUS-CIBLES ═══ -->
+<div class="modal-overlay" id="modalSubTargets">
+  <div class="modal-box modal-crimson st-modal">
+    <button class="modal-close" onclick="closeModal('modalSubTargets')">✕</button>
+    <div class="modal-title crimson">🕸 Sous-cibles suggérées</div>
+    <div class="section-sub" style="margin-bottom:14px">Personnes du Codex à approcher pour obtenir des informations sur la cible</div>
+    <div id="subTargetsContent"></div>
   </div>
 </div>
 
@@ -3327,6 +3381,7 @@ function renderWanted(){
       <div class="wanted-raison">${w.raison||''}</div>
       <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-top:8px">${reliabPill(w.verifStatus)}</div>
       ${w.source?`<div style="font-size:.56rem;color:var(--text-muted);text-align:center;margin-top:5px">Source : ${w.source}</div>`:''}
+      ${wCodexChips(w)}
       <div class="danger-section d${tier}">
         <div class="danger-label">Priorité de Neutralisation</div>
         <div class="danger-score">Priorité ${tier}</div>
@@ -3337,6 +3392,7 @@ function renderWanted(){
         <div class="fiche-history-toggle" onclick="toggleFicheHistory(this)"><span class="fh-arrow">▸</span> Historique &amp; évolution</div>
         <div class="fiche-history-body">${wHist}${spark?`<div style="font-size:.55rem;color:var(--text-muted);margin-top:6px">Évolution du danger</div>${spark}`:''}</div>
       </div>
+      <button class="btn btn-ghost btn-sm" style="width:100%;margin-top:12px" onclick="openSubTargets('${w._id}')" title="Personnes du Codex à approcher pour obtenir des informations">🕸 Sous-cibles suggérées</button>
       ${currentUser?`<div style="display:flex;gap:6px;margin-top:10px">
         <button class="btn btn-report btn-sm" style="flex:1" onclick="openReport('wanted','${w._id}','${nameEsc}')" title="Signaler une incohérence">🚩</button>
         <button class="btn btn-interro btn-sm" style="flex:1" onclick="openInterrogation('wanted','${w._id}')" title="Générer des questions d'interrogatoire">🗨</button>
@@ -3347,10 +3403,216 @@ function renderWanted(){
   }).join('')}</div>`;
 }
 
+/* ═══ CIBLES PRIORITAIRES ↔ CODEX ═══
+   1. À la désignation d'une cible, le site cherche son nom dans le Codex et propose
+      d'importer la fiche (rang, Souffle, brigade, Pilier/Kinoe référents, photo).
+      La cible garde un lien (codexId) vers la fiche : les informations affichées sur
+      la carte sont relues en direct dans le Codex, donc toujours à jour.
+   2. « Sous-cibles » : pour chaque cible, le site propose des personnes à approcher
+      pour obtenir des informations — famille probable (même nom), chaîne de
+      commandement (Pilier / Kinoe référents, subordonnés), pairs du même Souffle et
+      de grade équivalent, même brigade, autres cibles liées. */
+
+/* Fiche du Codex liée à une cible : lien explicite, sinon correspondance quasi exacte du nom. */
+function wLinked(w){
+  if(!w)return null;
+  if(w.codexId){const p=allPourfendeurs.find(x=>x._id===w.codexId); if(p)return p;}
+  const full=`${w.prenom||''} ${w.nom||''}`.trim();
+  if(!full)return null;
+  let best=null,bs=0;
+  allPourfendeurs.forEach(p=>{const sc=iqNameScore(full,p.nom); if(sc>bs){bs=sc;best=p;}});
+  return bs>=.92?best:null;
+}
+function wInfo(w){ // informations utiles : celles du Codex en priorité, sinon celles saisies sur la cible
+  const p=wLinked(w);
+  const clean=v=>iqClean(v||'');
+  return {
+    p,
+    rang:p?.rang||w.grade||'',
+    souffle:clean(p?.souffle)||clean(w.souffle),
+    brigade:clean(p?.brigade)||clean(w.brigade),
+    pilier:clean(p?.pilier_ref)||clean(w.pilier_ref),
+    kinoe:clean(p?.kinoe_ref)||clean(w.kinoe_ref),
+    nom:`${w.prenom||''} ${w.nom||''}`.trim()||p?.nom||''
+  };
+}
+
+/* ── Formulaire : champs Codex + import ── */
+function wfResetExtra(w){
+  const set=(id,v)=>{const e=document.getElementById(id); if(e)e.value=v||'';};
+  set('wfSouffle',w?.souffle); set('wfBrigade',w?.brigade); set('wfPilier',w?.pilier_ref); set('wfKinoe',w?.kinoe_ref); set('wfCodexId',w?.codexId);
+  wfCodexSearch();
+}
+function wfReadExtra(){
+  const v=id=>(document.getElementById(id)?.value||'').trim();
+  return {souffle:v('wfSouffle'),brigade:v('wfBrigade'),pilier_ref:v('wfPilier'),kinoe_ref:v('wfKinoe'),codexId:v('wfCodexId')};
+}
+let _wfSearchTimer=null;
+window.wfCodexSearch=()=>{
+  clearTimeout(_wfSearchTimer);
+  _wfSearchTimer=setTimeout(()=>{
+    const box=document.getElementById('wfCodexMatch'); if(!box)return;
+    const linkedId=document.getElementById('wfCodexId').value;
+    if(linkedId){
+      const p=allPourfendeurs.find(x=>x._id===linkedId);
+      box.innerHTML=p?`<div class="wf-codex linked">📜 Lié à la fiche Codex <b>${esc(p.nom)}</b> — ${esc(p.rang||'—')} · ${esc(p.souffle||'—')}${iqStatutLabel(p)?` · <em>${iqStatutLabel(p)}</em>`:''}
+        <button type="button" class="btn btn-ghost btn-sm" onclick="wfUnlink()">Délier</button></div>`:'';
+      return;
+    }
+    const full=`${document.getElementById('wfPrenom').value} ${document.getElementById('wfNom').value}`.trim();
+    if(full.length<2){box.innerHTML='';return;}
+    const cands=allPourfendeurs.map(p=>({p,s:iqNameScore(full,p.nom)})).filter(x=>x.s>=.7).sort((a,b)=>b.s-a.s).slice(0,3);
+    box.innerHTML=cands.length?`<div class="wf-codex"><div class="wf-codex-title">📜 Trouvé dans le Codex — importer les informations ?</div>${cands.map(({p,s})=>`
+      <div class="wf-codex-row"><div><b>${esc(p.nom)}</b> <span>${esc(p.rang||'—')} · ${esc(p.souffle||'—')}${iqClean(p.brigade)?' · '+esc(p.brigade):''}${iqStatutLabel(p)?' · '+iqStatutLabel(p):''}</span></div>
+      <button type="button" class="btn btn-gold btn-sm" onclick="wfImport('${p._id}')">Importer (${Math.round(s*100)}%)</button></div>`).join('')}</div>`:'';
+  },180);
+};
+window.wfUnlink=()=>{document.getElementById('wfCodexId').value=''; wfCodexSearch();};
+window.wfImport=(pid)=>{
+  const p=allPourfendeurs.find(x=>x._id===pid); if(!p)return;
+  const set=(id,v)=>{const e=document.getElementById(id); if(e)e.value=v||'';};
+  if(!document.getElementById('wfPrenom').value.trim()&&!document.getElementById('wfNom').value.trim()){
+    const parts=(p.nom||'').trim().split(/\s+/);
+    set('wfPrenom',parts.length>1?parts[0]:''); set('wfNom',parts.length>1?parts.slice(1).join(' '):parts[0]);
+  }
+  if(p.rang) set('wfGrade',p.rang);
+  set('wfSouffle',p.souffle); set('wfBrigade',iqClean(p.brigade)); set('wfPilier',iqClean(p.pilier_ref)); set('wfKinoe',iqClean(p.kinoe_ref)); set('wfCodexId',p._id);
+  if(!document.getElementById('wfSource').value.trim()) set('wfSource',`Codex — fiche de ${p.nom}`);
+  previewDanger();
+  /* La photo n'est pas dans la diffusion allégée : on va chercher la fiche complète. */
+  socket.emit('pourfendeurs:get',pid,(res)=>{
+    if(!res?.ok||document.getElementById('wfCodexId').value!==pid)return;
+    const first=(res.item.photos&&res.item.photos[0]?.url)||res.item.photo||'';
+    if(first&&!document.getElementById('wfPhoto').value.trim()){
+      set('wfPhoto',first); pendingPhotoWanted=null;
+      const prev=document.getElementById('wfPhotoPreview'); if(prev){prev.src=first;prev.classList.add('visible');}
+    }
+  });
+  wfCodexSearch();
+  toast(`Informations de ${p.nom} importées depuis le Codex.`,'success');
+};
+
+/* ── Moteur de suggestion de sous-cibles ── */
+function wSurnameTokens(w,info){
+  // le champ « nom » de la cible fait foi ; sinon tout sauf le premier mot du nom Codex
+  let txt=(w.nom||'').trim();
+  if(!txt){const parts=(info.p?.nom||w.prenom||'').trim().split(/\s+/); txt=parts.length>1?parts.slice(1).join(' '):parts[0]||'';}
+  return normName(txt).split(/\s+/).filter(t=>t.length>=3);
+}
+function wSameToken(a,b){return a===b||(a.length>=6&&b.length>=6&&iqEditDistance(a,b)<=1);}
+
+function suggestSubTargets(w){
+  const info=wInfo(w), selfId=info.p?._id;
+  const sn=wSurnameTokens(w,info);
+  const rIdx=hierarchyIdx[info.rang];
+  const nameKey=normName(info.nom);
+  const out=[];
+  const people=allPourfendeurs.filter(p=>p._id!==selfId&&p.statut!=='Mort'&&normName(p.nom)!==nameKey);
+
+  /* Haut Gradé du Souffle : le mieux classé encore en service, hors cible. */
+  const hg=info.souffle?people.filter(p=>p.souffle===info.souffle&&iqActive(p))
+    .sort((a,b)=>(hierarchyIdx[a.rang]??99)-(hierarchyIdx[b.rang]??99))[0]:null;
+
+  people.forEach(p=>{
+    const reasons=[]; let score=0, kind=null;
+    const add=(k,label,weight)=>{reasons.push({kind:k,label});score+=weight;if(!kind)kind=k;};
+    const pn=normName(p.nom).split(/\s+/).filter(t=>t.length>=3);
+    const shared=sn.find(t=>pn.some(u=>wSameToken(t,u)));
+    if(shared) add('famille',`Même nom de famille « ${shared} » — famille probable`,100);
+    if(info.pilier&&p.rang==='Pilier'&&iqSame(p.nom,info.pilier)) add('chaine','Pilier référent de la cible',90);
+    if(info.kinoe&&iqSame(p.nom,info.kinoe)) add('chaine','Kinoe référent de la cible',85);
+    if(info.nom&&((iqClean(p.pilier_ref)&&iqSame(p.pilier_ref,info.nom))||(iqClean(p.kinoe_ref)&&iqSame(p.kinoe_ref,info.nom)))) add('chaine','Subordonné direct de la cible',80);
+    if(info.brigade&&iqClean(p.brigade)&&iqSame(p.brigade,info.brigade)) add('brigade',`Même brigade « ${iqClean(p.brigade)} »`,60);
+    if(info.souffle&&p.souffle===info.souffle){
+      const d=rIdx===undefined||hierarchyIdx[p.rang]===undefined?null:Math.abs(hierarchyIdx[p.rang]-rIdx);
+      if(d===0) add('pair',`Même ${info.souffle}, même grade (${p.rang})`,70);
+      else if(d===1) add('pair',`Même ${info.souffle}, grade voisin (${p.rang})`,55);
+      if(hg&&p._id===hg._id) add('pair',`Haut Gradé du ${info.souffle} — connaît ses techniques`,65);
+    }
+    if(score>=50) out.push({p,reasons,score:score+(iqActive(p)?5:0),kind});
+  });
+
+  /* Autres cibles déjà désignées et liées à celle-ci. */
+  const others=allWanted.filter(o=>o._id!==w._id).map(o=>{
+    const oi=wInfo(o), reasons=[]; let score=0;
+    const os=wSurnameTokens(o,oi);
+    const shared=sn.find(t=>os.some(u=>wSameToken(t,u)));
+    if(shared){reasons.push({kind:'famille',label:`Même nom de famille « ${shared} »`});score+=100;}
+    if(info.souffle&&oi.souffle===info.souffle){reasons.push({kind:'pair',label:`Même ${info.souffle}`});score+=60;}
+    if(info.brigade&&oi.brigade&&iqSame(oi.brigade,info.brigade)){reasons.push({kind:'brigade',label:`Même brigade « ${oi.brigade} »`});score+=60;}
+    return {o,reasons,score};
+  }).filter(x=>x.score>=60);
+
+  out.sort((a,b)=>b.score-a.score);
+  return {info,people:out.slice(0,24),others,total:out.length};
+}
+
+const ST_GROUPS=[
+  ['famille','👪','Famille probable','Même nom de famille — souvent au courant de ses habitudes, de ses refuges et de ses contacts.'],
+  ['chaine','⛓','Chaîne de commandement','Pilier / Kinoe référents et subordonnés directs — savent où il était affecté et ce qu\'il a fait.'],
+  ['pair','⚔','Pairs du même Souffle','Même Souffle et grade équivalent, ou Haut Gradé du Souffle — connaissent son style et ses techniques.'],
+  ['brigade','🏛','Même brigade','Anciens coéquipiers — peuvent décrire ses fréquentations et son comportement.']
+];
+window.openSubTargets=(id)=>{
+  const w=allWanted.find(x=>x._id===id); if(!w)return;
+  const {info,people,others}=suggestSubTargets(w);
+  const box=document.getElementById('subTargetsContent');
+  const base=[info.rang&&`Rang ${esc(info.rang)}`,info.souffle&&esc(info.souffle),info.brigade&&`🏛 ${esc(info.brigade)}`,info.pilier&&`Pilier ${esc(info.pilier)}`,info.kinoe&&`Kinoe ${esc(info.kinoe)}`].filter(Boolean);
+  const person=({p,reasons,score})=>{
+    const photo=p.photoCount?`<img loading="lazy" src="${photoSrc('pourfendeurs',p._id,p.photos?.[0],0)}" alt="">`:(souffleEmoji[p.souffle]||'⚔');
+    const st=iqStatutLabel(p);
+    return `<div class="st-row">
+      <div class="st-photo">${photo}</div>
+      <div class="st-main">
+        <div class="st-name">${esc(p.nom)} <span>${esc(p.rang||'—')}${p.souffle?' · '+esc(p.souffle):''}${st?` · <em>${st}</em>`:''}</span></div>
+        <div class="st-reasons">${reasons.map(r=>`<span class="st-chip k-${r.kind}">${esc(r.label)}</span>`).join('')}</div>
+      </div>
+      <div class="st-actions">
+        <button class="btn btn-interro btn-sm" onclick="closeModal('modalSubTargets');goToInterrogatoire('${p._id}')" title="Préparer l'interrogatoire">🗨</button>
+        <button class="btn btn-ghost btn-sm" onclick="closeModal('modalSubTargets');showSection('registre');openProfile('${p._id}')" title="Voir la fiche">📜</button>
+        ${currentUser?`<button class="btn btn-crimson btn-sm" onclick="wfFromCodex('${p._id}')" title="Désigner comme cible">🎯 Cible</button>`:''}
+      </div></div>`;
+  };
+  const html=[];
+  html.push(`<div class="st-base"><b>${esc(info.nom||'Cible')}</b>${info.p?` <span class="st-linked">📜 fiche Codex liée</span>`:` <span class="st-nolink">aucune fiche Codex liée — suggestions limitées</span>`}
+    <div class="st-baseline">${base.length?base.join(' · '):'Aucune information de Souffle, brigade ou référent connue — importe la fiche depuis le Codex en modifiant la cible.'}</div></div>`);
+  let any=false;
+  ST_GROUPS.forEach(([kind,icon,title,desc])=>{
+    const list=people.filter(x=>x.kind===kind);
+    if(!list.length)return; any=true;
+    html.push(`<div class="st-group"><div class="st-group-title">${icon} ${title} <span>${list.length}</span></div><div class="st-group-desc">${desc}</div>${list.map(person).join('')}</div>`);
+  });
+  if(others.length){
+    any=true;
+    html.push(`<div class="st-group"><div class="st-group-title">🎯 Autres cibles liées <span>${others.length}</span></div><div class="st-group-desc">Déjà désignées — à recouper avec cette cible.</div>${others.map(({o,reasons})=>`
+      <div class="st-row"><div class="st-photo">🎯</div><div class="st-main"><div class="st-name">${esc(`${o.prenom||''} ${o.nom||''}`.trim())} <span>${esc(o.grade||'—')}</span></div>
+      <div class="st-reasons">${reasons.map(r=>`<span class="st-chip k-${r.kind}">${esc(r.label)}</span>`).join('')}</div></div></div>`).join('')}</div>`);
+  }
+  if(!any) html.push(`<div class="iq-empty">Aucune sous-cible évidente dans le Codex pour l'instant. Renseigne le Souffle, la brigade ou les référents de la cible (ou importe sa fiche) pour affiner.</div>`);
+  box.innerHTML=html.join('');
+  openModal('modalSubTargets');
+};
+/* Désigner une personne du Codex comme nouvelle cible, informations déjà importées. */
+window.wfFromCodex=(pid)=>{
+  closeModal('modalSubTargets');
+  showSection('wanted');
+  openFormWanted();
+  wfImport(pid);
+};
+
+/* Informations du Codex affichées sur la carte d'une cible (relues en direct). */
+function wCodexChips(w){
+  const i=wInfo(w);
+  const chips=[i.souffle&&`${souffleEmoji[i.souffle]||'⚔'} ${esc(i.souffle)}`,i.brigade&&`🏛 ${esc(i.brigade)}`,i.pilier&&`Pilier ${esc(i.pilier)}`,i.kinoe&&`Kinoe ${esc(i.kinoe)}`].filter(Boolean);
+  const st=i.p&&iqStatutLabel(i.p);
+  return (chips.length||i.p)?`<div class="w-codex">${chips.map(c=>`<span>${c}</span>`).join('')}${i.p?`<a onclick="showSection('registre');openProfile('${i.p._id}')" title="Ouvrir la fiche du Codex">📜 Fiche Codex${st?` (${st})`:''}</a>`:''}</div>`:'';
+}
+
 window.openFormWanted=(id=null)=>{
   document.getElementById('wantedEditId').value=id||'';
   document.getElementById('wantedFormTitle').textContent=id?'Modifier la Cible':'Nouvel Avis de Recherche';
   document.getElementById('wfDupWarning').style.display='none';
+  wfResetExtra(id?allWanted.find(x=>x._id===id):null);
   if(id){
     const w=allWanted.find(x=>x._id===id);
     if(w){
@@ -3390,7 +3652,7 @@ window.saveWanted=async()=>{
   if(pendingPhotoWanted){toast('Compression de l\'image...','info');try{wPhotoUrl=await uploadPhoto(pendingPhotoWanted);}catch(e){toast('Erreur image : '+e.message,'error');return;}}
   let verifStatus=document.getElementById('wfReliab').value;
   const grade=document.getElementById('wfGrade').value;
-  const data={prenom,nom,grade,raison:document.getElementById('wfRaison').value.trim(),photo:wPhotoUrl,dangerScore:s,dangerTier:tier,verifStatus,source:document.getElementById('wfSource').value.trim()};
+  const data={prenom,nom,grade,raison:document.getElementById('wfRaison').value.trim(),photo:wPhotoUrl,dangerScore:s,dangerTier:tier,verifStatus,source:document.getElementById('wfSource').value.trim(),...wfReadExtra()};
   if(editId) data._id=editId;
   socket.emit('wanted:save', data, (res)=>{
     if(!res?.ok){toast('Erreur : '+(res?.error||'inconnue'),'error');return;}
