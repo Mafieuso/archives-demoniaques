@@ -1144,7 +1144,18 @@ html.lite #liteBtn{color:var(--gold);border-color:rgba(201,162,39,.6);background
 .w-codex span,.w-codex a{font-size:.58rem;letter-spacing:.5px;padding:3px 9px;border-radius:10px;border:1px solid rgba(201,162,39,.25);color:var(--text-muted);background:rgba(0,0,0,.3);}
 .w-codex a{color:var(--gold);cursor:pointer;border-color:rgba(201,162,39,.5);}
 .w-codex a:hover{background:rgba(201,162,39,.12);}
-.st-modal{max-width:760px;max-height:88vh;overflow-y:auto;}
+.st-modal{max-width:760px;height:88vh;max-height:88vh;display:flex;flex-direction:column;overflow:hidden;padding-bottom:18px;}
+.st-modal .modal-title{flex-shrink:0;}
+.st-summary{flex-shrink:0;display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 12px;font-size:.7rem;color:var(--text-muted);}
+.st-summary b{color:var(--gold);}
+.st-scroll{position:relative;flex:1;min-height:0;}
+#subTargetsContent{height:100%;overflow-y:auto;padding-right:10px;scrollbar-width:auto;scrollbar-color:var(--gold) rgba(255,255,255,.08);overscroll-behavior:contain;}
+#subTargetsContent::-webkit-scrollbar{width:11px;}
+#subTargetsContent::-webkit-scrollbar-track{background:rgba(255,255,255,.06);border-radius:6px;}
+#subTargetsContent::-webkit-scrollbar-thumb{background:rgba(201,162,39,.75);border-radius:6px;border:2px solid #07070f;}
+#subTargetsContent::-webkit-scrollbar-thumb:hover{background:var(--gold);}
+.st-hint{position:absolute;left:0;right:14px;bottom:0;height:54px;display:flex;align-items:flex-end;justify-content:center;padding-bottom:6px;pointer-events:none;background:linear-gradient(to top,#07070f 15%,transparent);font-family:'Cinzel',serif;font-size:.58rem;letter-spacing:3px;text-transform:uppercase;color:var(--gold);opacity:0;transition:opacity .25s;}
+.st-hint.on{opacity:1;}
 .st-base{padding:12px 14px;border:1px solid var(--border);border-radius:8px;background:rgba(255,255,255,.02);margin-bottom:16px;font-size:.84rem;}
 .st-linked{font-size:.62rem;color:#3dba7a;margin-left:8px;}
 .st-nolink{font-size:.62rem;color:#e8a800;margin-left:8px;}
@@ -1894,8 +1905,8 @@ html.lite #liteBtn{color:var(--gold);border-color:rgba(201,162,39,.6);background
   <div class="modal-box modal-crimson st-modal">
     <button class="modal-close" onclick="closeModal('modalSubTargets')">✕</button>
     <div class="modal-title crimson">🕸 Sous-cibles suggérées</div>
-    <div class="section-sub" style="margin-bottom:14px">Personnes du Codex à approcher pour obtenir des informations sur la cible</div>
-    <div id="subTargetsContent"></div>
+    <div class="st-summary" id="subTargetsSummary"></div>
+    <div class="st-scroll"><div id="subTargetsContent"></div><div class="st-hint" id="subTargetsHint">▾ Fais défiler pour voir la suite</div></div>
   </div>
 </div>
 
@@ -3544,7 +3555,7 @@ function suggestSubTargets(w){
   }).filter(x=>x.score>=60);
 
   out.sort((a,b)=>b.score-a.score);
-  return {info,people:out.slice(0,24),others,total:out.length};
+  return {info,people:out,others,total:out.length};
 }
 
 const ST_GROUPS=[
@@ -3590,7 +3601,13 @@ window.openSubTargets=(id)=>{
   }
   if(!any) html.push(`<div class="iq-empty">Aucune sous-cible évidente dans le Codex pour l'instant. Renseigne le Souffle, la brigade ou les référents de la cible (ou importe sa fiche) pour affiner.</div>`);
   box.innerHTML=html.join('');
+  box.scrollTop=0;
+  const n=people.length+others.length;
+  document.getElementById('subTargetsSummary').innerHTML=n?`<span><b>${n}</b> proposition${n>1?'s':''} — fais défiler la liste pour toutes les voir</span><span>${people.length} du Codex${others.length?` · ${others.length} cible${others.length>1?'s':''} liée${others.length>1?'s':''}`:''}</span>`:'<span>Personnes du Codex à approcher pour obtenir des informations sur la cible</span>';
   openModal('modalSubTargets');
+  const hint=document.getElementById('subTargetsHint');
+  const sync=()=>hint.classList.toggle('on',box.scrollHeight>box.clientHeight+8&&box.scrollTop+box.clientHeight<box.scrollHeight-8);
+  box.onscroll=sync; requestAnimationFrame(sync); setTimeout(sync,350);
 };
 /* Désigner une personne du Codex comme nouvelle cible, informations déjà importées. */
 window.wfFromCodex=(pid)=>{
