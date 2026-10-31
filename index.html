@@ -1099,7 +1099,7 @@ html.lite #liteBtn{color:var(--gold);border-color:rgba(201,162,39,.6);background
 .pcard:hover .pcard-photo img{transform:scale(1.07);}
 .pcard-ph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding-bottom:34px;font-size:3.2rem;opacity:.5;filter:drop-shadow(0 0 14px rgba(var(--bcrgb),.7));}
 .pcard.nophoto .pcard-ph{font-size:4.4rem;opacity:.62;}
-.pcard.nophoto .pcard-photo::before{content:'';position:absolute;left:50%;top:42%;width:120px;height:120px;transform:translate(-50%,-50%);border-radius:50%;border:1px solid rgba(var(--bcrgb),.35);box-shadow:0 0 0 10px rgba(var(--bcrgb),.05),inset 0 0 30px rgba(var(--bcrgb),.15);}
+.pcard.nophoto .pcard-photo::before{display:none;content:'';position:absolute;left:50%;top:42%;width:120px;height:120px;transform:translate(-50%,-50%);border-radius:50%;border:1px solid rgba(var(--bcrgb),.35);box-shadow:0 0 0 10px rgba(var(--bcrgb),.05),inset 0 0 30px rgba(var(--bcrgb),.15);}
 .pcard .badge::after{display:none;}
 .pcard-photo::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(5,3,2,.97) 0%,rgba(5,3,2,.55) 30%,transparent 62%);pointer-events:none;}
 .pcard-rank{position:absolute;top:10px;left:10px;z-index:2;}
@@ -1180,6 +1180,9 @@ html.lite #liteBtn{color:var(--gold);border-color:rgba(201,162,39,.6);background
 .st-actions{display:flex;gap:6px;flex-shrink:0;}
 @media(max-width:640px){.st-row{flex-wrap:wrap;}.st-actions{width:100%;justify-content:flex-end;}}
 
+.avatar-ph{display:block;width:100%;height:100%;filter:drop-shadow(0 0 10px rgba(0,0,0,.6));}
+.pcard-photo .avatar-ph{position:absolute;inset:0;}
+.profile-portrait-ph .avatar-ph{filter:none;}
 </style>
 <script>try{if(localStorage.getItem('codexLite')==='1')document.documentElement.classList.add('lite');}catch(e){}</script>
 </head>
@@ -2358,6 +2361,17 @@ window.toast = (msg, type='info') => {
 
 /* ═══ UTILITAIRES ═══ */
 const souffleColors = {"Souffle de l'Eau":'#00a2ff',"Souffle de la Flamme":'#ff4500',"Souffle de la Foudre":'#e8e800',"Souffle de la Fleur":'#ffb6c1',"Souffle de la Roche":'#a0602a',"Souffle de la Brume":'#a0a0b0',"Souffle du Son":'#daa520',"Souffle du Serpent":'#9932cc',"Souffle de l'Amour":'#ff1493',"Autre / Dérivé":'#888'};
+/* Avatar de remplacement pour les fiches sans photo : silhouette sur fond de halo,
+   à la couleur du Souffle (gris neutre si inconnu, plus sombre pour un décédé). */
+function avatarPh(m){
+  const color=m&&m.statut==='Mort'?'#777':(souffleColors[m?.souffle]||'#c9a227');
+  return `<svg class="avatar-ph" viewBox="0 0 100 120" preserveAspectRatio="xMidYMid slice" style="color:${color}" aria-hidden="true">
+    <circle cx="50" cy="62" r="33" fill="currentColor" opacity=".07"/>
+    <circle cx="50" cy="62" r="33" fill="none" stroke="currentColor" stroke-opacity=".25" stroke-width=".6" stroke-dasharray="1.5 2.5"/>
+    <path d="M27 120 C27 99 38 90 50 90 C62 90 73 99 73 120 Z" fill="currentColor" fill-opacity=".22" stroke="currentColor" stroke-opacity=".5" stroke-width=".8"/>
+    <path d="M38.5 66 C38.5 51 61.5 51 61.5 66 C61.5 77 55 82 50 82 C45 82 38.5 77 38.5 66 Z" fill="currentColor" fill-opacity=".28" stroke="currentColor" stroke-opacity=".55" stroke-width=".8"/>
+  </svg>`;
+}
 const souffleEmoji = {"Souffle de l'Eau":'🌊',"Souffle de la Flamme":'🔥',"Souffle de la Foudre":'⚡',"Souffle de la Fleur":'🌸',"Souffle de la Roche":'🪨',"Souffle de la Brume":'🌫',"Souffle du Son":'🎵',"Souffle du Serpent":'🐍',"Souffle de l'Amour":'💗',"Autre / Dérivé":'⚔'};
 const hierarchyIdx={"Maître des Pourfendeurs":0,"Conseiller":1,"Pilier":2,"Kinoe":3,"Kinoto":4,"Hinoe":5,"Hinoto":6,"Tsuchinoe":7,"Tsuchinoto":8,"Kanoe":9,"Kanoto":10,"Mizunoe":11,"Mizunoto":12};
 const rankScore={"Maître des Pourfendeurs":100,"Conseiller":95,"Pilier":88,"Kinoe":75,"Kinoto":62,"Hinoe":50,"Hinoto":40,"Tsuchinoe":32,"Tsuchinoto":24,"Kanoe":18,"Kanoto":13,"Mizunoe":9,"Mizunoto":5};
@@ -2560,7 +2574,7 @@ function buildMemberCard(m){
   const pos=m.photos?.[0]?.position??50;
   const photo=m.photoCount
     ?`<img loading="lazy" decoding="async" src="${photoSrc('pourfendeurs',m._id,m.photos?.[0],0)}" alt="" style="object-position:50% ${pos}%">`
-    :`<span class="pcard-ph">${souffleEmoji[m.souffle]||'⚔'}</span>`;
+    :avatarPh(m);
   const nameEsc=(m.nom||'').replace(/'/g,"\\'").replace(/"/g,'&quot;');
   return `<div class="pcard r-${rk} st-${statut}${m.photoCount?'':' nophoto'}" style="--bc:${color};--bcrgb:${hexToRgb(color)}" onclick="openProfile('${m._id}')">
     <div class="pcard-photo">${photo}
@@ -2730,7 +2744,7 @@ window.openProfile=async(id)=>{
           <div class="profile-carousel-progress" style="width:0%"></div>
         `:''}
       </div>`
-    :`<div class="profile-portrait-ph">⚔</div>`;
+    :`<div class="profile-portrait-ph">${avatarPh(m)}</div>`;
   document.getElementById('profileContent').innerHTML=`
     <div class="profile-dossier"${isElite?' data-tier="elite"':''} style="--pbc:${color};--pbcrgb:${colorRgb}">
       <div class="profile-col-img">
@@ -3050,7 +3064,7 @@ function iqRenderMatch(form,cands,best){
   c.innerHTML=list.map(x=>{
     const e=x.entity, isW=x.type==='wanted';
     const meta=isW?`Cible recherchée · ${esc(e.grade||'—')}`:`${esc(e.rang||'—')} · ${esc(e.souffle||'—')}${e.statut==='Mort'?' · ✝ décédé':e.statut==='Retraité'?' · ◈ retraité':''}`;
-    const photo=!isW&&e.photoCount?`<img src="${photoSrc('pourfendeurs',e._id,e.photos?.[0],0)}" alt="">`:(isW?'🎯':'⚔');
+    const photo=!isW&&e.photoCount?`<img src="${photoSrc('pourfendeurs',e._id,e.photos?.[0],0)}" alt="">`:(isW?'🎯':avatarPh(e));
     return `<div class="iq-cand${x.key===selKey?' sel':''}${isW?' wanted':''}" onclick="iqPick('${x.key}')">
       <div class="iq-cand-photo">${photo}</div>
       <div class="iq-cand-info"><div class="iq-cand-name">${esc(iqEntityName(x.type,e))}</div><div class="iq-cand-meta">${meta}</div></div>
@@ -3570,7 +3584,7 @@ window.openSubTargets=(id)=>{
   const box=document.getElementById('subTargetsContent');
   const base=[info.rang&&`Rang ${esc(info.rang)}`,info.souffle&&esc(info.souffle),info.brigade&&`🏛 ${esc(info.brigade)}`,info.pilier&&`Pilier ${esc(info.pilier)}`,info.kinoe&&`Kinoe ${esc(info.kinoe)}`].filter(Boolean);
   const person=({p,reasons,score})=>{
-    const photo=p.photoCount?`<img loading="lazy" src="${photoSrc('pourfendeurs',p._id,p.photos?.[0],0)}" alt="">`:(souffleEmoji[p.souffle]||'⚔');
+    const photo=p.photoCount?`<img loading="lazy" src="${photoSrc('pourfendeurs',p._id,p.photos?.[0],0)}" alt="">`:avatarPh(p);
     const st=iqStatutLabel(p);
     return `<div class="st-row">
       <div class="st-photo">${photo}</div>
@@ -3869,7 +3883,7 @@ function renderDashPreview(){
     <div class="hier-label">✦ Maître des Pourfendeurs ✦</div>`;
   if(maitre){
     html+=`<div class="maitre-card" onclick="showSection('registre');openProfile('${maitre._id}')" style="cursor:pointer">
-      <div class="maitre-photo">${maitre.photoCount?`<img src="${photoSrc('pourfendeurs',maitre._id,maitre.photos?.[0],0)}" alt="${maitre.nom}">`:`<span class="maitre-photo-ph">⚔</span>`}</div>
+      <div class="maitre-photo">${maitre.photoCount?`<img src="${photoSrc('pourfendeurs',maitre._id,maitre.photos?.[0],0)}" alt="${maitre.nom}">`:avatarPh(maitre)}</div>
       <div>
         <div class="maitre-name">${maitre.nom}</div>
         <div class="maitre-title">Maître des Pourfendeurs</div>
@@ -3888,7 +3902,7 @@ function renderDashPreview(){
       <div class="conseiller-grid">
         ${conseillers.map(m=>`
           <div class="conseiller-card" onclick="showSection('registre');openProfile('${m._id}')">
-            <div class="conseiller-photo">${m.photoCount?`<img src="${photoSrc('pourfendeurs',m._id,m.photos?.[0],0)}" alt="${m.nom}">`:`<span class="conseiller-photo-ph">⚔</span>`}</div>
+            <div class="conseiller-photo">${m.photoCount?`<img src="${photoSrc('pourfendeurs',m._id,m.photos?.[0],0)}" alt="${m.nom}">`:avatarPh(m)}</div>
             <div>
               <div class="conseiller-name">${m.nom}</div>
               ${m.souffle?`<div class="conseiller-souffle">${m.souffle}</div>`:''}
@@ -3905,7 +3919,7 @@ function renderDashPreview(){
       <div class="pilier-grid">
         ${piliers.map(m=>`
           <div class="pilier-card" onclick="showSection('registre');openProfile('${m._id}')">
-            <div class="pilier-photo">${m.photoCount?`<img src="${photoSrc('pourfendeurs',m._id,m.photos?.[0],0)}" alt="${m.nom}">`:`<span class="pilier-photo-ph">⚔</span>`}</div>
+            <div class="pilier-photo">${m.photoCount?`<img src="${photoSrc('pourfendeurs',m._id,m.photos?.[0],0)}" alt="${m.nom}">`:avatarPh(m)}</div>
             <div class="pilier-info">
               <div class="pilier-name">${m.nom}</div>
               ${m.souffle?`<div class="pilier-souffle">${m.souffle}</div>`:''}
