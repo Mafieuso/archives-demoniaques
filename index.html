@@ -132,6 +132,7 @@ input,select,textarea{font-family:inherit;}
 .member-name:hover::after{width:100%;}
 .member-name.mort{text-decoration:line-through;color:#555!important;}
 .member-name.retraite{color:var(--retraite)!important;}
+.member-name.disparu{color:#a99be6!important;font-style:italic;}
 .badge{display:inline-block;padding:5px 13px;border-radius:4px;font-family:'Cinzel',serif;font-size:.72rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;border:1px solid;}
 .badge-Maitre{background:rgba(201,162,39,.25);border-color:#f0d060;color:#f0d060;box-shadow:0 0 18px rgba(240,208,96,.4);animation:glow-pulse 2s ease-in-out infinite;}
 .badge-Conseiller{background:rgba(180,80,200,.2);border-color:#c880f0;color:#d8a0ff;box-shadow:0 0 14px rgba(200,128,240,.25);animation:glow-pulse 3s ease-in-out infinite;}
@@ -143,12 +144,14 @@ input,select,textarea{font-family:inherit;}
 .status-Vivant{background:#00cc88;box-shadow:0 0 6px rgba(0,204,136,.6);}
 .status-Mort{background:#444;}
 .status-Retraité{background:var(--retraite);}
+.status-Disparu{background:#8a7bd0;box-shadow:0 0 6px rgba(138,123,208,.6);}
 .td-actions{text-align:right;white-space:nowrap;}
 .member-brigade{font-size:.72rem;color:var(--text-muted);}
 /* Sections spéciales */
 .special-group{background:var(--card-bg);border-radius:10px;margin-bottom:28px;overflow:hidden;border:1px solid var(--border);border-left:4px solid var(--sg,#555);box-shadow:0 8px 32px rgba(0,0,0,.45);}
 .special-group.sg-retraite{--sg:#2e8b57;opacity:.9;}
 .special-group.sg-mort{--sg:#444;opacity:.75;}
+.special-group.sg-disparu{--sg:#8a7bd0;opacity:.92;}
 .special-group-header{padding:18px 24px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);background:rgba(0,0,0,.25);}
 .special-group-title{font-family:'Cinzel',serif;font-size:1.05rem;font-weight:700;color:var(--sg,#555);letter-spacing:5px;text-transform:uppercase;text-shadow:0 0 12px var(--sg,#555);}
 
@@ -1125,6 +1128,9 @@ html.lite #liteBtn{color:var(--gold);border-color:rgba(201,162,39,.6);background
 /* statuts */
 .pcard.st-Retraité{--bc:#3dba7a;--bcrgb:61,186,122;}
 .pcard.st-Retraité .pcard-photo img{filter:saturate(.55) brightness(.9);}
+.pcard.st-Disparu{--bc:#8a7bd0;--bcrgb:138,123,208;}
+.pcard.st-Disparu .pcard-photo img{filter:grayscale(.65) brightness(.75) blur(.6px);}
+.pcard.st-Disparu .pcard-photo::before{content:'?';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Cinzel',serif;font-size:5rem;color:rgba(169,155,230,.22);z-index:1;}
 .pcard.st-Mort{--bc:#888;--bcrgb:136,136,136;opacity:.82;}
 .pcard.st-Mort .pcard-photo img{filter:grayscale(1) brightness(.7);}
 .pcard.st-Mort .pcard-name{color:#aaa;}
@@ -1325,6 +1331,7 @@ html.lite #liteBtn{color:var(--gold);border-color:rgba(201,162,39,.6);background
         <div class="stat-card" style="--sc:#ff4040"><div class="stat-icon">👑</div><div class="stat-val" id="stat-piliers">0</div><div class="stat-label">Piliers Actifs</div></div>
         <div class="stat-card" style="--sc:#00cc88"><div class="stat-icon">✦</div><div class="stat-val" id="stat-vivants">0</div><div class="stat-label">En Service</div></div>
         <div class="stat-card" style="--sc:#8b0000"><div class="stat-icon">💀</div><div class="stat-val" id="stat-wanted">0</div><div class="stat-label">Démons Ciblés</div></div>
+        <div class="stat-card" style="--sc:#8a7bd0"><div class="stat-icon">?</div><div class="stat-val" id="stat-disparus">0</div><div class="stat-label">Disparus</div></div>
         <div class="stat-card" style="--sc:#555"><div class="stat-icon">✝</div><div class="stat-val" id="stat-morts">0</div><div class="stat-label">Tombés au Combat</div></div>
       </div>
       <div id="dash-preview"></div>
@@ -1341,6 +1348,7 @@ html.lite #liteBtn{color:var(--gold);border-color:rgba(201,162,39,.6);background
         <span class="filter-chip" onclick="filterRegistre('Vivant',this)">● En service</span>
         <span class="filter-chip" onclick="filterRegistre('Mort',this)">✝ Décédés</span>
         <span class="filter-chip" onclick="filterRegistre('Retraité',this)">◈ Retraités</span>
+        <span class="filter-chip" onclick="filterRegistre('Disparu',this)">? Disparus</span>
         <span class="view-toggle"><button id="viewCards" onclick="setRegistreView('cards')">▦ Cartes</button><button id="viewList" onclick="setRegistreView('list')">☰ Liste</button></span>
       </div>
       <div id="registreContainer"><div class="loader"></div></div>
@@ -1824,6 +1832,7 @@ html.lite #liteBtn{color:var(--gold);border-color:rgba(201,162,39,.6);background
           <option value="Vivant">Vivant — En service</option>
           <option value="Mort">Décédé</option>
           <option value="Retraité">Retraité</option>
+          <option value="Disparu">Disparu — Introuvable</option>
         </select>
       </div>
       <div class="form-group"><label class="form-label">Jours de service</label><input class="form-input" id="fJours" type="number" min="0" placeholder="0"></div>
@@ -2570,7 +2579,7 @@ function buildMemberCard(m){
   const bcls=['Maître des Pourfendeurs','Conseiller','Pilier','Kinoe','Kinoto'].includes(rang)?'badge-'+rk:'badge-default';
   const color=souffleColors[m.souffle]||'#c9a227';
   const statut=m.statut||'Vivant';
-  const statutLabel={Vivant:'En service',Mort:'Tombé',Retraité:'Retraite'}[statut]||statut;
+  const statutLabel={Vivant:'En service',Mort:'Tombé',Retraité:'Retraite',Disparu:'Disparu'}[statut]||statut;
   const pos=m.photos?.[0]?.position??50;
   const photo=m.photoCount
     ?`<img loading="lazy" decoding="async" src="${photoSrc('pourfendeurs',m._id,m.photos?.[0],0)}" alt="" style="object-position:50% ${pos}%">`
@@ -2593,7 +2602,7 @@ function memberCollection(list){
 }
 
 function buildMemberRow(m){
-  const nc=m.statut==='Mort'?'mort':m.statut==='Retraité'?'retraite':'';
+  const nc=m.statut==='Mort'?'mort':m.statut==='Retraité'?'retraite':m.statut==='Disparu'?'disparu':'';
   const rang=m.rang||'';
   const bc=['Maître des Pourfendeurs','Conseiller','Pilier','Kinoe','Kinoto'].includes(rang)
     ?`badge-${rang==='Maître des Pourfendeurs'?'Maitre':rang==='Conseiller'?'Conseiller':rang}`:'badge-default';
@@ -2625,6 +2634,11 @@ function renderRegistre(){
   if(registreFilter==='all'||registreFilter==='Retraité'){
     const retraites=data.filter(m=>m.statut==='Retraité');
     if(retraites.length) html+=`<div class="special-group sg-retraite"><div class="special-group-header"><span class="special-group-title">◈ En Retraite</span><span class="breath-count" style="border-color:rgba(46,139,87,.4);color:#3dba7a">${retraites.length} membre${retraites.length>1?'s':''}</span></div>${memberCollection(retraites)}</div>`;
+  }
+
+  if(registreFilter==='all'||registreFilter==='Disparu'){
+    const disparus=data.filter(m=>m.statut==='Disparu');
+    if(disparus.length) html+=`<div class="special-group sg-disparu"><div class="special-group-header"><span class="special-group-title">? Portés Disparus</span><span class="breath-count" style="border-color:rgba(138,123,208,.45);color:#a99be6">${disparus.length} membre${disparus.length>1?'s':''}</span></div>${memberCollection(disparus)}</div>`;
   }
 
   if(registreFilter==='all'||registreFilter==='Mort'){
@@ -2723,7 +2737,7 @@ window.openProfile=async(id)=>{
   const color=souffleColors[m.souffle]||'#888';
   const colorRgb=hexToRgb(color);
   const isElite=(hierarchyIdx[m.rang]??99)<=2; // Pilier, Conseiller, Maître des Pourfendeurs
-  const statutColor={'Vivant':'#00cc88','Mort':'#666','Retraité':'#c9a227'}[m.statut]||'#888';
+  const statutColor={'Vivant':'#00cc88','Mort':'#666','Retraité':'#c9a227','Disparu':'#8a7bd0'}[m.statut]||'#888';
   const statutDot=`<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${statutColor};box-shadow:0 0 6px ${statutColor};margin-right:5px;vertical-align:middle"></span>`;
   const extras=[
     m.brigade?['Brigade',m.brigade]:null,
@@ -2847,7 +2861,7 @@ function iqSame(a,b){ // égalité souple entre deux libellés (brigade, nom de 
    ne doit plus apparaître dans les bonnes réponses (HG, Pilier d'un Souffle, liste des
    Piliers, membres d'une brigade…). Tout est recalculé à chaque mise à jour du Codex. */
 function iqActive(p){return p.statut==='Vivant';}
-function iqStatutLabel(p){return p.statut==='Mort'?'décédé':p.statut==='Retraité'?'retraité':'';}
+function iqStatutLabel(p){return p.statut==='Mort'?'décédé':p.statut==='Retraité'?'retraité':p.statut==='Disparu'?'disparu':'';}
 function iqFindRef(name,ranks){ // référent cité : on préfère le titulaire encore actif s'il y en a un
   const all=allPourfendeurs.filter(p=>ranks.includes(p.rang)&&iqSame(p.nom,name));
   return all.find(iqActive)||all[0]||null;
@@ -2964,6 +2978,7 @@ function iqBuildQuestions(form,match){
     }
     if(e.info) add('Décris tes dernières missions ou les observations rapportées à ton sujet.',e.info,'Fiche');
     if(e.statut==='Retraité') add('Pourquoi es-tu encore en activité alors que ta fiche indique la retraite ?','La fiche indique une retraite — le sujet ne devrait plus être en service','Alerte');
+    if(e.statut==='Disparu') add('Où étais-tu pendant ta disparition, et qui peut en témoigner ?','La fiche indique une disparition — le retour du sujet doit être expliqué et vérifié','Alerte');
     if(e.statut==='Mort') add('Quand et comment ta fiche a-t-elle été déclarée « tombé au combat » ?','La fiche indique un décès — toute réponse est suspecte','Alerte');
   }
   if(match?.type==='wanted'){
@@ -3063,7 +3078,7 @@ function iqRenderMatch(form,cands,best){
   const selKey=_iqMatch?(best?.key):null;
   c.innerHTML=list.map(x=>{
     const e=x.entity, isW=x.type==='wanted';
-    const meta=isW?`Cible recherchée · ${esc(e.grade||'—')}`:`${esc(e.rang||'—')} · ${esc(e.souffle||'—')}${e.statut==='Mort'?' · ✝ décédé':e.statut==='Retraité'?' · ◈ retraité':''}`;
+    const meta=isW?`Cible recherchée · ${esc(e.grade||'—')}`:`${esc(e.rang||'—')} · ${esc(e.souffle||'—')}${e.statut==='Mort'?' · ✝ décédé':e.statut==='Retraité'?' · ◈ retraité':e.statut==='Disparu'?' · ? disparu':''}`;
     const photo=!isW&&e.photoCount?`<img src="${photoSrc('pourfendeurs',e._id,e.photos?.[0],0)}" alt="">`:(isW?'🎯':avatarPh(e));
     return `<div class="iq-cand${x.key===selKey?' sel':''}${isW?' wanted':''}" onclick="iqPick('${x.key}')">
       <div class="iq-cand-photo">${photo}</div>
@@ -3077,6 +3092,8 @@ function iqRenderMatch(form,cands,best){
     c.innerHTML=`<div class="iq-alert danger">🎯 Le sujet correspond à une <b>cible recherchée</b>${w.raison?` — ${esc(w.raison)}`:''}</div>`+c.innerHTML;
   }else if(_iqMatch?.entity?.statut==='Retraité'){
     c.innerHTML=`<div class="iq-alert danger">◈ La fiche retrouvée est marquée <b>retraité</b> — le sujet ne devrait plus être en service.</div>`+c.innerHTML;
+  }else if(_iqMatch?.entity?.statut==='Disparu'){
+    c.innerHTML=`<div class="iq-alert danger">? La fiche retrouvée est marquée <b>disparu</b> — son retour doit être expliqué et vérifié.</div>`+c.innerHTML;
   }else if(_iqMatch?.entity?.statut==='Mort'){
     c.innerHTML=`<div class="iq-alert danger">✝ La fiche retrouvée est marquée <b>décédé</b> — usurpation d'identité possible.</div>`+c.innerHTML;
   }
@@ -3532,7 +3549,7 @@ function suggestSubTargets(w){
   const rIdx=hierarchyIdx[info.rang];
   const nameKey=normName(info.nom);
   const out=[];
-  const people=allPourfendeurs.filter(p=>p._id!==selfId&&p.statut!=='Mort'&&normName(p.nom)!==nameKey);
+  const people=allPourfendeurs.filter(p=>p._id!==selfId&&p.statut!=='Mort'&&p.statut!=='Disparu'&&normName(p.nom)!==nameKey);
 
   /* Haut Gradé du Souffle : le mieux classé encore en service, hors cible. */
   const hg=info.souffle?people.filter(p=>p.souffle===info.souffle&&iqActive(p))
@@ -3864,6 +3881,7 @@ function updateStats(){
   document.getElementById('stat-piliers').textContent=allPourfendeurs.filter(m=>m.rang==='Pilier'&&m.statut==='Vivant').length;
   document.getElementById('stat-vivants').textContent=allPourfendeurs.filter(m=>m.statut==='Vivant').length;
   document.getElementById('stat-morts').textContent=allPourfendeurs.filter(m=>m.statut==='Mort').length;
+  const sd=document.getElementById('stat-disparus'); if(sd) sd.textContent=allPourfendeurs.filter(m=>m.statut==='Disparu').length;
 }
 
 
