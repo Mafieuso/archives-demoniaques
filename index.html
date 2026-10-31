@@ -1348,7 +1348,6 @@ html.lite #liteBtn{color:var(--gold);border-color:rgba(201,162,39,.6);background
         <span class="filter-chip" onclick="filterRegistre('Vivant',this)">● En service</span>
         <span class="filter-chip" onclick="filterRegistre('Mort',this)">✝ Décédés</span>
         <span class="filter-chip" onclick="filterRegistre('Retraité',this)">◈ Retraités</span>
-        <span class="filter-chip" onclick="filterRegistre('Disparu',this)">? Disparus</span>
         <span class="view-toggle"><button id="viewCards" onclick="setRegistreView('cards')">▦ Cartes</button><button id="viewList" onclick="setRegistreView('list')">☰ Liste</button></span>
       </div>
       <div id="registreContainer"><div class="loader"></div></div>
@@ -2619,7 +2618,7 @@ function renderRegistre(){
 
 
   if(registreFilter==='all'||registreFilter==='Vivant'){
-    const actifs=data.filter(m=>m.statut==='Vivant');
+    const actifs=data.filter(m=>m.statut==='Vivant'||(registreFilter==='all'&&m.statut==='Disparu')); // les disparus restent dans leur Souffle
     const groups={};
     actifs.forEach(m=>{const s=m.souffle||'Autre';if(!groups[s])groups[s]=[];groups[s].push(m);});
     html+=Object.entries(groups).map(([souffle,membres])=>{
@@ -2634,11 +2633,6 @@ function renderRegistre(){
   if(registreFilter==='all'||registreFilter==='Retraité'){
     const retraites=data.filter(m=>m.statut==='Retraité');
     if(retraites.length) html+=`<div class="special-group sg-retraite"><div class="special-group-header"><span class="special-group-title">◈ En Retraite</span><span class="breath-count" style="border-color:rgba(46,139,87,.4);color:#3dba7a">${retraites.length} membre${retraites.length>1?'s':''}</span></div>${memberCollection(retraites)}</div>`;
-  }
-
-  if(registreFilter==='all'||registreFilter==='Disparu'){
-    const disparus=data.filter(m=>m.statut==='Disparu');
-    if(disparus.length) html+=`<div class="special-group sg-disparu"><div class="special-group-header"><span class="special-group-title">? Portés Disparus</span><span class="breath-count" style="border-color:rgba(138,123,208,.45);color:#a99be6">${disparus.length} membre${disparus.length>1?'s':''}</span></div>${memberCollection(disparus)}</div>`;
   }
 
   if(registreFilter==='all'||registreFilter==='Mort'){
